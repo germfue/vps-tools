@@ -32,8 +32,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from invoke import Collection
-from .plan import collection as collection_plan
-
+from .plans import plans
 
 collection = Collection('')
-collection.add_collection(coll=collection_plan, name='plan')
+collection.add_task(plans)

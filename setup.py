@@ -48,7 +48,7 @@ setup(
     license="BSD",
     keywords="vultr cli instance",
     url="https://github.com/germfue/vultr-cli.git",
-    install_requires=['invoke', 'vultr', ],
+    install_requires=['invoke', 'vultr', 'clint', ],
     # tests_require=('pylint', ),
     packages=('vultrcli', ),
     test_suite='tests',
