@@ -32,7 +32,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from invoke import Collection
+from .os import os
 from .plans import plans
 
 collection = Collection('')
+collection.add_task(os)
 collection.add_task(plans)

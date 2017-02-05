@@ -31,37 +31,31 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-from vultrcli.version import __version__
+from __future__ import print_function
+from vultr import Vultr
+from .display import display
+from .key import api_key
 
 
-long_description = """
-CLI to manage Vultr instances
-"""
+def query(ctx, action, q, criteria):
+    """
+    Query a Vultr endpoint
+    """
+    if not action == 'list':
+        print('TODO: documentation missing...')
+        return
+    if criteria:
+        # TODO filter criteria to avoid code injection
+        criteria = eval(criteria)
 
-setup(
-    name="vultr-cli",
-    version=__version__,
-    author="Germán Fuentes Capella",
-    author_email="development@fuentescapella.com",
-    description="Vultr CLI",
-    license="BSD",
-    keywords="vultr cli instance",
-    url="https://github.com/germfue/vultr-cli.git",
-    install_requires=['invoke', 'vultr', 'clint', ],
-    # tests_require=('pylint', ),
-    packages=('vultrcli', ),
-    test_suite='tests',
-    long_description=long_description,
-    entry_points={
-        'console_scripts': [
-            'vultr = vultrcli.program:program.run',
-        ],
-    },
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Topic :: System :: Systems Administration",
-        "License :: OSI Approved :: BSD License",
-        "Environment :: Console",
-    ],
-)
+        def _filter(a_dict):
+            for k,v in criteria.items():
+                if not a_dict.get(k) or a_dict[k] != v:
+                    return False
+            return True
+
+        result = list(filter(_filter, q(api_key).values()))
+    else:
+        result = q(api_key).values()
+    if result:
+        display(result)

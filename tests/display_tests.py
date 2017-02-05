@@ -31,37 +31,50 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-from vultrcli.version import __version__
+import unittest
+from vultrcli.display import get_headers, column_size
 
 
-long_description = """
-CLI to manage Vultr instances
-"""
+class TestDisplay(unittest.TestCase):
 
-setup(
-    name="vultr-cli",
-    version=__version__,
-    author="Germán Fuentes Capella",
-    author_email="development@fuentescapella.com",
-    description="Vultr CLI",
-    license="BSD",
-    keywords="vultr cli instance",
-    url="https://github.com/germfue/vultr-cli.git",
-    install_requires=['invoke', 'vultr', 'clint', ],
-    # tests_require=('pylint', ),
-    packages=('vultrcli', ),
-    test_suite='tests',
-    long_description=long_description,
-    entry_points={
-        'console_scripts': [
-            'vultr = vultrcli.program:program.run',
-        ],
-    },
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Topic :: System :: Systems Administration",
-        "License :: OSI Approved :: BSD License",
-        "Environment :: Console",
-    ],
-)
+    def test_headers(self):
+        h = [
+            {'h0': 0,
+             'h1': 1,
+             },
+            {'h0': 0,
+             'h1': 1,
+             },
+        ]
+        self.assertEqual(get_headers(h), ['h0', 'h1'])
+
+    def test_bad_headers(self):
+        h = [
+            {'h0': 0,
+             'h1': 1,
+             },
+            {'h0': 0,
+             'h1': 1,
+             'h2': 2,
+             },
+        ]
+        with self.assertRaises(KeyError):
+            get_headers(h)
+
+    def test_column_size(self):
+        matrix = [
+            {'k0': 'text0',
+             'k1': '1',
+             },
+            {'k0': 'txt',
+             'k1': '',
+             },
+        ]
+        csize = column_size(matrix[0].keys(), matrix)
+        self.assertEqual(csize['k0'], 5)
+        self.assertEqual(csize['k1'], 2)
+
+    def test_column_size_with_boolean(self):
+        matrix = [{'k0': False}]
+        csize = column_size(matrix[0].keys(), matrix)
+        self.assertEqual(csize['k0'], 5)

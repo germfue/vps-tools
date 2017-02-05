@@ -32,25 +32,15 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import print_function
-from clint.textui import puts, columns
-from clint.textui.cols import console_width
 from invoke import task
 from vultr import Vultr
-from .key import api_key
+from .query import query
 
 
 @task
-def plans(ctx, action):
+def plans(ctx, action, criteria=''):
     """
     Retrieve a list of all active plans.
     Plans that are no longer available will not be shown.
     """
-    if not action == 'list':
-        print('TODO: documentation missing...')
-        return
-    vultr = Vultr(api_key)
-    plans = [v for v in vultr.plans.list().values()]
-    keys = plans[0].keys()
-    width = console_width({})
-    header = [[key, width/len(keys)] for key in keys]
-    puts(columns(*header))
+    query(ctx, action, lambda x: Vultr(x).plans.list(), criteria)

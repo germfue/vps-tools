@@ -31,37 +31,12 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-from vultrcli.version import __version__
+from invoke import Program
+from .version import __version__
+from .tasks import collection
 
-
-long_description = """
-CLI to manage Vultr instances
-"""
-
-setup(
-    name="vultr-cli",
-    version=__version__,
-    author="Germán Fuentes Capella",
-    author_email="development@fuentescapella.com",
-    description="Vultr CLI",
-    license="BSD",
-    keywords="vultr cli instance",
-    url="https://github.com/germfue/vultr-cli.git",
-    install_requires=['invoke', 'vultr', 'clint', ],
-    # tests_require=('pylint', ),
-    packages=('vultrcli', ),
-    test_suite='tests',
-    long_description=long_description,
-    entry_points={
-        'console_scripts': [
-            'vultr = vultrcli.program:program.run',
-        ],
-    },
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Topic :: System :: Systems Administration",
-        "License :: OSI Approved :: BSD License",
-        "Environment :: Console",
-    ],
-)
+program = Program(binary='vultr',
+                  name='vultr',
+                  namespace=collection,
+                  version=__version__,
+                  )
