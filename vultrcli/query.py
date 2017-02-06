@@ -32,7 +32,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import print_function
-from vultr import Vultr
+from ast import literal_eval
 from .display import display
 from .key import api_key
 
@@ -45,11 +45,10 @@ def query(ctx, action, q, criteria):
         print('TODO: documentation missing...')
         return
     if criteria:
-        # TODO filter criteria to avoid code injection
-        criteria = eval(criteria)
+        criteria = literal_eval(criteria)
 
         def _filter(a_dict):
-            for k,v in criteria.items():
+            for k, v in criteria.items():
                 if not a_dict.get(k) or a_dict[k] != v:
                     return False
             return True
