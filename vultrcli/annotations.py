@@ -31,18 +31,36 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
-from invoke import task
-from vultr import Vultr
-from .query import query
+
+class allowed_args(object):
+    """
+    non-allowed fields can not have a value
+    """
+
+    def __init__(self, *args):
+        self.__args = args
+
+    def __call__(self, f):
+        def _f(kwargs):
+            for k, v in kwargs.items():
+                if k not in self.__args and v:
+                    raise ValueError('%s: parameter not applicable' % k)
+            return f(kwargs)
+        return _f
 
 
-@task
-def os(ctx, action, criteria=''):
+class mandatory_args(object):
     """
-    Retrieve a list of available operating systems
+    mandatory fields must have a value
     """
-    if action == 'list':
-        query(lambda x: Vultr(x).os.list(), criteria)
-    else:
-        print('TODO: documentation missing...')
+
+    def __init__(self, *args):
+        self.__args = args
+
+    def __call__(self, f):
+        def _f(kwargs):
+            for arg in self.__args:
+                if not kwargs.get(arg):
+                    raise ValueError('%s: missing parameter' % arg)
+            return f(kwargs)
+        return _f

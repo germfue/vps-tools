@@ -32,17 +32,71 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import print_function
+from enum import Enum
 from invoke import task
 from vultr import Vultr
+from .annotations import allowed_args, mandatory_args
+from .display import display_doc
 from .query import query
 
 
+class Param(Enum):
+    criteria = 1
+    dcid = 2
+    vpsplanid = 3
+    osid = 4
+    params = 5
+
+    def __str__(self):
+        return self.name
+
+
+@allowed_args(Param.criteria)
+def _server_list(kwargs):
+    query(lambda x: Vultr(x).server.list(), kwargs[Param.criteria])
+
+
+@mandatory_args(Param.dcid, Param.vpsplanid, Param.osid, Param.params)
+def _server_create(kwargs):
+    print('server create')
+
+
+doc = """
+Subcommand:
+
+  server    Server provisioning
+
+Actions:
+
+  list      List all active or pending virtual machines on the current account
+            Parameter:
+            criteria    Filter the result of the server list
+                        Optional
+                        Example:
+                        $ vultr server list --criteria "{'family': 'ubuntu'}"
+"""
+
+
 @task
-def os(ctx, action, criteria=''):
+def server(ctx, action, criteria='', dcid=None, vpsplanid=None, osid=None,
+           params=None):
     """
-    Retrieve a list of available operating systems
+    Server provisioning
     """
-    if action == 'list':
-        query(lambda x: Vultr(x).os.list(), criteria)
-    else:
-        print('TODO: documentation missing...')
+
+    kwargs = {
+        Param.criteria: criteria,
+        Param.dcid: dcid,
+        Param.vpsplanid: vpsplanid,
+        Param.osid: osid,
+        Param.params: params
+    }
+    try:
+        if action == 'list':
+            _server_list(kwargs)
+        elif action == 'create':
+            _server_create(kwargs)
+        else:
+            display_doc(doc)
+    except ValueError as e:
+        display_doc(doc, e)

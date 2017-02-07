@@ -37,24 +37,22 @@ from .display import display
 from .key import api_key
 
 
-def query(ctx, action, q, criteria):
+def query(q, criteria):
     """
     Query a Vultr endpoint
     """
-    if not action == 'list':
-        print('TODO: documentation missing...')
-        return
-    if criteria:
-        criteria = literal_eval(criteria)
-
-        def _filter(a_dict):
-            for k, v in criteria.items():
-                if not a_dict.get(k) or a_dict[k] != v:
-                    return False
-            return True
-
-        result = list(filter(_filter, q(api_key).values()))
-    else:
-        result = q(api_key).values()
+    result = q(api_key)
     if result:
-        display(result)
+        result = result.values()
+        if criteria:
+            criteria = literal_eval(criteria)
+
+            def _filter(a_dict):
+                for k, v in criteria.items():
+                    if not a_dict.get(k) or a_dict[k] != v:
+                        return False
+                return True
+
+            result = list(filter(_filter, result))
+        if result:
+            display(result)

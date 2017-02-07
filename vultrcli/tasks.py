@@ -34,7 +34,9 @@
 from invoke import Collection
 from .os import os
 from .plans import plans
+from .server import server
 
 collection = Collection('')
 collection.add_task(os)
 collection.add_task(plans)
+collection.add_task(server)

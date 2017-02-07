@@ -33,5 +33,5 @@
 
 from os import environ
 
-# TODO handle missing key
+# Missing key is already being handled by vultr library
 api_key = environ.get('VULTR_KEY')

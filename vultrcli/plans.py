@@ -31,7 +31,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
 from invoke import task
 from vultr import Vultr
 from .query import query
@@ -43,4 +42,7 @@ def plans(ctx, action, criteria=''):
     Retrieve a list of all active plans.
     Plans that are no longer available will not be shown.
     """
-    query(ctx, action, lambda x: Vultr(x).plans.list(), criteria)
+    if action == 'list':
+        query(lambda x: Vultr(x).plans.list(), criteria)
+    else:
+        print('TODO: documentation missing...')

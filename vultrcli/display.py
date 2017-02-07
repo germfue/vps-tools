@@ -72,3 +72,8 @@ def display(dl):
     for d in dl:
         row = [[str(d[header]), csize[header]] for header in headers]
         puts(columns(*row))
+
+
+def display_doc(doc, error_msg=''):
+    txt = '\n%s\n' % error_msg if error_msg else ''
+    puts(txt + doc)
