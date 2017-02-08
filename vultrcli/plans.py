@@ -31,18 +31,22 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from invoke import task
+from invoke import task, Collection
 from vultr import Vultr
 from .query import query
 
 
-@task
-def plans(ctx, action, criteria=''):
+@task(name='list',
+      help={
+          'criteria': 'Filter queried data. Example usage: '+
+          '"{\'plan_type\': \'SSD\'}"'
+      })
+def plans_list(ctx, criteria=''):
     """
     Retrieve a list of all active plans.
     Plans that are no longer available will not be shown.
     """
-    if action == 'list':
-        query(lambda x: Vultr(x).plans.list(), criteria)
-    else:
-        print('TODO: documentation missing...')
+    query(lambda x: Vultr(x).plans.list(), criteria)
+
+plans_coll = Collection()
+plans_coll.add_task(plans_list)

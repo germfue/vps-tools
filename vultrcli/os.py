@@ -32,17 +32,22 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import print_function
-from invoke import task
+from invoke import task, Collection
 from vultr import Vultr
 from .query import query
 
 
-@task
-def os(ctx, action, criteria=''):
+@task(name='list',
+      help={
+          'criteria': 'Filter queried data. Example usage: '+
+          '"{\'family\': \'ubuntu\'}"'
+      })
+def os_list(ctx, criteria=''):
     """
     Retrieve a list of available operating systems
     """
-    if action == 'list':
-        query(lambda x: Vultr(x).os.list(), criteria)
-    else:
-        print('TODO: documentation missing...')
+    query(lambda x: Vultr(x).os.list(), criteria)
+
+
+os_coll = Collection()
+os_coll.add_task(os_list)

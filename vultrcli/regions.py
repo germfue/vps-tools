@@ -31,36 +31,25 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import print_function
+from invoke import task, Collection
+from vultr import Vultr
+from .query import query
 
-class allowed_args(object):
+
+@task(name='list',
+      help={
+          'criteria': 'Filter queried data. Example usage: ' +
+          '"{\'continent\': \'Europe\'}"'
+      })
+def regions_list(ctx, criteria=''):
     """
-    non-allowed fields can not have a value
+    Retrieve a list of all active regions
+    Note that just because a region is listed here, does not mean that there is
+    room for new servers
     """
-
-    def __init__(self, *args):
-        self.__args = args
-
-    def __call__(self, f):
-        def _f(kwargs):
-            for k, v in kwargs.items():
-                if k not in self.__args and v:
-                    raise ValueError('%s: parameter not applicable' % k)
-            return f(kwargs)
-        return _f
+    query(lambda x: Vultr(x).regions.list(), criteria)
 
 
-class mandatory_args(object):
-    """
-    mandatory fields must have a value
-    """
-
-    def __init__(self, *args):
-        self.__args = args
-
-    def __call__(self, f):
-        def _f(kwargs):
-            for arg in self.__args:
-                if not kwargs.get(arg):
-                    raise ValueError('%s: missing parameter' % arg)
-            return f(kwargs)
-        return _f
+regions_coll = Collection()
+regions_coll.add_task(regions_list)

@@ -32,11 +32,13 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from invoke import Collection
-from .os import os
-from .plans import plans
-from .server import server
+from .os import os_coll
+from .plans import plans_coll
+from .regions import regions_coll
+from .server import server_coll
 
-collection = Collection('')
-collection.add_task(os)
-collection.add_task(plans)
-collection.add_task(server)
+collection = Collection()
+collection.add_collection(os_coll, name='os')
+collection.add_collection(plans_coll, name='plans')
+collection.add_collection(regions_coll, name='regions')
+collection.add_collection(server_coll, name='server')

@@ -31,8 +31,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from clint.textui import puts, columns
-# from clint.textui.cols import console_width
+from clint.textui import puts, columns, colored
 
 
 def get_headers(dl):
@@ -74,6 +73,8 @@ def display(dl):
         puts(columns(*row))
 
 
-def display_doc(doc, error_msg=''):
-    txt = '\n%s\n' % error_msg if error_msg else ''
-    puts(txt + doc)
+def display_subid(response):
+    key = 'SUBID'
+    subid = response[key]
+    row = [[colored.green('%s:' % key), len(key)+1], [subid, len(subid)]]
+    puts(columns(*row))
