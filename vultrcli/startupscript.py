@@ -31,27 +31,28 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import inspect
-from clint.textui import puts, colored
-from os import environ
+from __future__ import print_function
+from invoke import task, Collection
+from vultr import Vultr
+from .key import require_key
+from .query import query
 
-# Missing key is already being handled by vultr library
-api_key = environ.get('VULTR_KEY')
 
-
-def require_key(f):
+@task(name='list',
+      help={
+          'criteria': 'Filter queried data. Example usage: ' +
+          '"{\'XYZ\': \'???\'}"'
+      })
+@require_key
+def startupscript_list(ctx, criteria=''):
     """
-    Interrupts those function calls that need the API key, in case it is not
-    available. This is done in order to avoid known exceptions showing up
-    in the screen
+    List all startup scripts on the current account.
+    Scripts of type "boot" are executed by the server's operating system on
+    the first boot.
+    Scripts of type "pxe" are executed by iPXE when the server itself starts up
     """
+    query(lambda x: Vultr(x).startupscript.list(), criteria)
 
-    def _f(ctx, *args, **kwargs):
-        if api_key:
-            f(ctx, *args, **kwargs)
-        else:
-            puts("'%s' missing" % colored.red('VULTR_KEY'))
 
-    _f.__doc__ = inspect.getdoc(f)
-    _f.__signature__ = inspect.signature(f)
-    return _f
+startupscript_coll = Collection()
+startupscript_coll.add_task(startupscript_list)

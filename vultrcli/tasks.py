@@ -36,9 +36,11 @@ from .os import os_coll
 from .plans import plans_coll
 from .regions import regions_coll
 from .server import server_coll
+from .startupscript import startupscript_coll
 
 collection = Collection()
 collection.add_collection(os_coll, name='os')
 collection.add_collection(plans_coll, name='plans')
 collection.add_collection(regions_coll, name='regions')
 collection.add_collection(server_coll, name='server')
+collection.add_collection(startupscript_coll, name='startupscript')
