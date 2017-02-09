@@ -151,6 +151,23 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
     display_subid(response)
 
 
+@task(name='destroy',
+      help={
+          'subid': 'Unique identifier for this subscription. These can be ' +
+          'found using server.list',
+      })
+@require_key
+def server_destroy(ctx, subid):
+    """
+    Destroy (delete) a virtual machine.
+    All data will be permanently lost, and the IP address will be released.
+    There is no going back from this call
+    """
+    vultr = Vultr(api_key)
+    vultr.server.destroy(subid)
+
+
 server_coll = Collection()
 server_coll.add_task(server_list)
 server_coll.add_task(server_create)
+server_coll.add_task(server_destroy)

@@ -31,7 +31,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import ruamel.yaml
 from clint.textui import puts, columns, colored
+from clint.textui.cols import console_width
 
 
 def get_headers(dl):
@@ -60,17 +62,37 @@ def column_size(headers, dl):
     return csize
 
 
+def _trim(value, length):
+    value = str(value)
+    if len(value) > length:
+        value = value[0:length]
+        value = value[0:-3] + '...'
+    return value
+
+
 def display(dl):
     """
     Displays a list of dicts (dl) that contain same keys
     """
     headers = get_headers(dl)
     csize = column_size(headers, dl)
-    row = [[header, csize[header]] for header in headers]
-    puts(columns(*row))
-    for d in dl:
-        row = [[str(d[header]), csize[header]] for header in headers]
+    cons_width = console_width({})
+    values = csize.values()
+    content_width = sum(values)
+    if content_width > cons_width:
+        # if content is bigger than console, switch to yaml format
+        output = {}
+        for d in dl:
+            key = d.get('label') or d.get('SUBID')
+            output[key] = d
+        puts(ruamel.yaml.dump(output, Dumper=ruamel.yaml.RoundTripDumper))
+    else:
+        # otherwise, print a table
+        row = [[header, csize[header]] for header in headers]
         puts(columns(*row))
+        for d in dl:
+            row = [[_trim(d[h], csize[h]), csize[h]] for h in headers]
+            puts(columns(*row))
 
 
 def display_subid(response):
