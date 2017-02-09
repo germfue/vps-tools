@@ -35,16 +35,29 @@ from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
 from .display import display_subid
-from .key import api_key
+from .key import api_key, require_key
 from .query import query
 
 
 @task(name='list',
       help={
-          'criteria': 'Filter queried data. Example usage: '+
+          'criteria': 'Filter queried data. Example usage: ' +
           '"{\'XYZ\': \'???\'}"'
       })
+@require_key
 def server_list(ctx, criteria=''):
+    """
+    List all active or pending virtual machines on the current account.
+    The "status" field represents the status of the subscription and will be
+    one of: pending | active | suspended | closed. If the status is "active",
+    you can check "power_status" to determine if the VPS is powered on or not.
+    When status is "active", you may also use "server_state" for a more detailed
+    status of: none | locked | installingbooting | isomounting | ok.
+
+    The API does not provide any way to determine if the initial installation
+    has completed or not. The "v6_network", "v6_main_ip", and "v6_network_size"
+    fields are deprecated in favor of "v6_networks".
+    """
     query(lambda x: Vultr(x).server.list(), criteria)
 
 
@@ -53,49 +66,55 @@ def server_list(ctx, criteria=''):
           'dcid': 'Location to create this server in. See regions.list',
           'vpsplanid': 'Plan to use when creating this server. See plans.list',
           'osid': 'Operating system to use. See os.list',
-          'ipxe_chain_url': '(optional) If you have selected the \'custom\' '+
-          'operating system, this can be set to chainload the specified URL '+
+          'ipxe_chain_url': '(optional) If you have selected the \'custom\' ' +
+          'operating system, this can be set to chainload the specified URL ' +
           'on bootup, via iPXE',
-          'isoid': '(optional) If you have selected the \'custom\' operating '+
-          'system, this is the ID of a specific ISO to mount during the '+
+          'isoid': '(optional) If you have selected the \'custom\' operating ' +
+          'system, this is the ID of a specific ISO to mount during the ' +
           'deployment',
-          'scriptid': '(optional) If you have not selected a \'custom\' '+
-          'operating system, this can be the scriptid of a startup script to '+
+          'scriptid': '(optional) If you have not selected a \'custom\' ' +
+          'operating system, this can be the scriptid of a startup script to ' +
           'execute on boot.  See startupscript.list',
-          'snapshotid': '(optional) If you have selected the \'snapshot\' '+
-          'operating system, this should be the snapshotid (see '+
+          'snapshotid': '(optional) If you have selected the \'snapshot\' ' +
+          'operating system, this should be the snapshotid (see ' +
           'snapshot.list) to restore for the initial installation',
-          'enable_ipv6': '(optional) \'yes\' or \'no\'. If yes, an IPv6 '+
+          'enable_ipv6': '(optional) \'yes\' or \'no\'. If yes, an IPv6 ' +
           'subnet will be assigned to the machine (where available)',
-          'enable_private_network': '(optional) \'yes\' or \'no\'. If yes, '+
+          'enable_private_network': '(optional) \'yes\' or \'no\'. If yes, ' +
           'private networking support will be added to the new server.',
-          'label': '(optional) This is a text label that will be shown in the '+
-          'control panel',
-          'sshkeyid': '(optional) List of SSH keys to apply to this server on '+
-          'install (only valid for Linux/FreeBSD). See sshkey.list. Seperate '+
-          'keys with commas',
-          'auto_backups': '(optional) \'yes\' or \'no\'. If yes, automatic '+
-          'backups will be enabled for this server (these have an extra '+
+          'label': '(optional) This is a text label that will be shown in ' +
+          'the control panel',
+          'sshkeyid': '(optional) List of SSH keys to apply to this server ' +
+          'on install (only valid for Linux/FreeBSD). See sshkey.list. ' +
+          'Seperate keys with commas',
+          'auto_backups': '(optional) \'yes\' or \'no\'. If yes, automatic ' +
+          'backups will be enabled for this server (these have an extra ' +
           'charge associated with them)',
-          'appid': '(optional) If launching an application (OSID 186), this '+
+          'appid': '(optional) If launching an application (OSID 186), this ' +
           'is the appid to launch. See app.list',
           'userdata': '(optional) Base64 encoded cloud-init user-data',
-          'notify_activate': '(optional, default \'yes\') \'yes\' or \'no\'. '+
+          'notify_activate': '(optional, default \'yes\') \'yes\' or \'no\'. ' +
           'If yes, an activation email will be sent when the server is ready',
-          'ddos_protection':  '(optional, default \'no\') \'yes\' or \'no\'. '+
-          'If yes, DDOS protection will be enabled on the subscription (there '+
-          'is an additional charge for this)',
-          'reserved_ip_v4': '(optional) IP address of the floating IP to use '+
+          'ddos_protection':  '(optional, default \'no\') \'yes\' or \'no\'. ' +
+          'If yes, DDOS protection will be enabled on the subscription (' +
+          'there is an additional charge for this)',
+          'reserved_ip_v4': '(optional) IP address of the floating IP to use ' +
           'as the main IP of this server',
           'hostname': '(optional) The hostname to assign to this server',
           'tag': '(optional) The tag to assign to this server',
       })
+@require_key
 def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
                   isoid='', scriptid=0, snapshotid=0, enable_ipv6=False,
                   enable_private_network=False, label='', sshkeyid=0,
                   auto_backups=False, appid=0, userdata='',
                   notify_activate=True, ddos_protection=False,
                   reserved_ip_v4='', hostname='', tag=''):
+    """
+    Create a new virtual machine
+    You will start being billed for this immediately
+    The response only contains the SUBID for the new machine
+    """
     params = {}
     if ipxe_chain_url:
         params['ipxe_chain_url'] = ipxe_chain_url

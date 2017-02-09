@@ -31,22 +31,25 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from invoke import Collection
-from .app import app_coll
-from .os import os_coll
-from .plans import plans_coll
-from .regions import regions_coll
-from .server import server_coll
-from .snapshot import snapshot_coll
-from .sshkey import sshkey_coll
-from .startupscript import startupscript_coll
+from __future__ import print_function
+from invoke import task, Collection
+from vultr import Vultr
+from .key import require_key
+from .query import query
 
-collection = Collection()
-collection.add_collection(app_coll, name='app')
-collection.add_collection(os_coll, name='os')
-collection.add_collection(plans_coll, name='plans')
-collection.add_collection(regions_coll, name='regions')
-collection.add_collection(server_coll, name='server')
-collection.add_collection(snapshot_coll, name='snapshot')
-collection.add_collection(sshkey_coll, name='sshkey')
-collection.add_collection(startupscript_coll, name='startupscript')
+
+@task(name='list',
+      help={
+          'criteria': 'Filter queried data. Example usage: ' +
+          '"{\'status\': \'complete\'}"'
+      })
+@require_key
+def snapshot_list(ctx, criteria=''):
+    """
+    List all snapshots on the current account
+    """
+    query(lambda x: Vultr(x).snapshot.list(), criteria)
+
+
+snapshot_coll = Collection()
+snapshot_coll.add_task(snapshot_list)

@@ -39,7 +39,7 @@ from .query import query
 
 @task(name='list',
       help={
-          'criteria': 'Filter queried data. Example usage: '+
+          'criteria': 'Filter queried data. Example usage: ' +
           '"{\'family\': \'ubuntu\'}"'
       })
 def os_list(ctx, criteria=''):
