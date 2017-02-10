@@ -33,7 +33,7 @@
 
 from invoke import task, Collection
 from vultr import Vultr
-from .display import display_subid
+from .display import display_yaml
 from .key import api_key, require_key
 from .query import query
 
@@ -147,7 +147,7 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
         params['tag'] = tag
     vultr = Vultr(api_key)
     response = vultr.server.create(dcid, vpsplanid, osid, params or None)
-    display_subid(response)
+    display_yaml(response)
 
 
 @task(name='destroy',

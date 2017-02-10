@@ -97,10 +97,3 @@ def display(dl):
         for d in dl:
             row = [[_trim(d[h], csize[h]), csize[h]] for h in headers]
             puts(columns(*row))
-
-
-def display_subid(response):
-    key = 'SUBID'
-    subid = response[key]
-    row = [[colored.green('%s:' % key), len(key)+1], [subid, len(subid)]]
-    puts(columns(*row))

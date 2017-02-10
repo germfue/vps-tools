@@ -34,14 +34,15 @@
 from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
-from .key import require_key
+from .display import display_yaml
+from .key import api_key, require_key
 from .query import query
 
 
 @task(name='list',
       help={
           'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'XYZ\': \'???\'}"'
+          '"{\'name\': \'test\'}"'
       })
 @require_key
 def startupscript_list(ctx, criteria=''):
@@ -54,5 +55,56 @@ def startupscript_list(ctx, criteria=''):
     query(lambda x: Vultr(x).startupscript.list(), criteria)
 
 
+@task(name='create',
+      help={
+          'name': 'Name of the newly created startup script',
+          'script': 'Startup script contents',
+          'script_type': 'boot|pxe Type of startup script. Default is \'boot\'',
+      })
+@require_key
+def startupscript_create(ctx, name, script, script_type='boot'):
+    """
+    Create a startup script
+    """
+    vultr = Vultr(api_key)
+    response = vultr.startupscript.create(name, script, {'type': script_type})
+    display_yaml(response)
+
+
+@task(name='destroy',
+      help={
+          'scriptid': 'Unique identifier for this startup script',
+      })
+@require_key
+def startupscript_destroy(ctx, scriptid):
+    """
+    Remove a startup script
+    """
+    vultr = Vultr(api_key)
+    vultr.startupscript.destroy(scriptid)
+
+
+@task(name='update',
+      help={
+          'scriptid': 'scriptid of script to update',
+          'name': '(optional) New name for the startup script',
+          'script': '(optional) New startup script contents',
+      })
+@require_key
+def startupscript_update(ctx, scriptid, name='', script=''):
+    """
+    Update an existing startup script
+    """
+    vultr = Vultr(api_key)
+    params = {}
+    if name:
+        params['name'] = name
+    if script:
+        params['script'] = script
+    vultr.startupscript.update(scriptid, params)
+
+
 startupscript_coll = Collection()
+startupscript_coll.add_task(startupscript_create)
+startupscript_coll.add_task(startupscript_destroy)
 startupscript_coll.add_task(startupscript_list)
