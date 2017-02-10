@@ -31,24 +31,21 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from invoke import Collection
-from .account import account_coll
-from .app import app_coll
-from .os import os_coll
-from .plans import plans_coll
-from .regions import regions_coll
-from .server import server_coll
-from .snapshot import snapshot_coll
-from .sshkey import sshkey_coll
-from .startupscript import startupscript_coll
+from invoke import task, Collection
+from vultr import Vultr
+from .display import display_yaml
+from .key import api_key, require_key
 
-collection = Collection()
-collection.add_collection(account_coll, name='account')
-collection.add_collection(app_coll, name='app')
-collection.add_collection(os_coll, name='os')
-collection.add_collection(plans_coll, name='plans')
-collection.add_collection(regions_coll, name='regions')
-collection.add_collection(server_coll, name='server')
-collection.add_collection(snapshot_coll, name='snapshot')
-collection.add_collection(sshkey_coll, name='sshkey')
-collection.add_collection(startupscript_coll, name='startupscript')
+
+@task(name='info',
+      help={})
+@require_key
+def account_info(ctx):
+    """
+    Retrieve information about the current account
+    """
+    display_yaml({'Account Info': Vultr(api_key).account.info()})
+
+
+account_coll = Collection()
+account_coll.add_task(account_info)

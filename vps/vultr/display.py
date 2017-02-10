@@ -70,6 +70,10 @@ def _trim(value, length):
     return value
 
 
+def display_yaml(a_dict):
+    puts(ruamel.yaml.dump(a_dict, Dumper=ruamel.yaml.RoundTripDumper))
+
+
 def display(dl):
     """
     Displays a list of dicts (dl) that contain same keys
