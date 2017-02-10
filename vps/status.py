@@ -31,7 +31,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from clint.textui import puts, indent
+import math
+from clint.textui import puts, indent, colored
 from invoke import task, Collection
 from vps.vultr.tasks import collection as vultr_collection
 
@@ -110,23 +111,34 @@ def _compare_apis(spec, impl):
     return comp
 
 
-def _display(api, comp):
-    puts(api)
+def _fmt_percentage(p):
+    fmt_percentage = '%0.2f' % p
+    if math.isclose(p, 1):
+        fmt_percentage = colored.green(fmt_percentage)
+    else:
+        fmt_percentage = colored.red(fmt_percentage)
+    return fmt_percentage
+
+
+def _display(api, total_percentage, comp):
+    puts('%s: %s' % (api, _fmt_percentage(total_percentage)))
     with indent(4):
         for obj, percentage in comp.items():
-            puts('%s: %0.2f' % (obj, percentage))
+            puts('%s: %s' % (obj, _fmt_percentage(percentage)))
 
 
-@task(name='status')
-def tool_status(ctx):
+@task(name='vultr')
+def status_vultr(ctx):
     """
     Temporal subcommand to track of how much is left for a full featured vultr
     """
-    spec = _group_api_calls(vultr_api.splitlines())
-    impl = _group_api_calls(vultr_collection.task_names.keys())
+    spec_lines = vultr_api.splitlines()
+    spec = _group_api_calls(spec_lines)
+    impl_lines = vultr_collection.task_names.keys()
+    impl = _group_api_calls(impl_lines)
     comp = _compare_apis(spec, impl)
-    _display('vultr', comp)
+    _display('vultr', len(impl_lines)/len(spec_lines), comp)
 
 
 collection = Collection()
-collection.add_task(tool_status)
+collection.add_task(status_vultr)
