@@ -31,43 +31,24 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-from vps.version import __version__
+from invoke import task, Collection
+from vultr import Vultr
+from .key import require_key
+from .query import query
 
 
-long_description = """
-Tools to manage your VPS (Virtual Private Server)
-"""
+@task(name='list',
+      help={
+          'criteria': 'Filter queried data. Example usage: ' +
+          '"{\'status\': \'complete\'}"'
+      })
+@require_key
+def snapshot_list(ctx, criteria=''):
+    """
+    List all snapshots on the current account
+    """
+    query(lambda x: Vultr(x).snapshot.list(), criteria)
 
-setup(
-    name="vps-tools",
-    version=__version__,
-    author="Germán Fuentes Capella",
-    author_email="development@fuentescapella.com",
-    description="VPS Tools",
-    license="BSD",
-    keywords="vps vultr cli",
-    url="https://github.com/germfue/vps-tools.git",
-    install_requires=[
-        'invoke',
-        'vultr',
-        'clint',
-        'ruamel.yaml',
-    ],
-    # tests_require=('pylint', ),
-    packages=('vps', 'vps.vultr'),
-    test_suite='tests',
-    long_description=long_description,
-    entry_points={
-        'console_scripts': [
-            'vultr = vps.program:vultr.run',
-            'vps-status = vps.program:status.run',
-        ],
-    },
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Topic :: System :: Systems Administration",
-        "License :: OSI Approved :: BSD License",
-        "Environment :: Console",
-    ],
-)
+
+snapshot_coll = Collection()
+snapshot_coll.add_task(snapshot_list)

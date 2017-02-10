@@ -31,7 +31,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
 from .query import query
@@ -40,16 +39,15 @@ from .query import query
 @task(name='list',
       help={
           'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'continent\': \'Europe\'}"'
+          '"{\'name\': \'WordPress\'}"'
       })
-def regions_list(ctx, criteria=''):
+def app_list(ctx, criteria=''):
     """
-    Retrieve a list of all active regions
-    Note that just because a region is listed here, does not mean that there is
-    room for new servers
+    Retrieve a list of available applications
+    These refer to applications that can be launched when creating a Vultr VPS
     """
-    query(lambda x: Vultr(x).regions.list(), criteria)
+    query(lambda x: Vultr(x).app.list(), criteria)
 
 
-regions_coll = Collection()
-regions_coll.add_task(regions_list)
+app_coll = Collection()
+app_coll.add_task(app_list)

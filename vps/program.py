@@ -31,23 +31,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
-from invoke import task, Collection
-from vultr import Vultr
-from .query import query
+from invoke import Program
+from .version import __version__
+from .vultr.tasks import collection as vultr_coll
+from .status import collection as status_coll
 
+vultr = Program(binary='vultr',
+                name='vultr',
+                namespace=vultr_coll,
+                version=__version__,
+                )
 
-@task(name='list',
-      help={
-          'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'family\': \'ubuntu\'}"'
-      })
-def os_list(ctx, criteria=''):
-    """
-    Retrieve a list of available operating systems
-    """
-    query(lambda x: Vultr(x).os.list(), criteria)
-
-
-os_coll = Collection()
-os_coll.add_task(os_list)
+status = Program(binary='vps-status',
+                 name='vps-status',
+                 namespace=status_coll,
+                 version=__version__,
+                 )

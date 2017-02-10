@@ -31,24 +31,24 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
+from .key import require_key
 from .query import query
 
 
 @task(name='list',
       help={
           'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'name\': \'WordPress\'}"'
+          '"{\'name\': \'default\'}"'
       })
-def app_list(ctx, criteria=''):
+@require_key
+def sshkey_list(ctx, criteria=''):
     """
-    Retrieve a list of available applications
-    These refer to applications that can be launched when creating a Vultr VPS
+    List all the SSH keys on the current account
     """
-    query(lambda x: Vultr(x).app.list(), criteria)
+    query(lambda x: Vultr(x).sshkey.list(), criteria)
 
 
-app_coll = Collection()
-app_coll.add_task(app_list)
+sshkey_coll = Collection()
+sshkey_coll.add_task(sshkey_list)

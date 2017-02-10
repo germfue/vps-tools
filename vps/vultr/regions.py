@@ -31,25 +31,24 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
-from .key import require_key
 from .query import query
 
 
 @task(name='list',
       help={
           'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'name\': \'default\'}"'
+          '"{\'continent\': \'Europe\'}"'
       })
-@require_key
-def sshkey_list(ctx, criteria=''):
+def regions_list(ctx, criteria=''):
     """
-    List all the SSH keys on the current account
+    Retrieve a list of all active regions
+    Note that just because a region is listed here, does not mean that there is
+    room for new servers
     """
-    query(lambda x: Vultr(x).sshkey.list(), criteria)
+    query(lambda x: Vultr(x).regions.list(), criteria)
 
 
-sshkey_coll = Collection()
-sshkey_coll.add_task(sshkey_list)
+regions_coll = Collection()
+regions_coll.add_task(regions_list)
