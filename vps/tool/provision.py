@@ -31,22 +31,53 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os.path
+import ruamel.yaml
 from invoke import task, Collection
-from vultr import Vultr
-from .query import query
+from vps.vultr.os import os_list
+from vps.vultr.plans import plans_list
+from vps.vultr.regions import regions_list
+from vps.vultr.server import server_create
+from .config import require_config
 
 
-@task(name='list',
-      help={
-          'criteria': 'Filter queried data. Example usage: '+
-          '"{\'plan_type\': \'SSD\'}"'
-      })
-def plans_list(ctx, criteria=''):
-    """
-    Retrieve a list of all active plans.
-    Plans that are no longer available will not be shown.
-    """
-    return query(lambda x: Vultr(x).plans.list(), criteria)
+_cfg_path = os.path.join('.vps', 'vultr')
 
-plans_coll = Collection()
-plans_coll.add_task(plans_list)
+
+def _get_id(ctx, cfg, label, dyn_label, query):
+    id = cfg.pop(label, None)
+    if not id:
+        criteria = cfg.pop(dyn_label)
+        value = query(ctx, criteria)
+        if len(value) > 1:
+            msg = 'Criteria for %s returned multiple values' % dyn_label
+            raise ValueError(msg)
+        elif len(value) == 0:
+            msg = 'Criteria for %s did not return any value' % dyn_label
+            raise ValueError(msg)
+        # careful, ids coming from vultr API are uppercase
+        id = value[0][label.upper()]
+    else:
+        # just in case, removing from dict alternative config
+        cfg.pop(dyn_label, None)
+    return id
+
+
+@task(name='vultr',
+      help={})
+@require_config(_cfg_path)
+def provision_vultr(ctx):
+    path = os.path.join(os.path.expanduser('~'), _cfg_path)
+    with open(path, 'r') as f:
+        cfg = ruamel.yaml.load(f.read(), ruamel.yaml.RoundTripLoader)
+        for label in cfg:
+            dcid = _get_id(ctx, cfg[label], 'dcid', 'region', regions_list)
+            planid = _get_id(ctx, cfg[label], 'vpsplanid', 'plan', plans_list)
+            osid = _get_id(ctx, cfg[label], 'osid', 'os', os_list)
+            # we need to add the label to the params dict
+            cfg[label]['label'] = label
+            server_create(ctx, dcid, planid, osid, **cfg[label])
+
+
+provision_coll = Collection()
+provision_coll.add_task(provision_vultr)

@@ -33,7 +33,7 @@
 
 from invoke import task, Collection
 from vultr import Vultr
-from .display import display_yaml
+from vps.console import display_yaml
 from .key import api_key, require_key
 from .query import query
 
@@ -57,7 +57,7 @@ def server_list(ctx, criteria=''):
     has completed or not. The "v6_network", "v6_main_ip", and "v6_network_size"
     fields are deprecated in favor of "v6_networks".
     """
-    query(lambda x: Vultr(x).server.list(), criteria)
+    return query(lambda x: Vultr(x).server.list(), criteria)
 
 
 @task(name='create',

@@ -48,7 +48,7 @@ def require_key(f):
 
     def _f(ctx, *args, **kwargs):
         if api_key:
-            f(ctx, *args, **kwargs)
+            return f(ctx, *args, **kwargs)
         else:
             puts("'%s' missing" % colored.red('VULTR_KEY'))
 

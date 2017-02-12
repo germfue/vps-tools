@@ -33,8 +33,9 @@
 
 from invoke import Program
 from .version import __version__
-from .vultr.tasks import collection as vultr_coll
+from .tool.tasks import collection as tool_coll
 from .status import collection as status_coll
+from .vultr.tasks import collection as vultr_coll
 
 vultr = Program(binary='vultr',
                 name='vultr',
@@ -47,3 +48,9 @@ status = Program(binary='vps-status',
                  namespace=status_coll,
                  version=__version__,
                  )
+
+vps = Program(binary='vps',
+              name='vps',
+              namespace=tool_coll,
+              version=__version__,
+              )

@@ -31,9 +31,15 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from glob import glob
 from setuptools import setup
 from vps.version import __version__
 
+
+# find all __init__.py files under vps/*, take folder path and convert it
+# to pckg syntax (vps/vultr -> vps.vultr)
+pcks_init = glob('vps/**/__init__.py', recursive=True)
+pckgs = [p.rsplit('/', 1)[0].replace('/', '.') for p in pcks_init]
 
 long_description = """
 Tools to manage your VPS (Virtual Private Server)
@@ -55,13 +61,14 @@ setup(
         'ruamel.yaml',
     ],
     # tests_require=('pylint', ),
-    packages=('vps', 'vps.vultr'),
+    packages=pckgs,
     test_suite='tests',
     long_description=long_description,
     entry_points={
         'console_scripts': [
-            'vultr = vps.program:vultr.run',
+            'vps = vps.program:vps.run',
             'vps-status = vps.program:status.run',
+            'vultr = vps.program:vultr.run',
         ],
     },
     classifiers=[

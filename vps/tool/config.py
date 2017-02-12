@@ -31,22 +31,30 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from invoke import task, Collection
-from vultr import Vultr
-from .query import query
+import inspect
+import os.path
+from clint.textui import puts, colored
 
 
-@task(name='list',
-      help={
-          'criteria': 'Filter queried data. Example usage: '+
-          '"{\'plan_type\': \'SSD\'}"'
-      })
-def plans_list(ctx, criteria=''):
+class require_config(object):
     """
-    Retrieve a list of all active plans.
-    Plans that are no longer available will not be shown.
+    Decorator that checks if configuration file is present before running a task
     """
-    return query(lambda x: Vultr(x).plans.list(), criteria)
 
-plans_coll = Collection()
-plans_coll.add_task(plans_list)
+    def __init__(self, path):
+        if os.path.isabs(path):
+            self.__path = path
+        else:
+            home = os.path.expanduser('~')
+            self.__path = os.path.join(home, path)
+
+    def __call__(self, f):
+        def _f(ctx, *args, **kwargs):
+            if os.path.exists(self.__path):
+                return f(ctx, *args, **kwargs)
+            else:
+                puts("'%s' missing" % colored.red(self.__path))
+
+        _f.__doc__ = inspect.getdoc(f)
+        _f.__signature__ = inspect.signature(f)
+        return _f

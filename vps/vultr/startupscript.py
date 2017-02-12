@@ -34,7 +34,7 @@
 from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
-from .display import display_yaml
+from vps.console import display_yaml
 from .key import api_key, require_key
 from .query import query
 

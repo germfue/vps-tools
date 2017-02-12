@@ -32,7 +32,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from ast import literal_eval
-from .display import display
+from vps.console import display
 from .key import api_key
 
 
@@ -44,7 +44,8 @@ def query(q, criteria):
     if result:
         result = result.values()
         if criteria:
-            criteria = literal_eval(criteria)
+            if isinstance(criteria, str):
+                criteria = literal_eval(criteria)
 
             def _filter(a_dict):
                 for k, v in criteria.items():
@@ -55,3 +56,4 @@ def query(q, criteria):
             result = list(filter(_filter, result))
         if result:
             display(result)
+    return result

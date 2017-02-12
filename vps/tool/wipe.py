@@ -32,21 +32,19 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from invoke import task, Collection
-from vultr import Vultr
-from .query import query
+from vps.console import display_yaml
+from vps.vultr.server import server_list, server_destroy
 
 
-@task(name='list',
-      help={
-          'criteria': 'Filter queried data. Example usage: '+
-          '"{\'plan_type\': \'SSD\'}"'
-      })
-def plans_list(ctx, criteria=''):
-    """
-    Retrieve a list of all active plans.
-    Plans that are no longer available will not be shown.
-    """
-    return query(lambda x: Vultr(x).plans.list(), criteria)
+@task(name='vultr',
+      help={})
+def wipe_vultr(ctx):
+    wiped_servers = {}
+    for server in server_list(ctx):
+        subid = server['SUBID']
+        server_destroy(ctx, subid)
+        wiped_servers[server['label']] = subid
+    display_yaml({'Wiped servers': wiped_servers})
 
-plans_coll = Collection()
-plans_coll.add_task(plans_list)
+wipe_coll = Collection()
+wipe_coll.add_task(wipe_vultr)
