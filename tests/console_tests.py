@@ -32,7 +32,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
-from vps.vultr.display import get_headers, column_size
+from vps.console import get_headers, column_size
 
 
 class TestDisplay(unittest.TestCase):

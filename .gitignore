@@ -94,3 +94,4 @@ bin
 include
 pip-selfcheck.json
 lib64
+cases_new.yaml

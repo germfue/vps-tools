@@ -1,0 +1,793 @@
+!!omap
+- /v1/account/info: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/account/info\n"
+  - RESPONSE: "{\n\"balance\": \"-5519.11\",\n\"pending_charges\": \"57.03\",\n\"\
+      last_payment_date\": \"2014-07-18 15:31:01\",\n\"last_payment_amount\": \"-1.00\"\
+      \n}"
+  - PARAMETERS: ''
+- /v1/app/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/app/list\n"
+  - RESPONSE: "{\n\"1\": {\n\"APPID\": \"1\",\n\"name\": \"LEMP\",\n\"short_name\"\
+      : \"lemp\",\n\"deploy_name\": \"LEMP on CentOS 6 x64\",\n\"surcharge\": 0.00\n\
+      },\n\"2\": {\n\"APPID\": \"2\",\n\"name\": \"WordPress\",\n\"short_name\": \"\
+      wordpress\",\n\"deploy_name\": \"WordPress on CentOS 6 x64\",\n\"surcharge\"\
+      : 0.00\n}\n}"
+  - PARAMETERS: ''
+- /v1/auth/info: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/auth/info\n"
+  - RESPONSE: "{\n\"acls\": [\n\"subscriptions\",\n\"billing\",\n\"support\",\n\"\
+      provisioning\"\n],\n\"email\": \"example@vultr.com\",\n\"name\": \"Example Account\"\
+      \n}"
+  - PARAMETERS: ''
+- /v1/backup/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/backup/list\n"
+  - RESPONSE: "{\n\"543d34149403a\": {\n\"BACKUPID\": \"543d34149403a\",\n\"date_created\"\
+      : \"2014-10-14 12:40:40\",\n\"description\": \"Automatic server backup\",\n\"\
+      size\": \"42949672960\",\n\"status\": \"complete\"\n},\n\"543d340f6dbce\": {\n\
+      \"BACKUPID\": \"543d340f6dbce\",\n\"date_created\": \"2014-10-13 16:11:46\"\
+      ,\n\"description\": \"\",\n\"size\": \"10000000\",\n\"status\": \"complete\"\
+      \n}\n}\n"
+  - PARAMETERS: "SUBID integer (optional) Unique identifier of a subscription. Only\
+      \ backups for this subscription object will be returned.\n"
+- /v1/block/attach: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/attach --data\
+      \ 'SUBID=1313217' --data 'attach_to_SUBID=1313207'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer ID of the block storage subscription to attach\nattach_to_SUBID\
+      \ integer ID of the VPS subscription to mount the block storage subscription\
+      \ to\n"
+- /v1/block/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/create --data\
+      \ 'DCID=1' --data 'size_gb=50' --data 'label=test'\n"
+  - RESPONSE: "{\n\"USERID\": \"564a1a88947b4\",\n\"api_key\":\"AAAAAAAA\"\n}\n"
+  - PARAMETERS: "DCID integer DCID of the location to create this subscription in.\
+      \  See /v1/regions/list\nsize_gb integer Size (in GB) of this subscription.\n\
+      label string (optional) Text label that will be associated with the subscription\n"
+- /v1/block/delete: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/delete --data\
+      \ 'SUBID=1313217'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer ID of the block storage subscription to delete\n"
+- /v1/block/detach: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/detach --data\
+      \ 'SUBID=1313217'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer ID of the block storage subscription to detach\n"
+- /v1/block/label_set: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/label_set\
+      \ --data 'SUBID=1313217' --data 'label=example'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer ID of the block storage subscription.\nlabel string\
+      \ Text label that will be shown in the control panel.\n"
+- /v1/block/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/list\n"
+  - RESPONSE: "[\n{\n\"SUBID\": 1313216,\n\"date_created\": \"2016-03-29 10:10:04\"\
+      ,\n\"cost_per_month\": 10.00,\n\"status\": \"pending\",\n\"size_gb\": 100,\n\
+      \"DCID\": 1,\n\"attached_to_SUBID\": null,\n\"label\": \"files1\"\n},\n{\n\"\
+      SUBID\": 1313217,\n\"date_created\": \"2016-31-29 10:10:48\",\n\"cost_per_month\"\
+      : 5.00,\n\"status\": \"active\",\n\"size_gb\": 50,\n\"DCID\": 1,\n\"attached_to_SUBID\"\
+      : 1313207,\n\"label\": \"files2\"\n}\n]\n"
+  - PARAMETERS: "SUBID integer (optional) Unique identifier of a subscription. Only\
+      \ the subscription object will be returned.\n"
+- /v1/block/resize: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/resize --data\
+      \ 'SUBID=1313217' --data 'size_gb=75'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer ID of the block storage subscription to resize\nsize_gb\
+      \ integer New size (in GB) of the block storage subscription\n"
+- /v1/dns/create_domain: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/create_domain\
+      \ --data 'domain=example.com' --data 'serverip=127.0.0.1'\n"
+  - RESPONSE: "\n"
+  - PARAMETERS: "domain string Domain name to create\nserverip string Server IP to\
+      \ use when creating default records (A and MX)\n"
+- /v1/dns/create_record: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/create_record\
+      \ --data 'domain=example.com' --data 'name=vultr' --data 'type=A' --data 'data=192.0.2.1'\n"
+  - RESPONSE: "\n"
+  - PARAMETERS: "domain string Domain name to add record to\nname string Name (subdomain)\
+      \ of record\ntype string Type (A, AAAA, MX, etc) of record\ndata string Data\
+      \ for this record\nttl integer (optional) TTL of this record\npriority integer\
+      \ (only required for MX and SRV) Priority of this record (omit the priority\
+      \ from the data)\n"
+- /v1/dns/delete_domain: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/delete_domain\
+      \ --data 'domain=example.com'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "domain string Domain name to delete\n"
+- /v1/dns/delete_record: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/delete_record\
+      \ --data 'domain=example.com' --data 'RECORDID=1265277'\n"
+  - RESPONSE: "\n"
+  - PARAMETERS: "domain string Domain name to delete record from\nRECORDID integer\
+      \ ID of record to delete (see /dns/records)\n"
+- /v1/dns/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/list\n"
+  - RESPONSE: "[\n{\n\"domain\": \"example.com\",\n\"date_created\": \"2014-12-11\
+      \ 16:20:59\"\n}\n]"
+  - PARAMETERS: ''
+- /v1/dns/records: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/records?domain=example.com\n"
+  - RESPONSE: "[\n{\n\"type\": \"A\",\n\"name\": \"\",\n\"data\": \"127.0.0.1\",\n\
+      \"priority\": 0,\n\"RECORDID\": 1265276,\n\"ttl\": 300\n},\n{\n\"type\": \"\
+      CNAME\",\n\"name\": \"*\",\n\"data\": \"example.com\",\n\"priority\": 0,\n\"\
+      RECORDID\": 1265277,\n\"ttl\": 300\n}\n]\n"
+  - PARAMETERS: "domain string Domain to list records for\n"
+- /v1/dns/update_record: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/update_record\
+      \ --data 'domain=example.com' --data 'name=vultr' --data 'type=A' --data 'data=127.0.0.1'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "domain string Domain name to delete record from\nRECORDID integer\
+      \ ID of record to delete (see /dns/records)\nname string (optional) Name (subdomain)\
+      \ of record\ndata string (optional) Data for this record\nttl integer (optional)\
+      \ TTL of this record\npriority integer (optional) (only required for MX and\
+      \ SRV) Priority of this record (omit the priority from the data)\n"
+- /v1/iso/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/iso/list\n"
+  - RESPONSE: "{\n\"24\": {\n\"ISOID\": 24,\n\"date_created\": \"2014-04-01 14:10:09\"\
+      ,\n\"filename\": \"CentOS-6.5-x86_64-minimal.iso\",\n\"size\": 9342976,\n\"\
+      md5sum\": \"ec0669895a250f803e1709d0402fc411\"\n}\n}"
+  - PARAMETERS: ''
+- /v1/os/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/os/list\n"
+  - RESPONSE: "{\n\"127\": {\n\"OSID\": \"127\",\n\"name\": \"CentOS 6 x64\",\n\"\
+      arch\": \"x64\",\n\"family\": \"centos\",\n\"windows\": false\n},\n\"148\":\
+      \ {\n\"OSID\": \"148\",\n\"name\": \"Ubuntu 12.04 i386\",\n\"arch\": \"i386\"\
+      ,\n\"family\": \"ubuntu\",\n\"windows\": false\n}\n}"
+  - PARAMETERS: ''
+- /v1/plans/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/plans/list?type=vc2\n"
+  - RESPONSE: "{\n\"1\": {\n\"VPSPLANID\": \"1\",\n\"name\": \"Starter\",\n\"vcpu_count\"\
+      : \"1\",\n\"ram\": \"512\",\n\"disk\": \"20\",\n\"bandwidth\": \"1\",\n\"price_per_month\"\
+      : \"5.00\",\n\"windows\": false,\n\"plan_type\": \"SSD\",\n\"available_locations\"\
+      : [\n1,\n2,\n3\n]\n},\n\"2\": {\n\"VPSPLANID\": \"2\",\n\"name\": \"Basic\"\
+      ,\n\"vcpu_count\": \"1\",\n\"ram\": \"1024\",\n\"disk\": \"30\",\n\"bandwidth\"\
+      : \"2\",\n\"price_per_month\": \"8.00\",\n\"windows\": false,\n\"plan_type\"\
+      : \"SATA\",\n\"available_locations\": [ ],\n\"deprecated\": true\n}\n}\n"
+  - PARAMETERS: "type string (optional) The type of plans to return. Possible values:\
+      \ \"all\", \"vc2\", \"ssd\", \"vdc2\", \"dedicated\".\n"
+- /v1/plans/list_vc2: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/plans/list_vc2\n"
+  - RESPONSE: "{\n\"1\": {\n\"VPSPLANID\": \"1\",\n\"name\": \"Starter\",\n\"vcpu_count\"\
+      : \"1\",\n\"ram\": \"512\",\n\"disk\": \"20\",\n\"bandwidth\": \"1\",\n\"price_per_month\"\
+      : \"5.00\",\n\"plan_type\": \"SSD\"\n}\n}"
+  - PARAMETERS: ''
+- /v1/plans/list_vdc2: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/plans/list_vdc2\n"
+  - RESPONSE: "{\n\"115\": {\n\"VPSPLANID\": \"115\",\n\"name\": \"8192 MB RAM,110\
+      \ GB SSD,10.00 TB BW\",\n\"vcpu_count\": \"2\",\n\"ram\": \"8192\",\n\"disk\"\
+      : \"110\",\n\"bandwidth\": \"10.00\",\n\"price_per_month\": \"60.00\",\n\"plan_type\"\
+      : \"DEDICATED\"\n}\n}"
+  - PARAMETERS: ''
+- /v1/regions/availability: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/regions/availability?DCID=1\n"
+  - RESPONSE: "[40,11,45,29,41,61]\n"
+  - PARAMETERS: "DCID integer Location to check availability of\n"
+- /v1/regions/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl https://api.vultr.com/v1/regions/list\n"
+  - RESPONSE: "{\n\"1\": {\n\"DCID\": \"1\",\n\"name\": \"New Jersey\",\n\"country\"\
+      : \"US\",\n\"continent\": \"North America\",\n\"state\": \"NJ\",\n\"ddos_protection\"\
+      : true,\n\"block_storage\": true,\n\"regioncode\": \"EWR\"\n},\n\"2\": {\n\"\
+      DCID\": \"2\",\n\"name\": \"Chicago\",\n\"country\": \"US\",\n\"continent\"\
+      : \"North America\",\n\"state\": \"IL\",\n\"ddos_protection\": false,\n\"block_storage\"\
+      : false,\n\"regioncode\": \"ORD\"\n}\n}"
+  - PARAMETERS: ''
+- /v1/reservedip/attach: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/attach\
+      \ --data 'ip_address=2001:db8:8000::/64' --data 'attach_SUBID=5342543'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "ip_address string Reserved IP to attach to your account (use the\
+      \ full subnet here)\nattach_SUBID integer Unique indentifier of the server to\
+      \ attach the reserved IP to\n"
+- /v1/reservedip/convert: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/convert\
+      \ --data 'SUBID=5342543' --data 'ip_address=2001:db8:8000:/64'\n"
+  - RESPONSE: "{\n\"SUBID\": 365352\n}\n"
+  - PARAMETERS: "SUBID integer SUBID of the server that currently has the IP address\
+      \ you want to convert\nip_address string IP address you want to convert (v4\
+      \ must be a /32, v6 must be a /64)\nlabel string (optional) Label for this reserved\
+      \ IP\n"
+- /v1/reservedip/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/create\
+      \ --data 'DCID=1' --data 'ip_type=v4'\n"
+  - RESPONSE: "{\n\"SUBID\": 1312965\n}\n"
+  - PARAMETERS: "DCID integer Location to create this reserved IP in.  See v1/regions/list\n\
+      ip_type string 'v4' or 'v6' Type of reserved IP to create\nlabel string (optional)\
+      \ Label for this reserved IP\n"
+- /v1/reservedip/destroy: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/destroy\
+      \ --data 'SUBID=12345'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "ip_address string Reserved IP to remove from your account.\n"
+- /v1/reservedip/detach: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/detach\
+      \ --data 'ip_address=2001:db8:8000::/64' --data 'detach_SUBID=5342543'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "ip_address string Reserved IP to attach to your account (use the\
+      \ full subnet here)\ndetach_SUBID integer Unique identifier of the server to\
+      \ detach the reserved IP from\n"
+- /v1/reservedip/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/list\n"
+  - RESPONSE: "{\n\"1313044\": {\n\"SUBID\": 1313044,\n\"DCID\": 1,\n\"ip_type\":\
+      \ \"v4\",\n\"subnet\": \"10.234.22.53\",\n\"subnet_size\": 32,\n\"label\": \"\
+      my first reserved ip\",\n\"attached_SUBID\": 123456\n},\n\"1313045\": {\n\"\
+      SUBID\": 1313045,\n\"DCID\": 1,\n\"ip_type\": \"v6\",\n\"subnet\": \"2001:db8:9999::\"\
+      ,\n\"subnet_size\": 64,\n\"label\": \"\",\n\"attached_SUBID\": false\n}\n}"
+  - PARAMETERS: ''
+- /v1/server/app_change: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/app_change\
+      \ --data 'SUBID=596965' --data 'APPID=2'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nAPPID integer Application to use.\
+      \ See /v1/server/app_change_list.\n"
+- /v1/server/app_change_list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/app_change_list?SUBID=576965\n"
+  - RESPONSE: "{\n\"1\": {\n\"APPID\": \"1\",\n\"name\": \"LEMP\",\n\"short_name\"\
+      : \"lemp\",\n\"deploy_name\": \"LEMP on CentOS 6 x64\",\n\"surcharge\": 0.00\n\
+      },\n\"2\": {\n\"APPID\": \"2\",\n\"name\": \"WordPress\",\n\"short_name\": \"\
+      wordpress\",\n\"deploy_name\": \"WordPress on CentOS 6 x64\",\n\"surcharge\"\
+      : 0.00\n}\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/backup_disable: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_disable\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/backup_enable: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_enable\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/backup_get_schedule: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_get_schedule\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: "{\n\"enabled\": true,\n\"cron_type\": \"weekly\",\n\"next_scheduled_time_utc\"\
+      : \"2016-05-07 08:00:00\",\n\"hour\": 8,\n\"dow\": 6,\n\"dom\": 0\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/backup_set_schedule: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_set_schedule\
+      \ --data 'SUBID=576965' --data 'cron_type=weekly' --data 'hour=8' --data 'dow=6'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\ncron_type string Backup cron type.\
+      \ Can be one of 'daily', 'weekly', or 'monthly'.\nhour integer (optional) Hour\
+      \ value (0-23). Applicable to crons: 'daily', 'weekly', 'monthly'.\ndow integer\
+      \ (optional) Day-of-week value (0-6). Applicable to crons: 'weekly'.\ndom integer\
+      \ (optional) Day-of-month value (1-28). Applicable to crons: 'monthly'.\n"
+- /v1/server/bandwidth: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/bandwidth?SUBID=576965\n"
+  - RESPONSE: "{\n\"incoming_bytes\": [\n[ \"2014-06-10\", \"81072581\" ],\n[ \"2014-06-11\"\
+      , \"222387466\" ],\n[ \"2014-06-12\", \"216885232\" ],\n[ \"2014-06-13\", \"\
+      117262318\" ]\n],\n\"outgoing_bytes\": [\n[ \"2014-06-10\", \"4059610\" ],\n\
+      [ \"2014-06-11\", \"13432380\" ],\n[ \"2014-06-12\", \"2455005\" ],\n[ \"2014-06-13\"\
+      , \"1106963\" ]\n]\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/create --data\
+      \ 'DCID=1' --data 'VPSPLANID=1' --data 'OSID=127'\n"
+  - RESPONSE: "{\n\"SUBID\": \"1312965\"\n}\n"
+  - PARAMETERS: "DCID integer Location to create this virtual machine in.  See v1/regions/list\n\
+      VPSPLANID integer Plan to use when creating this virtual machine.  See v1/plans/list\n\
+      OSID integer Operating system to use.  See v1/os/list\nipxe_chain_url string\
+      \ (optional) If you've selected the 'custom' operating system, this can be set\
+      \ to chainload the specified URL on bootup, via iPXE\nISOID string (optional)\
+      \  If you've selected the 'custom' operating system, this is the ID of a specific\
+      \ ISO to mount during the deployment\nSCRIPTID integer (optional) If you've\
+      \ not selected a 'custom' operating system, this can be the SCRIPTID of a startup\
+      \ script to execute on boot.  See v1/startupscript/list\nSNAPSHOTID string (optional)\
+      \ If you've selected the 'snapshot' operating system, this should be the SNAPSHOTID\
+      \ (see v1/snapshot/list) to restore for the initial installation\nenable_ipv6\
+      \ string (optional) 'yes' or 'no'.  If yes, an IPv6 subnet will be assigned\
+      \ to the machine (where available)\nenable_private_network string (optional)\
+      \ 'yes' or 'no'. If yes, private networking support will be added to the new\
+      \ server.\nlabel string (optional) This is a text label that will be shown in\
+      \ the control panel\nSSHKEYID string (optional) List of SSH keys to apply to\
+      \ this server on install (only valid for Linux/FreeBSD).  See v1/sshkey/list.\
+      \  Seperate keys with commas\nauto_backups string (optional) 'yes' or 'no'.\
+      \  If yes, automatic backups will be enabled for this server (these have an\
+      \ extra charge associated with them)\nAPPID integer (optional) If launching\
+      \ an application (OSID 186), this is the APPID to launch. See v1/app/list.\n\
+      userdata string (optional) Base64 encoded cloud-init user-data\nnotify_activate\
+      \ string (optional, default 'yes') 'yes' or 'no'. If yes, an activation email\
+      \ will be sent when the server is ready.\nddos_protection (optional, default\
+      \ 'no') 'yes' or 'no'.  If yes, DDOS protection will be enabled on the subscription\
+      \ (there is an additional charge for this)\nreserved_ip_v4 string (optional)\
+      \ IP address of the floating IP to use as the main IP of this server\nhostname\
+      \ string (optional) The hostname to assign to this server.\ntag string (optional)\
+      \ The tag to assign to this server.\n"
+- /v1/server/create_ipv4: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/create_ipv4\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nreboot string (optional, default\
+      \ 'yes') 'yes' or 'no'. If yes, the server is rebooted immediately.\n"
+- /v1/server/destroy: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/destroy --data\
+      \ 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/destroy_ipv4: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/destroy_ipv4\
+      \ --data 'SUBID=576965' --data 'ip=192.0.2.1'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nip string IPv4 address to remove.\n"
+- /v1/server/get_app_info: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/get_app_info?SUBID=12345\n"
+  - RESPONSE: "{\n\"app_info\": \"\"\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/get_user_data: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/get_user_data?SUBID=12345\n"
+  - RESPONSE: "{\n\"userdata\": \"ZWNobyBIZWxsbyBXb3JsZA==\"\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/halt: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/halt --data\
+      \ 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/iso_attach: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_attach\
+      \ --data 'SUBID=576965' --data 'ISOID=24'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the /v1/server/list call.\nISOID integer The ISO that will\
+      \ be mounted. See the /v1/iso/list call.\n"
+- /v1/server/iso_detach: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_detach\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the /v1/server/list call.\n"
+- /v1/server/iso_status: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_status\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: "{\n\"state\": \"ready\",\n\"ISOID\": \"0\"\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the /v1/server/list call.\n"
+- /v1/server/label_set: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/label_set\
+      \ --data 'SUBID=576965' --data 'label=example'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nlabel string This is a text label\
+      \ that will be shown in the control panel.\n"
+- /v1/server/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/list\n"
+  - RESPONSE: "{\n\"576965\": {\n\"SUBID\": \"576965\",\n\"os\": \"CentOS 6 x64\"\
+      ,\n\"ram\": \"4096 MB\",\n\"disk\": \"Virtual 60 GB\",\n\"main_ip\": \"123.123.123.123\"\
+      ,\n\"vcpu_count\": \"2\",\n\"location\": \"New Jersey\",\n\"DCID\": \"1\",\n\
+      \"default_password\": \"nreqnusibni\",\n\"date_created\": \"2013-12-19 14:45:41\"\
+      ,\n\"pending_charges\": \"46.67\",\n\"status\": \"active\",\n\"cost_per_month\"\
+      : \"10.05\",\n\"current_bandwidth_gb\": 131.512,\n\"allowed_bandwidth_gb\":\
+      \ \"1000\",\n\"netmask_v4\": \"255.255.255.248\",\n\"gateway_v4\": \"123.123.123.1\"\
+      ,\n\"power_status\": \"running\",\n\"server_state\": \"ok\",\n\"VPSPLANID\"\
+      : \"28\",\n\"v6_network\": \"2001:DB8:1000::\",\n\"v6_main_ip\": \"2001:DB8:1000::100\"\
+      ,\n\"v6_network_size\": \"64\",\n\"v6_networks\": [{\n\"v6_network\": \"2001:DB8:1000::\"\
+      ,\n\"v6_main_ip\": \"2001:DB8:1000::100\",\n\"v6_network_size\": \"64\"\n}],\n\
+      \"label\": \"my new server\",\n\"internal_ip\": \"10.99.0.10\",\n\"kvm_url\"\
+      : \"https:\\/\\/my.vultr.com\\/subs\\/novnc\\/api.php?data=eawxFVZw2mXnhGUV\"\
+      ,\n\"auto_backups\": \"yes\",\n\"tag\": \"mytag\",\n\"OSID\": \"127\",\n\"APPID\"\
+      : \"0\"\n}\n}\n"
+  - PARAMETERS: "SUBID integer (optional) Unique identifier of a subscription. Only\
+      \ the subscription object will be returned.\ntag string (optional) A tag string.\
+      \ Only subscription objects with this tag will be returned.\nlabel string (optional)\
+      \ A text label string. Only subscription objects with this text label will be\
+      \ returned.\nmain_ip string (optional) An IPv4 address. Only the subscription\
+      \ matching this IPv4 address will be returned.\n"
+- /v1/server/list_ipv4: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/list_ipv4?SUBID=576965\n"
+  - RESPONSE: "{\n\"576965\": [\n{\n\"ip\": \"123.123.123.123\",\n\"netmask\": \"\
+      255.255.255.248\",\n\"gateway\": \"123.123.123.1\",\n\"type\": \"main_ip\",\n\
+      \"reverse\": \"host1.example.com\"\n},\n{\n\"ip\": \"123.123.123.124\",\n\"\
+      netmask\": \"255.255.255.248\",\n\"gateway\": \"123.123.123.1\",\n\"type\":\
+      \ \"secondary_ip\",\n\"reverse\": \"host2.example.com\"\n},\n{\n\"ip\": \"10.99.0.10\"\
+      ,\n\"netmask\": \"255.255.0.0\",\n\"gateway\": \"\",\n\"type\": \"private\"\
+      ,\n\"reverse\": \"\"\n}\n]\n}"
+  - PARAMETERS: ''
+- /v1/server/list_ipv6: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/list_ipv6?SUBID=576965\n"
+  - RESPONSE: "{\n\"576965\": [\n{\n\"ip\": \"2001:DB8:1000::100\",\n\"network\":\
+      \ \"2001:DB8:1000::\",\n\"network_size\": \"64\",\n\"type\": \"main_ip\"\n}\n\
+      ]\n}"
+  - PARAMETERS: ''
+- /v1/server/neighbors: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/neighbors?SUBID=12345\n"
+  - RESPONSE: "[\n23456\n]\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/os_change: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/os_change\
+      \ --data 'SUBID=576965' --data 'OSID=127'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nOSID integer Operating system to\
+      \ use. See /v1/server/os_change_list.\n"
+- /v1/server/os_change_list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/os_change_list?SUBID=576965\n"
+  - RESPONSE: "{\n\"127\": {\n\"OSID\": \"127\",\n\"name\": \"CentOS 6 x64\",\n\"\
+      arch\": \"x64\",\n\"family\": \"centos\",\n\"windows\": false,\n\"surcharge\"\
+      : \"0.00\"\n},\n\"148\": {\n\"OSID\": \"148\",\n\"name\": \"Ubuntu 12.04 i386\"\
+      ,\n\"arch\": \"i386\",\n\"family\": \"ubuntu\",\n\"windows\": false,\n\"surcharge\"\
+      : \"0.00\"\n}\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/reboot: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reboot --data\
+      \ 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/reinstall: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reinstall\
+      \ --data 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\nhostname string (optional) The hostname\
+      \ to assign to this server.\n"
+- /v1/server/restore_backup: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/restore_backup\
+      \ --data 'SUBID=576965' --data 'BACKUPID=543d34149403a'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\nBACKUPID string BACKUPID (see v1/backup/list)\
+      \ to restore to this instance\n"
+- /v1/server/restore_snapshot: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/restore_snapshot\
+      \ --data 'SUBID=576965' --data 'SNAPSHOTID=5359435d28b9a'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\nSNAPSHOTID string SNAPSHOTID (see\
+      \ v1/snapshot/list) to restore to this instance\n"
+- /v1/server/reverse_default_ipv4: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_default_ipv4\
+      \ --data 'SUBID=576965' --data 'ip=192.0.2.1'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nip string IPv4 address used in the\
+      \ reverse DNS update. These can be found with the v1/server/list_ipv4 call.\n"
+- /v1/server/reverse_delete_ipv6: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_delete_ipv6\
+      \ --data 'SUBID=576965' --data 'ip=2001:db8:1234::'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nip string IPv6 address used in the\
+      \ reverse DNS update. These can be found with the v1/server/reverse_list_ipv6\
+      \ call.\n"
+- /v1/server/reverse_list_ipv6: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_list_ipv6?SUBID=576965\n"
+  - RESPONSE: "{\n\"576965\": [\n{\n\"ip\": \"2001:DB8:1000::101\",\n\"reverse\":\
+      \ \"host1.example.com\"\n},\n{\n\"ip\": \"2001:DB8:1000::102\",\n\"reverse\"\
+      : \"host2.example.com\"\n}\n]\n}\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/reverse_set_ipv4: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_set_ipv4\
+      \ --data 'SUBID=576965' --data 'ip=192.0.2.1' --data 'entry=example.vultr.com'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nip string IPv4 address used in the\
+      \ reverse DNS update. These can be found with the v1/server/list_ipv4 call.\n\
+      entry string reverse DNS entry.\n"
+- /v1/server/reverse_set_ipv6: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_set_ipv6\
+      \ --data 'SUBID=576965' --data 'ip=2001:db8:1234::' --data 'entry=example.vultr.com'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nip string IPv6 address used in the\
+      \ reverse DNS update. These can be found with the v1/server/list_ipv6 or v1/server/reverse_list_ipv6\
+      \ calls.\nentry string reverse DNS entry.\n"
+- /v1/server/set_user_data: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/set_user_data\
+      \ --data 'SUBID=12345' --data 'userdata=ZWNobyBIZWxsbyBXb3JsZA==''\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nuserdata string Base64 encoded cloud-init\
+      \ user-data\n"
+- /v1/server/start: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/start --data\
+      \ 'SUBID=576965'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription.  These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/server/upgrade_plan: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/upgrade_plan\
+      \ --data 'SUBID=576965' --data 'VPSPLANID=29'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\nVPSPLANID integer The new plan. See\
+      \ /v1/server/upgrade_plan_list.\n"
+- /v1/server/upgrade_plan_list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/upgrade_plan_list?SUBID=576965\n"
+  - RESPONSE: "[29,41,61]\n"
+  - PARAMETERS: "SUBID integer Unique identifier for this subscription. These can\
+      \ be found using the v1/server/list call.\n"
+- /v1/snapshot/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/create\
+      \ --data 'SUBID=1312965'\n"
+  - RESPONSE: "{ \"SNAPSHOTID\": \"544e52f31c706\" }\n"
+  - PARAMETERS: "SUBID integer Identifier of the virtual machine to create a snapshot\
+      \ from.  See v1/server/list\ndescription string (optional) Description of snapshot\
+      \ contents\n"
+- /v1/snapshot/destroy: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/destroy\
+      \ --data 'SNAPSHOTID=5359435d28b9a'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SNAPSHOTID string Unique identifier for this snapshot.  These can\
+      \ be found using the v1/snapshot/list call.\n"
+- /v1/snapshot/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/list\n"
+  - RESPONSE: "{\n\"5359435d28b9a\": {\n\"SNAPSHOTID\": \"5359435d28b9a\",\n\"date_created\"\
+      : \"2014-04-18 12:40:40\",\n\"description\": \"Test snapshot\",\n\"size\": \"\
+      42949672960\",\n\"status\": \"complete\"\n},\n\"5359435dc1df3\": {\n\"SNAPSHOTID\"\
+      : \"5359435dc1df3\",\n\"date_created\": \"2014-04-22 16:11:46\",\n\"description\"\
+      : \"\",\n\"size\": \"10000000\",\n\"status\": \"complete\"\n}\n}"
+  - PARAMETERS: ''
+- /v1/sshkey/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/create --data\
+      \ 'name=test SSH KEY' --data 'ssh_key=ssh-rsa AA... test@example.com'\n"
+  - RESPONSE: "{ \"SSHKEYID\": \"541b4960f23bd\" }\n"
+  - PARAMETERS: "name string Name of the SSH key\nssh_key string SSH public key (in\
+      \ authorized_keys format)\n"
+- /v1/sshkey/destroy: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/destroy --data\
+      \ 'SSHKEYID=541b4960f23bd'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SSHKEYID string Unique identifier for this SSH key.  These can be\
+      \ found using the v1/sshkey/list call.\n"
+- /v1/sshkey/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/list?api_key=EXAMPLE\n"
+  - RESPONSE: "{\n\"541b4960f23bd\": {\n\"SSHKEYID\": \"541b4960f23bd\",\n\"date_created\"\
+      : null,\n\"name\": \"test\",\n\"ssh_key\": \"ssh-rsa AA... test@example.com\"\
+      \n}\n}"
+  - PARAMETERS: ''
+- /v1/sshkey/update: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/update --data\
+      \ 'SSHKEYID=541b4960f23bd' --data 'name=new key name' --data 'ssh_key=ssh-rsa\
+      \ AA... someother@example.com'\n\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SSHKEYID string SSHKEYID of key to update (see /v1/sshkey/list)\n\
+      name string (optional) New name for the SSH key\nssh_key string (optional) New\
+      \ SSH key contents\n"
+- /v1/startupscript/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/create\
+      \ --data 'name=my first script' --data 'script=#!/bin/bash\\necho hello world\
+      \ > /root/hello'\n"
+  - RESPONSE: "{ \"SCRIPTID\": 5 }\n"
+  - PARAMETERS: "name string Name of the newly created startup script\nscript string\
+      \ Startup script contents\ntype string boot|pxe Type of startup script.  Default\
+      \ is 'boot'\n"
+- /v1/startupscript/destroy: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/destroy\
+      \ --data 'SCRIPTID=5'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SCRIPTID string Unique identifier for this startup script.  These\
+      \ can be found using the v1/startupscript/list call.\n"
+- /v1/startupscript/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/list\n"
+  - RESPONSE: "{\n\"3\": {\n\"SCRIPTID\": \"3\",\n\"date_created\": \"2014-05-21 15:27:18\"\
+      ,\n\"date_modified\": \"2014-05-21 15:27:18\",\n\"name\": \"test \",\n\"type\"\
+      : \"boot\",\n\"script\": \"#!/bin/bash echo Hello World > /root/hello\"\n},\n\
+      \"5\": {\n\"SCRIPTID\": \"5\",\n\"date_created\": \"2014-08-22 15:27:18\",\n\
+      \"date_modified\": \"2014-09-22 15:27:18\",\n\"name\": \"test \",\n\"type\"\
+      : \"pxe\",\n\"script\": \"#!ipxe\\necho Hello World\\nshell\"\n}\n}"
+  - PARAMETERS: ''
+- /v1/startupscript/update: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/update\
+      \ --data 'SCRIPTID=5' --data 'name=my first script' --data 'script=#!/bin/bash\\\
+      necho hello world > /root/hello'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "SCRIPTID integer SCRIPTID of script to update (see /v1/startupscript/list)\n\
+      name string (optional) New name for the startup script\nscript string (optional)\
+      \ New startup script contents\n"
+- /v1/user/create: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/create --data\
+      \ 'email=new@vultr.com' --data 'name=test user' --data 'password=badpassword'\
+      \ --data 'acls[]=manage_users' --data 'acls[]=subscriptions'\n"
+  - RESPONSE: "{\n\"USERID\": \"564a1a88947b4\",\n\"api_key\":\"AAAAAAAA\"\n}\n"
+  - PARAMETERS: "email string Email address for this user\nname string Name for this\
+      \ user\npassword Password for this user\napi_enabled string (optional) 'yes'\
+      \ or 'no'. If yes, this user's API key will work on api.vultr.com.  Default\
+      \ is yes\nacls array List of ACLs that this user should have.  See /v1/user/list\
+      \ for information on possible ACLs\n"
+- /v1/user/delete: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/delete --data\
+      \ 'USERID=564a1a88947b4'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "USERID int ID of the user to delete\n"
+- /v1/user/list: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: GET
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/list\n"
+  - RESPONSE: "[\n{\n\"USERID\": \"564a1a7794d83\",\n\"name\": \"example user 1\"\
+      ,\n\"email\": \"example@vultr.com\",\n\"api_enabled\": \"yes\",\n\"acls\": [\n\
+      \"manage_users\",\n\"subscriptions\",\n\"billing\",\n\"provisioning\"\n]\n},\n\
+      {\n\"USERID\": \"564a1a88947b4\",\n\"name\": \"example user 2\",\n\"email\"\
+      : \"example@vultr.com\",\n\"api_enabled\": \"no\",\n\"acls\": [\n\"support\"\
+      ,\n\"dns\"\n]\n}\n]"
+  - PARAMETERS: ''
+- /v1/user/update: !!omap
+  - API_KEY: ''
+  - HTTP_METHOD: POST
+  - REQUEST: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/update --data\
+      \ 'USERID=564a1a88947b4' --data 'email=new@vultr.com' --data 'password=badpassword'\
+      \ --data 'acls[]=manage_users' --data 'acls[]=subscriptions'\n"
+  - RESPONSE: No response, check HTTP result code.
+  - PARAMETERS: "USERID string ID of the user to update\nemail string (optional) New\
+      \ email address for this user\nname string (optional) New name for this user\n\
+      password string (optional) New password for this user\napi_enabled string (optional)\
+      \ 'yes' or 'no'. If yes, this user's API key will work on api.vultr.com\nacls\
+      \ array (optional) List of ACLs that this user should have.  See /v1/user/list\
+      \ for information on possible ACLs\n"
