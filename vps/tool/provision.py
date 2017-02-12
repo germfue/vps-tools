@@ -67,6 +67,9 @@ def _get_id(ctx, cfg, label, dyn_label, query):
       help={})
 @require_config(_cfg_path)
 def provision_vultr(ctx):
+    """
+    Provision Vultr servers based on ~/.vps/vultr
+    """
     path = os.path.join(os.path.expanduser('~'), _cfg_path)
     with open(path, 'r') as f:
         cfg = ruamel.yaml.load(f.read(), ruamel.yaml.RoundTripLoader)

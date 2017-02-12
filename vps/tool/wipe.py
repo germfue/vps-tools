@@ -39,6 +39,9 @@ from vps.vultr.server import server_list, server_destroy
 @task(name='vultr',
       help={})
 def wipe_vultr(ctx):
+    """
+    Destroy all instances in Vultr
+    """
     wiped_servers = {}
     for server in server_list(ctx):
         subid = server['SUBID']
