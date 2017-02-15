@@ -37,6 +37,7 @@ import ruamel.yaml
 import unittest
 from bs4 import BeautifulSoup
 from collections import OrderedDict
+from .api_scenario import Scenario
 
 
 _response = requests.get('https://www.vultr.com/api/')
@@ -130,13 +131,14 @@ _api_calls = """/v1/account/info
 _re_block = re.compile('/v1/(?P<block>[^/]+)/')
 _blocks = set([_re_block.match(x).group('block') for x in _api_calls])
 
-_re_meta = re.compile('.*\n([a-zA-Z ]+:\s{1,2}[a-zA-Z]*)\s.*')
-_meta_api_key = 'API Key Required:'
-_meta_http_method = 'Request Type:'
-_sample_request = 'Example Request:'
-_sample_response = 'Example Response:'
-_parameters = 'Parameters:'
-_no_parameters = 'No parameters.'
+_re_row = '.*%s\s+%s\s.*'
+_txt_api_key = 'API Key Required:'
+_txt_http_method = 'Request Type:'
+_txt_sample_request = 'Example Request:'
+_txt_sample_response = 'Example Response:'
+_txt_parameters = 'Parameters:'
+_txt_no_parameters = 'No parameters.'
+_txt_no_response = 'No response, check HTTP result code.'
 
 
 class TestAPI(unittest.TestCase):
@@ -164,27 +166,33 @@ class TestAPI(unittest.TestCase):
         for call in _api_calls:
             self.assertIn(call, calls_found)
 
-    def _parse_metadata(self, scenario, table):
-        for meta in _re_meta.findall(table.get_text()):
-            if meta.startswith(_meta_api_key):
-                value = meta.replace(_meta_api_key, '').strip()
-                scenario['API_KEY'] = value
-            if meta.startswith(_meta_http_method):
-                value = meta.replace(_meta_http_method, '').strip()
-                scenario['HTTP_METHOD'] = value
+    def _parse_table(self, scenario, table):
+        txt = table.get_text()
+        match = re.search(_re_row % (_txt_api_key, 'Yes'), txt)
+        if match:
+            scenario.api_key = 'SAMPLE'
+        else:
+            scenario.api_key = ''
+        match = re.search(_re_row % (_txt_http_method, 'GET'), txt)
+        if match:
+            scenario.http_method = 'GET'
+        else:
+            match = re.search(_re_row % (_txt_http_method, 'POST'), txt)
+            if match:
+                scenario.http_method = 'POST'
+            else:
+                raise ValueError('Can not find HTTP Method: %s' % txt)
 
-    def _parse_samples(self, scenario, code_blocks):
+    def _parse_code_blocks(self, scenario, code_blocks):
         for code_block in code_blocks:
             key = code_block.find_all('h4', limit=1)[0].text
             value = code_block.find_all('code', limit=1)[0].text
-            if key == _sample_request:
-                scenario['REQUEST'] = value
-            elif key == _sample_response:
-                scenario['RESPONSE'] = value
-            elif key == _parameters:
-                if value == _no_parameters:
-                    value = ''
-                scenario['PARAMETERS'] = value
+            if key == _txt_sample_request:
+                scenario.request = value
+            elif key == _txt_sample_response:
+                scenario.response = value.replace(_txt_no_response, '')
+            elif key == _txt_parameters:
+                scenario.parameters = value.replace(_txt_no_parameters, '')
             else:
                 raise ValueError('%s: item not expected' % key)
 
@@ -195,16 +203,45 @@ class TestAPI(unittest.TestCase):
     def _parse_scenarios(self):
         scenarios = OrderedDict()
         for api_call in self._find_api_calls():
-            scenario = OrderedDict()
-            self._parse_metadata(scenario, api_call.parent.table)
+            scenario = Scenario()
+            self._parse_table(scenario, api_call.parent.table)
             code_blocks = api_call.parent.find_all('div', class_='code')
-            self._parse_samples(scenario, code_blocks)
+            self._parse_code_blocks(scenario, code_blocks)
             scenarios[api_call.text] = scenario
         return scenarios
 
     def test_scenarios(self):
-        scenarios = ruamel.yaml.dump(self._parse_scenarios(),
-                                     Dumper=ruamel.yaml.RoundTripDumper)
+        scenarios = ruamel.yaml.dump(self._parse_scenarios())
+
+    def _parse_code_blocks(self, scenario, code_blocks):
+        for code_block in code_blocks:
+            key = code_block.find_all('h4', limit=1)[0].text
+            value = code_block.find_all('code', limit=1)[0].text
+            if key == _txt_sample_request:
+                scenario.request = value
+            elif key == _txt_sample_response:
+                scenario.response = value.replace(_txt_no_response, '')
+            elif key == _txt_parameters:
+                scenario.parameters = value.replace(_txt_no_parameters, '')
+            else:
+                raise ValueError('%s: item not expected' % key)
+
+    def _load_scenarios(self):
+        with open('cases.yaml', 'r') as f:
+            return f.read()
+
+    def _parse_scenarios(self):
+        scenarios = OrderedDict()
+        for api_call in self._find_api_calls():
+            scenario = Scenario()
+            self._parse_table(scenario, api_call.parent.table)
+            code_blocks = api_call.parent.find_all('div', class_='code')
+            self._parse_code_blocks(scenario, code_blocks)
+            scenarios[api_call.text] = scenario
+        return scenarios
+
+    def test_scenarios(self):
+        scenarios = ruamel.yaml.dump(self._parse_scenarios())
         scenarios_in_use = self._load_scenarios()
         try:
             error_msg = "execute 'diff cases.yaml cases_new.yaml' for details"

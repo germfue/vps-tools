@@ -32,20 +32,17 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import ruamel.yaml
-from clint.textui import puts, columns, colored
+from clint.textui import puts, columns
 from clint.textui.cols import console_width
 
 
 def get_headers(dl):
-    headers = ()
+    headers = set()
     for d in dl:
-        keys = list(d.keys())
-        keys.sort()
-        if headers:
-            if headers != keys:
-                raise KeyError('keys are not unique for all dictionaries')
-        else:
-            headers = keys
+        for key in d.keys():
+            headers.add(key)
+    headers = list(headers)
+    headers.sort()
     return headers
 
 
@@ -55,7 +52,7 @@ def column_size(headers, dl):
         # initialize to the length of the key (header)
         length = len(header)
         for d in dl:
-            item_length = len(str(d[header]))
+            item_length = len(str(d.get(header, '')))
             if item_length > length:
                 length = item_length
         csize[header] = length
@@ -92,8 +89,8 @@ def display(dl):
         puts(ruamel.yaml.dump(output, Dumper=ruamel.yaml.RoundTripDumper))
     else:
         # otherwise, print a table
-        row = [[header, csize[header]] for header in headers]
+        row = [[header, csize.get(header, '')] for header in headers]
         puts(columns(*row))
         for d in dl:
-            row = [[_trim(d[h], csize[h]), csize[h]] for h in headers]
+            row = [[_trim(d.get(h, ''), csize[h]), csize[h]] for h in headers]
             puts(columns(*row))

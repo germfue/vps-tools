@@ -52,3 +52,9 @@ collection.add_collection(server_coll, name='server')
 collection.add_collection(snapshot_coll, name='snapshot')
 collection.add_collection(sshkey_coll, name='sshkey')
 collection.add_collection(startupscript_coll, name='startupscript')
+
+collection.configure({
+    'run': {
+        'echo': True
+    }
+})

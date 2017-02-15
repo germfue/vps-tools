@@ -47,7 +47,7 @@ def sshkey_list(ctx, criteria=''):
     """
     List all the SSH keys on the current account
     """
-    query(lambda x: Vultr(x).sshkey.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).sshkey.list(), criteria)
 
 
 sshkey_coll = Collection()

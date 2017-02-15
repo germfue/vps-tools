@@ -48,7 +48,7 @@ class TestDisplay(unittest.TestCase):
         ]
         self.assertEqual(get_headers(h), ['h0', 'h1'])
 
-    def test_bad_headers(self):
+    def test_different_headers(self):
         h = [
             {'h0': 0,
              'h1': 1,
@@ -58,8 +58,7 @@ class TestDisplay(unittest.TestCase):
              'h2': 2,
              },
         ]
-        with self.assertRaises(KeyError):
-            get_headers(h)
+        self.assertEqual(get_headers(h), ['h0', 'h1', 'h2'])
 
     def test_column_size(self):
         matrix = [

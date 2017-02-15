@@ -57,7 +57,7 @@ def server_list(ctx, criteria=''):
     has completed or not. The "v6_network", "v6_main_ip", and "v6_network_size"
     fields are deprecated in favor of "v6_networks".
     """
-    return query(lambda x: Vultr(x).server.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).server.list(), criteria)
 
 
 @task(name='create',
@@ -147,7 +147,9 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
         params['tag'] = tag
     vultr = Vultr(api_key)
     response = vultr.server.create(dcid, vpsplanid, osid, params or None)
-    display_yaml(response)
+    if ctx.config.run.echo:
+        display_yaml(response)
+    return response
 
 
 @task(name='destroy',

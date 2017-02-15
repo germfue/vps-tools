@@ -36,13 +36,13 @@ from vps.console import display
 from .key import api_key
 
 
-def query(q, criteria):
+def query(ctx, q, criteria):
     """
     Query a Vultr endpoint
     """
     result = q(api_key)
     if result:
-        result = result.values()
+        result = list(result.values())
         if criteria:
             if isinstance(criteria, str):
                 criteria = literal_eval(criteria)
@@ -54,6 +54,6 @@ def query(q, criteria):
                 return True
 
             result = list(filter(_filter, result))
-        if result:
+        if result and ctx.config.run.echo:
             display(result)
     return result

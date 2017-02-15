@@ -47,7 +47,7 @@ def snapshot_list(ctx, criteria=''):
     """
     List all snapshots on the current account
     """
-    query(lambda x: Vultr(x).snapshot.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).snapshot.list(), criteria)
 
 
 snapshot_coll = Collection()

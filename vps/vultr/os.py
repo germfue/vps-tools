@@ -45,7 +45,7 @@ def os_list(ctx, criteria=''):
     """
     Retrieve a list of available operating systems
     """
-    return query(lambda x: Vultr(x).os.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).os.list(), criteria)
 
 
 os_coll = Collection()

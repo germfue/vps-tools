@@ -31,8 +31,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import requests_mock
 import ruamel.yaml
 import unittest
+from ast import literal_eval
+from invoke import Context
 from vps.vultr.tasks import collection
 
 
@@ -40,17 +43,11 @@ def _to_subcommand(api_call):
     return api_call.replace('/v1/', '').replace('/', '.')
 
 
-def _test_case(name, key, http_method, request, response, parameters):
+def _test_case(name, scenario):
     class TestCLI(unittest.TestCase):
 
-        def __init__(self, name, key, http_method, request, response,
-                     parameters):
+        def __init__(self, name):
             self.name = name
-            self.key = key
-            self.http_method = http_method
-            self.request = request
-            self.response = response
-            self.parameters = parameters
             (self.module, self.method) = name.split('.')
             super(TestCLI, self).__init__(name)
 
@@ -60,33 +57,53 @@ def _test_case(name, key, http_method, request, response, parameters):
             else:
                 return super(TestCLI, self).__getattribute__(name)
 
+        def check_response(self, result):
+            if not result:
+                self.assertEqual(scenario.response, '')
+            else:
+                response = scenario.response.replace('null', 'None')
+                response = response.replace('false', 'False')
+                response = response.replace('true', 'True')
+                response = response.replace('\\/', '/')
+                expected_response = literal_eval(response)
+                if self.name.endswith('.list'):
+                    # .list methods change how the results are provided,
+                    # returning a list of values, instead of a dict
+                    values = list(expected_response.values())
+                    self.assertEqual(values, result)
+                else:
+                    self.assertEqual(expected_response, result)
+
         def runTest(self):
-            # temporary, until first method is executed properly
-            if self.name == 'os.list':
-                # task = collection.collections[self.module].tasks[self.method]
-                if self.key:
-                    self._test_key_not_present()
+            req = scenario.parse_request()
+            task = collection.collections[self.module].tasks[self.method]
+            with requests_mock.mock() as m:
+                op = getattr(m, scenario.http_method.lower())
+                op(req.url, text=scenario.response)
+                ctx = Context()
+                ctx.config.run.echo = False
+                result = task(ctx, **req.params)
+                self.check_response(result)
+            if scenario.api_key:
+                self._test_key_not_present()
 
         def _test_key_not_present(self):
-            raise NotImplementedError('_test_key_not_present')
+            """
+            TODO implement this
+            """
+            pass
 
-    return TestCLI(name, key, http_method, request, response, parameters)
+    return TestCLI(name)
 
 
 def load_tests(loader, tests, pattern):
     suite = unittest.TestSuite()
     with open('cases.yaml', 'r') as f:
-        scenarios = ruamel.yaml.load(f.read(), ruamel.yaml.RoundTripLoader)
+        scenarios = ruamel.yaml.load(f.read(), Loader=ruamel.yaml.Loader)
         for api_call in scenarios:
             subcommand = _to_subcommand(api_call)
             if subcommand in collection.task_names.keys():
                 scenario = scenarios[api_call]
-                key = scenario['API_KEY']
-                http_method = scenario['HTTP_METHOD']
-                request = scenario['REQUEST']
-                response = scenario['RESPONSE']
-                params = scenario['PARAMETERS']
-                test_case = _test_case(subcommand, key, http_method, request,
-                                       response, params)
+                test_case = _test_case(subcommand, scenario)
                 suite.addTest(test_case)
     return suite

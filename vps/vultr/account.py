@@ -44,7 +44,10 @@ def account_info(ctx):
     """
     Retrieve information about the current account
     """
-    display_yaml({'Account Info': Vultr(api_key).account.info()})
+    info = Vultr(api_key).account.info()
+    if ctx.config.run.echo:
+        display_yaml({'Account Info': info})
+    return info
 
 
 account_coll = Collection()

@@ -63,6 +63,7 @@ setup(
     tests_require=[
         'beautifulsoup4',
         'requests',
+        'requests-mock',
     ],
     packages=pckgs,
     test_suite='tests',

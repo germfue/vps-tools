@@ -47,7 +47,7 @@ def regions_list(ctx, criteria=''):
     Note that just because a region is listed here, does not mean that there is
     room for new servers
     """
-    return query(lambda x: Vultr(x).regions.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).regions.list(), criteria)
 
 
 regions_coll = Collection()

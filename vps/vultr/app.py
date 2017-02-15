@@ -46,7 +46,7 @@ def app_list(ctx, criteria=''):
     Retrieve a list of available applications
     These refer to applications that can be launched when creating a Vultr VPS
     """
-    query(lambda x: Vultr(x).app.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).app.list(), criteria)
 
 
 app_coll = Collection()

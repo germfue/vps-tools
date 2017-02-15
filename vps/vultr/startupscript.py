@@ -31,7 +31,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function
 from invoke import task, Collection
 from vultr import Vultr
 from vps.console import display_yaml
@@ -52,7 +51,7 @@ def startupscript_list(ctx, criteria=''):
     the first boot.
     Scripts of type "pxe" are executed by iPXE when the server itself starts up
     """
-    query(lambda x: Vultr(x).startupscript.list(), criteria)
+    return query(ctx, lambda x: Vultr(x).startupscript.list(), criteria)
 
 
 @task(name='create',
@@ -68,7 +67,9 @@ def startupscript_create(ctx, name, script, script_type='boot'):
     """
     vultr = Vultr(api_key)
     response = vultr.startupscript.create(name, script, {'type': script_type})
-    display_yaml(response)
+    if ctx.config.run.echo:
+        display_yaml(response)
+    return response
 
 
 @task(name='destroy',
