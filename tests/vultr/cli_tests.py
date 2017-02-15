@@ -31,10 +31,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import json
 import requests_mock
 import ruamel.yaml
 import unittest
-from ast import literal_eval
 from invoke import Context
 from vps.vultr.tasks import collection
 
@@ -61,11 +61,7 @@ def _test_case(name, scenario):
             if not result:
                 self.assertEqual(scenario.response, '')
             else:
-                response = scenario.response.replace('null', 'None')
-                response = response.replace('false', 'False')
-                response = response.replace('true', 'True')
-                response = response.replace('\\/', '/')
-                expected_response = literal_eval(response)
+                expected_response = json.loads(scenario.response)
                 if self.name.endswith('.list'):
                     # .list methods change how the results are provided,
                     # returning a list of values, instead of a dict

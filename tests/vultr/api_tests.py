@@ -212,36 +212,6 @@ class TestAPI(unittest.TestCase):
 
     def test_scenarios(self):
         scenarios = ruamel.yaml.dump(self._parse_scenarios())
-
-    def _parse_code_blocks(self, scenario, code_blocks):
-        for code_block in code_blocks:
-            key = code_block.find_all('h4', limit=1)[0].text
-            value = code_block.find_all('code', limit=1)[0].text
-            if key == _txt_sample_request:
-                scenario.request = value
-            elif key == _txt_sample_response:
-                scenario.response = value.replace(_txt_no_response, '')
-            elif key == _txt_parameters:
-                scenario.parameters = value.replace(_txt_no_parameters, '')
-            else:
-                raise ValueError('%s: item not expected' % key)
-
-    def _load_scenarios(self):
-        with open('cases.yaml', 'r') as f:
-            return f.read()
-
-    def _parse_scenarios(self):
-        scenarios = OrderedDict()
-        for api_call in self._find_api_calls():
-            scenario = Scenario()
-            self._parse_table(scenario, api_call.parent.table)
-            code_blocks = api_call.parent.find_all('div', class_='code')
-            self._parse_code_blocks(scenario, code_blocks)
-            scenarios[api_call.text] = scenario
-        return scenarios
-
-    def test_scenarios(self):
-        scenarios = ruamel.yaml.dump(self._parse_scenarios())
         scenarios_in_use = self._load_scenarios()
         try:
             error_msg = "execute 'diff cases.yaml cases_new.yaml' for details"
