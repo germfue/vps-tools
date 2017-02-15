@@ -49,7 +49,7 @@ def require_key(f):
     def _f(ctx, *args, **kwargs):
         if api_key:
             return f(ctx, *args, **kwargs)
-        else:
+        elif ctx.config.run.echo:
             puts("'%s' missing" % colored.red('VULTR_KEY'))
 
     _f.__doc__ = inspect.getdoc(f)

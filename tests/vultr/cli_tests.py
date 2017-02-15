@@ -35,6 +35,7 @@ import json
 import requests_mock
 import ruamel.yaml
 import unittest
+import vps.vultr.key
 from invoke import Context
 from vps.vultr.tasks import collection
 
@@ -74,20 +75,31 @@ def _test_case(name, scenario):
             req = scenario.parse_request()
             task = collection.collections[self.module].tasks[self.method]
             with requests_mock.mock() as m:
+                # TODO check that request is as expected
                 op = getattr(m, scenario.http_method.lower())
                 op(req.url, text=scenario.response)
                 ctx = Context()
                 ctx.config.run.echo = False
-                result = task(ctx, **req.params)
-                self.check_response(result)
-            if scenario.api_key:
-                self._test_key_not_present()
+                if scenario.api_key:
+                    self._test_with_key(task, ctx, req.params)
+                    self._test_key_not_present(task, ctx, req.params)
+                else:
+                    self._test_without_key(task, ctx, req.params)
 
-        def _test_key_not_present(self):
-            """
-            TODO implement this
-            """
-            pass
+        def _test_with_key(self, task, ctx, params):
+            vps.vultr.key.api_key = 'EXAMPLE'
+            result = task(ctx, **params)
+            self.check_response(result)
+
+        def _test_without_key(self, task, ctx, params):
+            vps.vultr.key.api_key = None
+            result = task(ctx, **params)
+            self.check_response(result)
+
+        def _test_key_not_present(self, task, ctx, params):
+            vps.vultr.key.api_key = None
+            result = task(ctx, **params)
+            self.assertIsNone(result)
 
     return TestCLI(name)
 
