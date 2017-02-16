@@ -36,7 +36,15 @@ from clint.textui import puts, colored
 from os import environ
 
 # Missing key is already being handled by vultr library
-api_key = environ.get('VULTR_KEY')
+_api_key = environ.get('VULTR_KEY')
+
+
+def get_key():
+    """
+    API Key can be changed during test execution, therefore code should always
+    use this method to access it
+    """
+    return _api_key
 
 
 def require_key(f):
@@ -47,7 +55,7 @@ def require_key(f):
     """
 
     def _f(ctx, *args, **kwargs):
-        if api_key:
+        if _api_key:
             return f(ctx, *args, **kwargs)
         elif ctx.config.run.echo:
             puts("'%s' missing" % colored.red('VULTR_KEY'))

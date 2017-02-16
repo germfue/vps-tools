@@ -33,14 +33,14 @@
 
 from ast import literal_eval
 from vps.console import display
-from .key import api_key
+from .key import get_key
 
 
 def query(ctx, q, criteria):
     """
     Query a Vultr endpoint
     """
-    result = q(api_key)
+    result = q(get_key())
     if result:
         result = list(result.values())
         if criteria:

@@ -34,7 +34,7 @@
 from invoke import task, Collection
 from vultr import Vultr
 from vps.console import display_yaml
-from .key import api_key, require_key
+from .key import get_key, require_key
 from .query import query
 
 
@@ -65,7 +65,7 @@ def startupscript_create(ctx, name, script, script_type='boot'):
     """
     Create a startup script
     """
-    vultr = Vultr(api_key)
+    vultr = Vultr(get_key())
     response = vultr.startupscript.create(name, script, {'type': script_type})
     if ctx.config.run.echo:
         display_yaml(response)
@@ -81,7 +81,7 @@ def startupscript_destroy(ctx, scriptid):
     """
     Remove a startup script
     """
-    vultr = Vultr(api_key)
+    vultr = Vultr(get_key())
     vultr.startupscript.destroy(scriptid)
 
 
@@ -96,7 +96,7 @@ def startupscript_update(ctx, scriptid, name='', script=''):
     """
     Update an existing startup script
     """
-    vultr = Vultr(api_key)
+    vultr = Vultr(get_key())
     params = {}
     if name:
         params['name'] = name

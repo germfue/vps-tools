@@ -34,7 +34,7 @@
 from invoke import task, Collection
 from vultr import Vultr
 from vps.console import display_yaml
-from .key import api_key, require_key
+from .key import get_key, require_key
 
 
 @task(name='info',
@@ -44,7 +44,7 @@ def account_info(ctx):
     """
     Retrieve information about the current account
     """
-    info = Vultr(api_key).account.info()
+    info = Vultr(get_key()).account.info()
     if ctx.config.run.echo:
         display_yaml({'Account Info': info})
     return info

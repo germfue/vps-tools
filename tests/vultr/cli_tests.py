@@ -87,17 +87,17 @@ def _test_case(name, scenario):
                     self._test_without_key(task, ctx, req.params)
 
         def _test_with_key(self, task, ctx, params):
-            vps.vultr.key.api_key = 'EXAMPLE'
+            vps.vultr.key._api_key = 'EXAMPLE'
             result = task(ctx, **params)
             self.check_response(result)
 
         def _test_without_key(self, task, ctx, params):
-            vps.vultr.key.api_key = None
+            vps.vultr.key._api_key = None
             result = task(ctx, **params)
             self.check_response(result)
 
         def _test_key_not_present(self, task, ctx, params):
-            vps.vultr.key.api_key = None
+            vps.vultr.key._api_key = None
             result = task(ctx, **params)
             self.assertIsNone(result)
 

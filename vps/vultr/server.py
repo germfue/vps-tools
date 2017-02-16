@@ -34,7 +34,7 @@
 from invoke import task, Collection
 from vultr import Vultr
 from vps.console import display_yaml
-from .key import api_key, require_key
+from .key import get_key, require_key
 from .query import query
 
 
@@ -145,7 +145,7 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
         params['hostname'] = hostname
     if tag:
         params['tag'] = tag
-    vultr = Vultr(api_key)
+    vultr = Vultr(get_key())
     response = vultr.server.create(dcid, vpsplanid, osid, params or None)
     if ctx.config.run.echo:
         display_yaml(response)
@@ -164,7 +164,7 @@ def server_destroy(ctx, subid):
     All data will be permanently lost, and the IP address will be released.
     There is no going back from this call
     """
-    vultr = Vultr(api_key)
+    vultr = Vultr(get_key())
     vultr.server.destroy(subid)
 
 
