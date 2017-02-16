@@ -71,6 +71,29 @@ def _test_case(name, scenario):
                 else:
                     self.assertEqual(expected_response, result)
 
+        def _supports_criteria(self, task):
+            param_names = [p.name for p in task.get_arguments()]
+            return 'criteria' in param_names
+
+        def _test_criteria(self, task, ctx, params):
+            vps.vultr.key._api_key = 'EXAMPLE'
+            result = task(ctx, **params)
+            # test that a valid filter works
+            for k, v in result[0].items():
+                if v:
+                    params['criteria'] = str({k: v})
+                    filtered = task(ctx, **params)
+                    for a_dict in filtered:
+                        self.assertEqual(v, a_dict.get(k, ''))
+                    break
+            else:
+                self.assertFalse('No value found in reponse!')
+            # test that an invalid filter returns nothing
+            params['criteria'] = str({'fake key': 'fake value'})
+            filtered = task(ctx, **params)
+            self.assertFalse(filtered)
+
+
         def runTest(self):
             req = scenario.parse_request()
             task = collection.collections[self.module].tasks[self.method]
@@ -85,6 +108,8 @@ def _test_case(name, scenario):
                     self._test_key_not_present(task, ctx, req.params)
                 else:
                     self._test_without_key(task, ctx, req.params)
+                if self._supports_criteria(task):
+                    self._test_criteria(task, ctx, req.params)
 
         def _test_with_key(self, task, ctx, params):
             vps.vultr.key._api_key = 'EXAMPLE'
