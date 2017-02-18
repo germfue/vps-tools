@@ -170,7 +170,7 @@ class TestAPI(unittest.TestCase):
         txt = table.get_text()
         match = re.search(_re_row % (_txt_api_key, 'Yes'), txt)
         if match:
-            scenario.api_key = 'SAMPLE'
+            scenario.api_key = 'EXAMPLE'
         else:
             scenario.api_key = ''
         match = re.search(_re_row % (_txt_http_method, 'GET'), txt)

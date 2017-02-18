@@ -66,7 +66,10 @@ def startupscript_create(ctx, name, script, script_type='boot'):
     Create a startup script
     """
     vultr = Vultr(get_key())
-    response = vultr.startupscript.create(name, script, {'type': script_type})
+    params = {}
+    if script_type != 'boot':
+        params['type'] = script_type
+    response = vultr.startupscript.create(name, script, params)
     if ctx.config.run.echo:
         display_yaml(response)
     return response

@@ -37,10 +37,15 @@ import ruamel.yaml
 import unittest
 import vps.vultr.key
 from invoke import Context
+from urllib.parse import parse_qs
 from vps.vultr.tasks import collection
 
 
 class _Test(object):
+    """
+    This class can't inherit from TestCase as it gets automatically loaded
+    by setup tools
+    """
 
     def __init__(self, test_name, task, scenario):
         self.task = task
@@ -61,7 +66,33 @@ class _Test(object):
             else:
                 self.assertEqual(expected_response, result)
 
-    def _get_context(self):
+    def _check_request(self, request, context):
+        query = request.query
+        if self.scenario.api_key:
+            # requests_mock stores the headers in the query attribute,
+            # lower case
+            header = 'api_key=%s' % self.scenario.api_key.lower()
+            self.assertEqual(header, query)
+        else:
+            self.assertFalse(query)
+        req = self.scenario.parse_request()
+        if req.params:
+            params = dict(req.params)
+            for key, value in parse_qs(request.text).items():
+                # parse_qs will return a list of values
+                self.assertEqual(1, len(value))
+                value = value[0]
+                # check that the key exists in req.params
+                self.assertIn(key.lower(), params)
+                # check that the values stored are the same
+                self.assertEqual(value, params.pop(key.lower()))
+            self.assertFalse(params)
+
+    def _callback(self, request, context):
+        self._check_request(request, context)
+        return self.scenario.response
+
+    def _task_context(self):
         ctx = Context()
         ctx.config.run.echo = False
         return ctx
@@ -81,10 +112,9 @@ class _Test(object):
     def _runTest(self, f):
         req = self.scenario.parse_request()
         with requests_mock.mock() as m:
-            # TODO check that request is as expected
             op = getattr(m, self.scenario.http_method.lower())
-            op(req.url, text=self.scenario.response)
-            ctx = self._get_context()
+            op(req.url, text=self._callback)
+            ctx = self._task_context()
             f(self.task, ctx, req.params)
 
     def _test_with_key(self, task, ctx, params):
@@ -103,7 +133,10 @@ class _Test(object):
         self.assertIsNone(result)
 
     def _test_criteria(self, task, ctx, params):
-        vps.vultr.key._api_key = 'EXAMPLE'
+        if self.scenario.api_key:
+            vps.vultr.key._api_key = 'EXAMPLE'
+        else:
+            vps.vultr.key._api_key = None
         result = task(ctx, **params)
         # test that a valid filter works
         for k, v in result[0].items():
