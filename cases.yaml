@@ -443,10 +443,9 @@
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/destroy\
         \ --data 'SSHKEYID=541b4960f23bd'\n", response: ''}}, {/v1/sshkey/list: !!python/object:tests.vultr.api_scenario.Scenario {
       api_key: SAMPLE, http_method: GET, parameters: '', request: "curl -H 'API-Key:\
-        \ EXAMPLE' https://api.vultr.com/v1/sshkey/list?api_key=EXAMPLE\n", response: "{\n\
-        \"541b4960f23bd\": {\n\"SSHKEYID\": \"541b4960f23bd\",\n\"date_created\":\
-        \ null,\n\"name\": \"test\",\n\"ssh_key\": \"ssh-rsa AA... test@example.com\"\
-        \n}\n}"}}, {/v1/sshkey/update: !!python/object:tests.vultr.api_scenario.Scenario {
+        \ EXAMPLE' https://api.vultr.com/v1/sshkey/list\n", response: "{\n\"541b4960f23bd\"\
+        : {\n\"SSHKEYID\": \"541b4960f23bd\",\n\"date_created\": null,\n\"name\":\
+        \ \"test\",\n\"ssh_key\": \"ssh-rsa AA... test@example.com\"\n}\n}"}}, {/v1/sshkey/update: !!python/object:tests.vultr.api_scenario.Scenario {
       api_key: SAMPLE, http_method: POST, parameters: "SSHKEYID string SSHKEYID of\
         \ key to update (see /v1/sshkey/list)\nname string (optional) New name for\
         \ the SSH key\nssh_key string (optional) New SSH key contents\n", request: "curl\
@@ -457,8 +456,8 @@
         \ created startup script\nscript string Startup script contents\ntype string\
         \ boot|pxe Type of startup script.  Default is 'boot'\n", request: "curl -H\
         \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/create --data\
-        \ 'name=my first script' --data 'script=#!/bin/bash\\necho hello world > /root/hello'\n",
-      response: "{ \"SCRIPTID\": 5 }\n"}}, {/v1/startupscript/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
+        \ 'name=my first script' --data $'script=#!/bin/bash\\necho hello world >\
+        \ /root/hello'\n", response: "{ \"SCRIPTID\": 5 }\n"}}, {/v1/startupscript/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
       api_key: SAMPLE, http_method: POST, parameters: "SCRIPTID string Unique identifier\
         \ for this startup script.  These can be found using the v1/startupscript/list\
         \ call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/destroy\
