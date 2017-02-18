@@ -203,7 +203,7 @@ class TestAPI(unittest.TestCase):
     def _parse_scenarios(self):
         scenarios = OrderedDict()
         for api_call in self._find_api_calls():
-            scenario = Scenario()
+            scenario = Scenario(api_call.text)
             self._parse_table(scenario, api_call.parent.table)
             code_blocks = api_call.parent.find_all('div', class_='code')
             self._parse_code_blocks(scenario, code_blocks)

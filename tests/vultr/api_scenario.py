@@ -52,7 +52,12 @@ class ScenarioRequest(object):
                 elements = request.replace("'", "").split('--data')
                 for el in elements[1:]:
                     (key, value) = el.split('=')
-                    self.params[key.strip().lower()] = value.strip()
+                    key = key.strip().lower()
+                    if key.startswith("$"):
+                        # this is to avoid an error in the documentation:
+                        # --data $'script=..'\n"
+                        key = key[1:]
+                    self.params[key] = value.strip()
         else:
             raise ValueError('%s: could not be matched' % request)
 
@@ -62,8 +67,9 @@ class ScenarioRequest(object):
 
 class Scenario(object):
 
-    def __init__(self, api_key='', http_method='', request='', response='',
-                 parameters=''):
+    def __init__(self, api_call, api_key='', http_method='', request='',
+                 response='', parameters=''):
+        self.api_call = api_call
         self.api_key = api_key
         self.http_method = http_method
         self.request = request
@@ -73,10 +79,18 @@ class Scenario(object):
     def parse_request(self):
         return ScenarioRequest(self.request)
 
+    def invoke_subcommand(self):
+        return self.api_call.replace('/v1/', '').replace('/', '.')
+
+    def test_name(self):
+        return 'test_%s' % self.api_call.replace('/v1/', '').replace('/', '_')
+
     def __repr__(self):
-        return '%s(%r, %r, %r, %r, %r)' % (self.__class__.__name__,
-                                           self.api_key,
-                                           self.http_method,
-                                           self.request,
-                                           self.response,
-                                           self.parameters)
+        return '%s(%r, %r, %r, %r, %r, %r)' % (self.__class__.__name__,
+                                               self.api_call,
+                                               self.api_key,
+                                               self.http_method,
+                                               self.request,
+                                               self.response,
+                                               self.parameters
+                                               )
