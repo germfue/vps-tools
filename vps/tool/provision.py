@@ -41,45 +41,58 @@ from vps.vultr.server import server_create
 from .config import require_config
 
 
-_cfg_path = os.path.join('.vps', 'vultr')
+class _VultrProvision(object):
 
+    cfg_path = os.path.join('.vps', 'vultr')
 
-def _get_id(ctx, cfg, label, dyn_label, query):
-    id = cfg.pop(label, None)
-    if not id:
-        criteria = cfg.pop(dyn_label)
-        value = query(ctx, criteria)
-        if len(value) > 1:
-            msg = 'Criteria for %s returned multiple values' % dyn_label
-            raise ValueError(msg)
-        elif len(value) == 0:
-            msg = 'Criteria for %s did not return any value' % dyn_label
-            raise ValueError(msg)
-        # careful, ids coming from vultr API are uppercase
-        id = value[0][label.upper()]
-    else:
-        # just in case, removing from dict alternative config
-        cfg.pop(dyn_label, None)
-    return id
+    def __init__(self, ctx):
+        self.ctx = ctx
+
+    def _read_cfg(self):
+        path = os.path.join(os.path.expanduser('~'), _VultrProvision.cfg_path)
+        with open(path, 'r') as f:
+            return f.read()
+
+    def _get_id(self, cfg, label, dyn_label, query):
+        id = cfg.pop(label, None)
+        if not id:
+            criteria = cfg.pop(dyn_label)
+            value = query(self.ctx, criteria)
+            if len(value) > 1:
+                msg = 'Criteria for %s returned multiple values' % dyn_label
+                raise ValueError(msg)
+            elif len(value) == 0:
+                msg = 'Criteria for %s did not return any value' % dyn_label
+                raise ValueError(msg)
+            # careful, ids coming from vultr API are uppercase
+            id = value[0][label.upper()]
+        else:
+            # just in case, removing from dict alternative config
+            cfg.pop(dyn_label, None)
+        return id
+
+    def run(self):
+        txt_cfg = self._read_cfg()
+        cfg = ruamel.yaml.load(txt_cfg, ruamel.yaml.RoundTripLoader)
+        if cfg:
+            for label in cfg:
+                vm_cfg = cfg[label]
+                dcid = self._get_id(vm_cfg, 'dcid', 'region', regions_list)
+                planid = self._get_id(vm_cfg, 'vpsplanid', 'plan', plans_list)
+                osid = self._get_id(vm_cfg, 'osid', 'os', os_list)
+                # we need to add the label to the params dict
+                cfg[label]['label'] = label
+                server_create(self.ctx, dcid, planid, osid, **cfg[label])
 
 
 @task(name='vultr',
       help={})
-@require_config(_cfg_path)
+@require_config(_VultrProvision.cfg_path)
 def provision_vultr(ctx):
     """
     Provision Vultr servers based on ~/.vps/vultr
     """
-    path = os.path.join(os.path.expanduser('~'), _cfg_path)
-    with open(path, 'r') as f:
-        cfg = ruamel.yaml.load(f.read(), ruamel.yaml.RoundTripLoader)
-        for label in cfg:
-            dcid = _get_id(ctx, cfg[label], 'dcid', 'region', regions_list)
-            planid = _get_id(ctx, cfg[label], 'vpsplanid', 'plan', plans_list)
-            osid = _get_id(ctx, cfg[label], 'osid', 'os', os_list)
-            # we need to add the label to the params dict
-            cfg[label]['label'] = label
-            server_create(ctx, dcid, planid, osid, **cfg[label])
+    return _VultrProvision(ctx).run()
 
 
 provision_coll = Collection()
