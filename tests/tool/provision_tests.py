@@ -174,10 +174,10 @@ _cfg_no_match = """
 _cfg_multiple_match = """
 %s:
     dcid: %s
-    vpsplanid: %s
-    os:
-        windows: false
-""" % (_label, _dcid, _vpsplanid)
+    plan:
+        vcpu_count: "1"
+    osid: %s
+""" % (_label, _dcid, _osid)
 
 
 class TestProvision(unittest.TestCase):
@@ -252,14 +252,22 @@ class TestProvision(unittest.TestCase):
 
     def test_no_match(self):
         with self.assertRaises(ValueError):
-            self._test_mocked_query(_cfg_no_match,
-                                    '/v1/os/list',
-                                    _os_response
-                                    )
+            try:
+                self._test_mocked_query(_cfg_no_match,
+                                        '/v1/os/list',
+                                        _os_response
+                                        )
+            except ValueError as e:
+                self.assertIn('not return any value', str(e))
+                raise
 
     def test_multiple_match(self):
         with self.assertRaises(ValueError):
-            self._test_mocked_query(_cfg_multiple_match,
-                                    '/v1/os/list',
-                                    _os_response
-                                    )
+            try:
+                self._test_mocked_query(_cfg_multiple_match,
+                                        '/v1/plans/list',
+                                        _plan_response
+                                        )
+            except ValueError as e:
+                self.assertIn('multiple', str(e))
+                raise
