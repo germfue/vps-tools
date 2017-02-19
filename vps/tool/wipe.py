@@ -43,11 +43,15 @@ def wipe_vultr(ctx):
     Destroy all instances in Vultr
     """
     wiped_servers = {}
-    for server in server_list(ctx):
-        subid = server['SUBID']
-        server_destroy(ctx, subid)
-        wiped_servers[server['label']] = subid
-    display_yaml({'Wiped servers': wiped_servers})
+    servers = server_list(ctx)
+    if servers:
+        for server in servers:
+            subid = server['SUBID']
+            server_destroy(ctx, subid)
+            wiped_servers[server['label']] = subid
+    if ctx.config.run.echo:
+        display_yaml({'Wiped servers': wiped_servers})
+    return wiped_servers
 
 wipe_coll = Collection()
 wipe_coll.add_task(wipe_vultr)
