@@ -31,13 +31,31 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from invoke import Collection
-from .provision import provision_coll
-from .salt import salt_coll
-from .wipe import wipe_coll
+from invoke import task, Collection, Context
+from vps.console import display_yaml
+from vps.vultr.server import server_list
 
 
-collection = Collection()
-collection.add_collection(provision_coll, name='provision')
-collection.add_collection(salt_coll, name='salt')
-collection.add_collection(wipe_coll, name='wipe')
+@task(name='roster',
+      help={})
+def salt_roster(ctx):
+    """
+    Query the available servers and present the information in yaml format
+    """
+    roster = {}
+    # we do not want to display the result of the query
+    query_ctx = Context()
+    query_ctx.config.run.echo = False
+    servers = server_list(query_ctx)
+    if servers:
+        for server in servers:
+            label = server['label']
+            roster[label] = {}
+            roster[label]['host'] = server['main_ip']
+            roster[label]['user'] = 'root'
+    if ctx.config.run.echo:
+        display_yaml(roster)
+    return roster
+
+salt_coll = Collection()
+salt_coll.add_task(salt_roster)
