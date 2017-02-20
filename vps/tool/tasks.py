@@ -41,3 +41,9 @@ collection = Collection()
 collection.add_collection(provision_coll, name='provision')
 collection.add_collection(salt_coll, name='salt')
 collection.add_collection(wipe_coll, name='wipe')
+
+collection.configure({
+    'run': {
+        'echo': True
+    }
+})
