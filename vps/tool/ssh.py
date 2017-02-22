@@ -2,24 +2,24 @@
 
 # Copyright (c) 2016, Germán Fuentes Capella <development@fuentescapella.com>
 # BSD 3-Clause License
-#
+# 
 # Copyright (c) 2017, Germán Fuentes Capella
 # All rights reserved.
-#
+# 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-#
+# 
 # * Redistributions of source code must retain the above copyright notice, this
 #   list of conditions and the following disclaimer.
-#
+# 
 # * Redistributions in binary form must reproduce the above copyright notice,
 #   this list of conditions and the following disclaimer in the documentation
 #   and/or other materials provided with the distribution.
-#
+# 
 # * Neither the name of the copyright holder nor the names of its
 #   contributors may be used to endorse or promote products derived from
 #   this software without specific prior written permission.
-#
+# 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,21 +31,33 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from invoke import Collection
-from .provision import provision_coll
-from .salt import salt_coll
-from .ssh import ssh_coll
-from .wipe import wipe_coll
+from invoke import task, Collection, Context
+from vps.console import puts
+from vps.vultr.server import server_list
 
+@task(name='list',
+      help={})
+def ssh_list(ctx):
+    """
+    Lists the servers to ssh, in ssh-keyscan format
+    To execute, run:
+    $ vps ssh.list > /tmp/known_hosts
+    $ ssh-keyscan -t ecdsa -f /tmp/known_hosts >> ~/.ssh/known_hosts
+    """
+    hosts = []
+    # we do not want to display the result of the query
+    query_ctx = Context()
+    query_ctx.config.run.echo = False
+    servers = server_list(query_ctx)
+    if servers:
+        for server in servers:
+            label = server['label']
+            ip = server['main_ip']
+            hosts.append('%s vultr.com,%s,%s' % (ip, ip, label))
+    if ctx.config.run.echo:
+        puts('\n'.join(hosts))
+    return hosts
 
-collection = Collection()
-collection.add_collection(provision_coll, name='provision')
-collection.add_collection(salt_coll, name='salt')
-collection.add_collection(ssh_coll, name='ssh')
-collection.add_collection(wipe_coll, name='wipe')
+ssh_coll = Collection()
+ssh_coll.add_task(ssh_list)
 
-collection.configure({
-    'run': {
-        'echo': True
-    }
-})
