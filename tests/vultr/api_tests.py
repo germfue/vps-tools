@@ -126,6 +126,14 @@ _api_calls = """/v1/account/info
 /v1/user/delete
 /v1/user/list
 /v1/user/update
+/v1/firewall/group_create
+/v1/firewall/group_delete
+/v1/firewall/group_list
+/v1/firewall/group_set_description
+/v1/firewall/rule_create
+/v1/firewall/rule_delete
+/v1/firewall/rule_list
+/v1/server/firewall_group_set
 """.splitlines()
 
 _re_block = re.compile('/v1/(?P<block>[^/]+)/')
@@ -160,7 +168,7 @@ class TestAPI(unittest.TestCase):
 
         # check that all calls retrieved match existing calls
         for call in calls_found:
-            self.assertIn(call, _api_calls)
+            self.assertIn(call, _api_calls, 'New calls added to api')
 
         # check that no API call gets dropped
         for call in _api_calls:
