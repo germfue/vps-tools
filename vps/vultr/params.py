@@ -42,6 +42,10 @@ _key_translation = {
 
 
 def param_dict(**kargs):
+    """
+    Given python parameters and its values, it generates a dict of vultr parameters that are
+    compliant with the service specification
+    """
     params = {}
     for k, v in kargs.items():
         if v is not None:
