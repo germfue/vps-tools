@@ -32,6 +32,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from invoke import task, Collection
+import os.path
 from vultr import Vultr
 from vps.console import display_yaml
 from .key import get_key, require_key
@@ -54,21 +55,28 @@ def startupscript_list(ctx, criteria=''):
     return query(ctx, lambda x: Vultr(x).startupscript.list(), criteria)
 
 
+def _read_script(path):
+    with open(path, 'r') as f:
+        return '\\n'.join([x.strip() for x in f.readlines()])
+
+
 @task(name='create',
       help={
           'name': 'Name of the newly created startup script',
-          'script': 'Startup script contents',
-          'script_type': 'boot|pxe Type of startup script. Default is \'boot\'',
+          'script': 'Startup script contents or path to startup script',
+          '_type': 'boot|pxe Type of startup script.',
       })
 @require_key
-def startupscript_create(ctx, name, script, script_type='boot'):
+def startupscript_create(ctx, name, script, _type=''):
     """
     Create a startup script
     """
     vultr = Vultr(get_key())
     params = {}
-    if script_type != 'boot':
-        params['type'] = script_type
+    if os.path.exists(script):
+        script = _read_script(script)
+    if _type:
+        params['type'] = _type
     response = vultr.startupscript.create(name, script, params)
     if ctx.config.run.echo:
         display_yaml(response)
@@ -85,7 +93,7 @@ def startupscript_destroy(ctx, scriptid):
     Remove a startup script
     """
     vultr = Vultr(get_key())
-    vultr.startupscript.destroy(scriptid)
+    return vultr.startupscript.destroy(scriptid)
 
 
 @task(name='update',
@@ -105,7 +113,7 @@ def startupscript_update(ctx, scriptid, name='', script=''):
         params['name'] = name
     if script:
         params['script'] = script
-    vultr.startupscript.update(scriptid, params)
+    return vultr.startupscript.update(scriptid, params)
 
 
 startupscript_coll = Collection()

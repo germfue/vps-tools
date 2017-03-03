@@ -59,10 +59,10 @@ class _VultrProvision(object):
             criteria = cfg.pop(dyn_label)
             value = query(self.ctx, criteria)
             if len(value) > 1:
-                msg = 'Criteria for %s returned multiple values' % dyn_label
+                msg = 'Criteria for %s(%s) returned multiple values' % (dyn_label, str(criteria))
                 raise ValueError(msg)
             elif len(value) == 0:
-                msg = 'Criteria for %s did not return any value' % dyn_label
+                msg = 'Criteria for %s(%s) did not return any value' % (dyn_label, str(criteria))
                 raise ValueError(msg)
             # careful, ids coming from vultr API are uppercase
             id = value[0][label.upper()]

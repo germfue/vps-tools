@@ -43,6 +43,8 @@ def ssh_list(ctx):
     To execute, run:
     $ vps ssh.list > /tmp/known_hosts
     $ ssh-keyscan -t ecdsa -f /tmp/known_hosts >> ~/.ssh/known_hosts
+    or, in case you just have one server:
+    $ ssh-keyscan -t ecdsa `vps ssh.list` >> ~/.ssh/known_hosts
     """
     hosts = []
     # we do not want to display the result of the query

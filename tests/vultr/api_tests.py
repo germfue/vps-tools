@@ -200,7 +200,7 @@ class TestAPI(unittest.TestCase):
             elif key == _txt_sample_response:
                 scenario.response = value.replace(_txt_no_response, '')
             elif key == _txt_parameters:
-                scenario.parameters = value.replace(_txt_no_parameters, '')
+                scenario.doc_params = value.replace(_txt_no_parameters, '')
             else:
                 raise ValueError('%s: item not expected' % key)
 

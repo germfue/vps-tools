@@ -72,6 +72,7 @@ _osid = '127'
 _region_name = 'New Jersey'
 _plan_name = 'Starter'
 _os_name = 'CentOS 6 x64'
+_script_id = '123'
 _os_response = '''{
 "127": {
     "OSID": "127",
@@ -178,6 +179,13 @@ _cfg_multiple_match = """
         vcpu_count: "1"
     osid: %s
 """ % (_label, _dcid, _osid)
+_cfg_script_id = """
+%s:
+    dcid: %s
+    vpsplanid: %s
+    osid: %s
+    scriptid: %s
+""" % (_label, _dcid, _vpsplanid, _osid, _script_id)
 
 
 class TestProvision(unittest.TestCase):
@@ -219,6 +227,9 @@ class TestProvision(unittest.TestCase):
                 self.assertEqual(_label, qs.pop('label')[0])
                 self.assertEqual(_vpsplanid, qs.pop('VPSPLANID')[0])
                 self.assertEqual(_osid, qs.pop('OSID')[0])
+                if 'scriptid' in cfg:
+                    self.assertEqual(_script_id, qs.pop('SCRIPTID')[0])
+
                 self.assertFalse(qs)
 
             m.get(requests_mock.ANY, text=_callback_query)
@@ -271,3 +282,9 @@ class TestProvision(unittest.TestCase):
             except ValueError as e:
                 self.assertIn('multiple', str(e))
                 raise
+
+    def test_script_id(self):
+        self._test_mocked_query(_cfg_script_id,
+                                'no query',
+                                'no response'
+                                )

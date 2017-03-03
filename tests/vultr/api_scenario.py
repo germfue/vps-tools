@@ -52,7 +52,7 @@ class ScenarioRequest(object):
                 elements = request.replace("'", "").split('--data')
                 for el in elements[1:]:
                     (key, value) = el.split('=')
-                    key = key.strip().lower()
+                    key = key.strip()
                     if key.startswith("$"):
                         # this is to avoid an error in the documentation:
                         # --data $'script=..'\n"
@@ -68,16 +68,24 @@ class ScenarioRequest(object):
 class Scenario(object):
 
     def __init__(self, api_call, api_key='', http_method='', request='',
-                 response='', parameters=''):
+                 response='', doc_params=''):
         self.api_call = api_call
         self.api_key = api_key
         self.http_method = http_method
         self.request = request
         self.response = response
-        self.parameters = parameters
+        self.doc_params = doc_params
 
     def parse_request(self):
         return ScenarioRequest(self.request)
+
+    def _get_doc_param_type(self, line):
+        if "'yes' or 'no'" in line:
+            return 'boolean'
+        return line.split(' ', 2)[1]
+
+    def parse_doc_params(self):
+        return {line.split(' ', 1)[0]: self._get_doc_param_type(line) for line in self.doc_params.splitlines()}
 
     def invoke_subcommand(self):
         return self.api_call.replace('/v1/', '').replace('/', '.')
@@ -92,5 +100,5 @@ class Scenario(object):
                                                self.http_method,
                                                self.request,
                                                self.response,
-                                               self.parameters
+                                               self.doc_params
                                                )

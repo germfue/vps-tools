@@ -38,6 +38,7 @@ import unittest
 import vps.vultr.key
 from invoke import Context
 from urllib.parse import parse_qs
+from vps.console import puts
 from vps.vultr.tasks import collection
 
 
@@ -72,21 +73,21 @@ class _Test(object):
             # requests_mock stores the headers in the query attribute,
             # lower case
             header = 'api_key=%s' % self.scenario.api_key.lower()
-            self.assertEqual(header, query)
-        else:
-            self.assertFalse(query)
-        req = self.scenario.parse_request()
-        if req.params:
-            params = dict(req.params)
-            for key, value in parse_qs(request.text).items():
+            self.assertIn(header, query)
+        scenario_req = self.scenario.parse_request()
+        doc_params = self.scenario.parse_doc_params().keys()
+        if scenario_req.params or doc_params:
+            scenario_params = dict(scenario_req.params)
+            for mockedreq_param, mockedreq_value in parse_qs(request.text).items():
                 # parse_qs will return a list of values
-                self.assertEqual(1, len(value))
-                value = value[0]
-                # check that the key exists in req.params
-                self.assertIn(key.lower(), params)
+                self.assertEqual(1, len(mockedreq_value))
+                mockedreq_value = mockedreq_value[0]
+                # check that the key exists in the documented parameters
+                self.assertIn(mockedreq_param, doc_params)
                 # check that the values stored are the same
-                self.assertEqual(value, params.pop(key.lower()))
-            self.assertFalse(params)
+                if mockedreq_param in scenario_params:
+                    self.assertEqual(mockedreq_value, scenario_params.pop(mockedreq_param), 'value for %s mismatch' % mockedreq_param)
+            self.assertFalse(scenario_params)
 
     def _callback(self, request, context):
         self._check_request(request, context)
@@ -96,6 +97,15 @@ class _Test(object):
         ctx = Context()
         ctx.config.run.echo = False
         return ctx
+
+    def _set_key(self):
+        if self.scenario.api_key:
+            vps.vultr.key._api_key = 'EXAMPLE'
+        else:
+            vps.vultr.key._api_key = None
+
+    def runAllParamsDocumented(self):
+        self._runTest(self._test_all_documented_params)
 
     def runTestCriteria(self):
         self._runTest(self._test_criteria)
@@ -109,49 +119,74 @@ class _Test(object):
     def runTestWithoutKey(self):
         self._runTest(self._test_without_key)
 
+    def _pythonize_id(self, _id):
+        translation = {'type': '_type'}
+        return translation.get(_id, _id.lower())
+
     def _runTest(self, f):
         req = self.scenario.parse_request()
         with requests_mock.mock() as m:
             op = getattr(m, self.scenario.http_method.lower())
             op(req.url, text=self._callback)
             ctx = self._task_context()
-            f(self.task, ctx, req.params)
+            # python api uses lower case. Vultr API uses upper case for ids
+            python_params = {self._pythonize_id(k): v for k, v in req.params.items()}
+            f(self.task, ctx, python_params)
 
-    def _test_with_key(self, task, ctx, params):
+    def _test_with_key(self, task, ctx, python_params):
         vps.vultr.key._api_key = 'EXAMPLE'
-        result = task(ctx, **params)
+        result = task(ctx, **python_params)
         self.check_response(result)
 
-    def _test_without_key(self, task, ctx, params):
+    def _test_without_key(self, task, ctx, python_params):
         vps.vultr.key._api_key = None
-        result = task(ctx, **params)
+        result = task(ctx, **python_params)
         self.check_response(result)
 
-    def _test_key_not_present(self, task, ctx, params):
+    def _test_key_not_present(self, task, ctx, python_params):
         vps.vultr.key._api_key = None
-        result = task(ctx, **params)
+        result = task(ctx, **python_params)
         self.assertIsNone(result)
 
-    def _test_criteria(self, task, ctx, params):
-        if self.scenario.api_key:
-            vps.vultr.key._api_key = 'EXAMPLE'
-        else:
-            vps.vultr.key._api_key = None
-        result = task(ctx, **params)
+    def _test_criteria(self, task, ctx, python_params):
+        self._set_key()
+        result = task(ctx, **python_params)
         # test that a valid filter works
         for k, v in result[0].items():
             if v:
-                params['criteria'] = str({k: v})
-                filtered = task(ctx, **params)
+                python_params['criteria'] = str({k: v})
+                filtered = task(ctx, **python_params)
                 for a_dict in filtered:
                     self.assertEqual(v, a_dict.get(k, ''))
                 break
         else:
             self.assertFalse('No value found in reponse!')
         # test that an invalid filter returns nothing
-        params['criteria'] = str({'fake key': 'fake value'})
-        filtered = task(ctx, **params)
+        python_params['criteria'] = str({'fake key': 'fake value'})
+        filtered = task(ctx, **python_params)
         self.assertFalse(filtered)
+
+    def _test_all_documented_params(self, task, ctx, python_params):
+        self._set_key()
+        default_values = {
+                'string': 'abc',
+                'integer': 1,
+                'boolean': 'yes'
+                }
+        for paramid, param_type in self.scenario.parse_doc_params().items():
+            paramid = self._pythonize_id(paramid)
+            if paramid not in python_params:
+                python_params[paramid] = default_values[param_type]
+        try:
+            result = task(ctx, **python_params)
+            self.assertIsNotNone(result)
+        except TypeError as err:
+            # this will happen if new parameters are added to the API, but not supported
+            # in the vps interface
+            if 'unexpected keyword argument' in str(err):
+                puts('Please add missing parameters')
+                puts(self.scenario.doc_params)
+            raise err
 
 
 def _get_task(module, method):
@@ -196,6 +231,11 @@ def load_tests(loader, standard_tests, pattern):
             (module, method) = subcommand.split('.')
             task = _get_task(module, method)
             base_test_name = scenario.test_name()
+            test = _load_test_case('%s_all_documented_params' % base_test_name,
+                                   task, scenario,
+                                   lambda x: x.runAllParamsDocumented()
+                                   )
+            suite.addTest(test)
             if _supports_criteria(task):
                 test = _load_test_case('%s_with_criteria' % base_test_name,
                                        task, scenario,

@@ -38,15 +38,18 @@ from .query import query
 
 @task(name='list',
       help={
-          'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'plan_type\': \'SSD\'}"'
+          'criteria': 'Filter queried data. Example usage: "{\'plan_type\': \'SSD\'}"',
+          '_type': 'The type of plans to return. Possible values: "all", "vc2", "ssd", "vdc2", "dedicated"',
       })
-def plans_list(ctx, criteria=''):
+def plans_list(ctx, criteria='', _type=''):
     """
     Retrieve a list of all active plans.
     Plans that are no longer available will not be shown.
     """
-    return query(ctx, lambda x: Vultr(x).plans.list(), criteria)
+    params = {}
+    if _type:
+        params['type'] = _type
+    return query(ctx, lambda x: Vultr(x).plans.list(params), criteria)
 
 plans_coll = Collection()
 plans_coll.add_task(plans_list)

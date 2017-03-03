@@ -40,11 +40,14 @@ from .query import query
 
 @task(name='list',
       help={
-          'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'XYZ\': \'???\'}"'
+          'criteria': 'Filter queried data. Example usage: "{\'XYZ\': \'???\'}"',
+          'subid': 'Unique identifier of a subscription. Only the subscription object will be returned',
+          'tag': 'A tag string. Only subscription objects with this tag will be returned',
+          'label': 'A text label string. Only subscription objects with this text label will be returned',
+          'main_ip': 'An IPv4 address. Only the subscription matching this IPv4 address will be returned',
       })
 @require_key
-def server_list(ctx, criteria=''):
+def server_list(ctx, subid=None, tag='', label='', main_ip='', criteria=''):
     """
     List all active or pending virtual machines on the current account.
     The "status" field represents the status of the subscription and will be
@@ -57,7 +60,14 @@ def server_list(ctx, criteria=''):
     has completed or not. The "v6_network", "v6_main_ip", and "v6_network_size"
     fields are deprecated in favor of "v6_networks".
     """
-    return query(ctx, lambda x: Vultr(x).server.list(), criteria)
+    params = {}
+    if tag:
+        params['tag'] = tag
+    if label:
+        params['label'] = label
+    if main_ip:
+        params['main_ip'] = main_ip
+    return query(ctx, lambda x: Vultr(x).server.list(subid=subid, params=params), criteria)
 
 
 @task(name='create',
@@ -101,6 +111,7 @@ def server_list(ctx, criteria=''):
           'as the main IP of this server',
           'hostname': '(optional) The hostname to assign to this server',
           'tag': '(optional) The tag to assign to this server',
+          'firewallgroupid': 'The firewall group to assign to this server',
       })
 @require_key
 def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
@@ -108,7 +119,7 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
                   enable_private_network=False, label='', sshkeyid=0,
                   auto_backups=False, appid=0, userdata='',
                   notify_activate=True, ddos_protection=False,
-                  reserved_ip_v4='', hostname='', tag=''):
+                  reserved_ip_v4='', hostname='', tag='', firewallgroupid=''):
     """
     Create a new virtual machine
     You will start being billed for this immediately
@@ -118,9 +129,9 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
     if ipxe_chain_url:
         params['ipxe_chain_url'] = ipxe_chain_url
     if scriptid:
-        params['scriptid'] = scriptid
+        params['SCRIPTID'] = scriptid
     if snapshotid:
-        params['snapshotid'] = snapshotid
+        params['SNAPSHOTID'] = snapshotid
     if enable_ipv6:
         params['enable_ipv6'] = enable_ipv6
     if enable_private_network:
@@ -128,11 +139,11 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
     if label:
         params['label'] = label
     if sshkeyid:
-        params['sshkeyid'] = sshkeyid
+        params['SSHKEYID'] = sshkeyid
     if auto_backups:
         params['auto_backups'] = auto_backups
     if appid:
-        params['appid'] = appid
+        params['APPID'] = appid
     if userdata:
         params['userdata'] = userdata
     if not notify_activate:
@@ -145,6 +156,8 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
         params['hostname'] = hostname
     if tag:
         params['tag'] = tag
+    if firewallgroupid:
+        params['FIREWALLGROUPID'] = firewallgroupid
     vultr = Vultr(get_key())
     response = vultr.server.create(dcid, vpsplanid, osid, params or None)
     if ctx.config.run.echo:
@@ -165,7 +178,7 @@ def server_destroy(ctx, subid):
     There is no going back from this call
     """
     vultr = Vultr(get_key())
-    vultr.server.destroy(subid)
+    return vultr.server.destroy(subid)
 
 
 server_coll = Collection()

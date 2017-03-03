@@ -1,169 +1,172 @@
 !!omap [{/v1/account/info: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/account/info,
-      api_key: EXAMPLE, http_method: GET, parameters: '', request: "curl -H 'API-Key:\
+      api_key: EXAMPLE, doc_params: '', http_method: GET, request: "curl -H 'API-Key:\
         \ EXAMPLE' https://api.vultr.com/v1/account/info\n", response: "{\n\"balance\"\
         : \"-5519.11\",\n\"pending_charges\": \"57.03\",\n\"last_payment_date\": \"\
         2014-07-18 15:31:01\",\n\"last_payment_amount\": \"-1.00\"\n}"}}, {/v1/app/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/app/list, api_key: '', http_method: GET, parameters: '', request: "curl\
+      api_call: /v1/app/list, api_key: '', doc_params: '', http_method: GET, request: "curl\
         \ https://api.vultr.com/v1/app/list\n", response: "{\n\"1\": {\n\"APPID\"\
         : \"1\",\n\"name\": \"LEMP\",\n\"short_name\": \"lemp\",\n\"deploy_name\"\
         : \"LEMP on CentOS 6 x64\",\n\"surcharge\": 0.00\n},\n\"2\": {\n\"APPID\"\
         : \"2\",\n\"name\": \"WordPress\",\n\"short_name\": \"wordpress\",\n\"deploy_name\"\
         : \"WordPress on CentOS 6 x64\",\n\"surcharge\": 0.00\n}\n}"}}, {/v1/auth/info: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/auth/info, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/auth/info, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/auth/info\n",
       response: "{\n\"acls\": [\n\"subscriptions\",\n\"billing\",\n\"support\",\n\"\
         provisioning\"\n],\n\"email\": \"example@vultr.com\",\n\"name\": \"Example\
         \ Account\"\n}"}}, {/v1/backup/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/backup/list, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer (optional) Unique identifier of a subscription. Only backups for\
-        \ this subscription object will be returned.\n", request: "curl -H 'API-Key:\
+      api_call: /v1/backup/list, api_key: EXAMPLE, doc_params: "SUBID integer (optional)\
+        \ Unique identifier of a subscription. Only backups for this subscription\
+        \ object will be returned.\n", http_method: GET, request: "curl -H 'API-Key:\
         \ EXAMPLE' https://api.vultr.com/v1/backup/list\n", response: "{\n\"543d34149403a\"\
         : {\n\"BACKUPID\": \"543d34149403a\",\n\"date_created\": \"2014-10-14 12:40:40\"\
         ,\n\"description\": \"Automatic server backup\",\n\"size\": \"42949672960\"\
         ,\n\"status\": \"complete\"\n},\n\"543d340f6dbce\": {\n\"BACKUPID\": \"543d340f6dbce\"\
         ,\n\"date_created\": \"2014-10-13 16:11:46\",\n\"description\": \"\",\n\"\
         size\": \"10000000\",\n\"status\": \"complete\"\n}\n}\n"}}, {/v1/block/attach: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/block/attach, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer ID of the block storage subscription to attach\nattach_to_SUBID\
-        \ integer ID of the VPS subscription to mount the block storage subscription\
-        \ to\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/attach\
-        \ --data 'SUBID=1313217' --data 'attach_to_SUBID=1313207'\n", response: ''}},
-  {/v1/block/create: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/block/create,
-      api_key: EXAMPLE, http_method: POST, parameters: "DCID integer DCID of the location\
-        \ to create this subscription in.  See /v1/regions/list\nsize_gb integer Size\
-        \ (in GB) of this subscription.\nlabel string (optional) Text label that will\
-        \ be associated with the subscription\n", request: "curl -H 'API-Key: EXAMPLE'\
-        \ https://api.vultr.com/v1/block/create --data 'DCID=1' --data 'size_gb=50'\
-        \ --data 'label=test'\n", response: "{\n\"USERID\": \"564a1a88947b4\",\n\"\
-        api_key\":\"AAAAAAAA\"\n}\n"}}, {/v1/block/delete: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/block/delete, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer ID of the block storage subscription to delete\n", request: "curl\
+      api_call: /v1/block/attach, api_key: EXAMPLE, doc_params: "SUBID integer ID\
+        \ of the block storage subscription to attach\nattach_to_SUBID integer ID\
+        \ of the VPS subscription to mount the block storage subscription to\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/attach --data\
+        \ 'SUBID=1313217' --data 'attach_to_SUBID=1313207'\n", response: ''}}, {/v1/block/create: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/block/create, api_key: EXAMPLE, doc_params: "DCID integer DCID\
+        \ of the location to create this subscription in.  See /v1/regions/list\n\
+        size_gb integer Size (in GB) of this subscription.\nlabel string (optional)\
+        \ Text label that will be associated with the subscription\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/create --data\
+        \ 'DCID=1' --data 'size_gb=50' --data 'label=test'\n", response: "{\n\"USERID\"\
+        : \"564a1a88947b4\",\n\"api_key\":\"AAAAAAAA\"\n}\n"}}, {/v1/block/delete: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/block/delete, api_key: EXAMPLE, doc_params: "SUBID integer ID\
+        \ of the block storage subscription to delete\n", http_method: POST, request: "curl\
         \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/delete --data 'SUBID=1313217'\n",
       response: ''}}, {/v1/block/detach: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/block/detach, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer ID of the block storage subscription to detach\n", request: "curl\
+      api_call: /v1/block/detach, api_key: EXAMPLE, doc_params: "SUBID integer ID\
+        \ of the block storage subscription to detach\n", http_method: POST, request: "curl\
         \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/detach --data 'SUBID=1313217'\n",
       response: ''}}, {/v1/block/label_set: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/block/label_set, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer ID of the block storage subscription.\nlabel string Text label that\
-        \ will be shown in the control panel.\n", request: "curl -H 'API-Key: EXAMPLE'\
-        \ https://api.vultr.com/v1/block/label_set --data 'SUBID=1313217' --data 'label=example'\n",
-      response: ''}}, {/v1/block/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/block/list, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer (optional) Unique identifier of a subscription. Only the subscription\
-        \ object will be returned.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/list\n",
+      api_call: /v1/block/label_set, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ ID of the block storage subscription.\nlabel string Text label that will\
+        \ be shown in the control panel.\n", http_method: POST, request: "curl -H\
+        \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/label_set --data 'SUBID=1313217'\
+        \ --data 'label=example'\n", response: ''}}, {/v1/block/list: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/block/list, api_key: EXAMPLE, doc_params: "SUBID integer (optional)\
+        \ Unique identifier of a subscription. Only the subscription object will be\
+        \ returned.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/list\n",
       response: "[\n{\n\"SUBID\": 1313216,\n\"date_created\": \"2016-03-29 10:10:04\"\
         ,\n\"cost_per_month\": 10.00,\n\"status\": \"pending\",\n\"size_gb\": 100,\n\
         \"DCID\": 1,\n\"attached_to_SUBID\": null,\n\"label\": \"files1\"\n},\n{\n\
         \"SUBID\": 1313217,\n\"date_created\": \"2016-31-29 10:10:48\",\n\"cost_per_month\"\
         : 5.00,\n\"status\": \"active\",\n\"size_gb\": 50,\n\"DCID\": 1,\n\"attached_to_SUBID\"\
         : 1313207,\n\"label\": \"files2\"\n}\n]\n"}}, {/v1/block/resize: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/block/resize, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer ID of the block storage subscription to resize\nsize_gb integer\
-        \ New size (in GB) of the block storage subscription\n", request: "curl -H\
-        \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/resize --data 'SUBID=1313217'\
+      api_call: /v1/block/resize, api_key: EXAMPLE, doc_params: "SUBID integer ID\
+        \ of the block storage subscription to resize\nsize_gb integer New size (in\
+        \ GB) of the block storage subscription\n", http_method: POST, request: "curl\
+        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/block/resize --data 'SUBID=1313217'\
         \ --data 'size_gb=75'\n", response: ''}}, {/v1/dns/create_domain: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/dns/create_domain, api_key: EXAMPLE, http_method: POST, parameters: "domain\
-        \ string Domain name to create\nserverip string Server IP to use when creating\
-        \ default records (A and MX)\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/create_domain\
-        \ --data 'domain=example.com' --data 'serverip=127.0.0.1'\n", response: "\n"}},
-  {/v1/dns/create_record: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/dns/create_record,
-      api_key: EXAMPLE, http_method: POST, parameters: "domain string Domain name\
-        \ to add record to\nname string Name (subdomain) of record\ntype string Type\
-        \ (A, AAAA, MX, etc) of record\ndata string Data for this record\nttl integer\
-        \ (optional) TTL of this record\npriority integer (only required for MX and\
-        \ SRV) Priority of this record (omit the priority from the data)\n", request: "curl\
-        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/create_record --data\
-        \ 'domain=example.com' --data 'name=vultr' --data 'type=A' --data 'data=192.0.2.1'\n",
+      api_call: /v1/dns/create_domain, api_key: EXAMPLE, doc_params: "domain string\
+        \ Domain name to create\nserverip string Server IP to use when creating default\
+        \ records (A and MX)\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/dns/create_domain --data 'domain=example.com' --data\
+        \ 'serverip=127.0.0.1'\n", response: "\n"}}, {/v1/dns/create_record: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/dns/create_record, api_key: EXAMPLE, doc_params: "domain string\
+        \ Domain name to add record to\nname string Name (subdomain) of record\ntype\
+        \ string Type (A, AAAA, MX, etc) of record\ndata string Data for this record\n\
+        ttl integer (optional) TTL of this record\npriority integer (only required\
+        \ for MX and SRV) Priority of this record (omit the priority from the data)\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/create_record\
+        \ --data 'domain=example.com' --data 'name=vultr' --data 'type=A' --data 'data=192.0.2.1'\n",
       response: "\n"}}, {/v1/dns/delete_domain: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/dns/delete_domain, api_key: EXAMPLE, http_method: POST, parameters: "domain\
-        \ string Domain name to delete\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/delete_domain\
-        \ --data 'domain=example.com'\n", response: ''}}, {/v1/dns/delete_record: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/dns/delete_record, api_key: EXAMPLE, http_method: POST, parameters: "domain\
-        \ string Domain name to delete record from\nRECORDID integer ID of record\
-        \ to delete (see /dns/records)\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/delete_record\
-        \ --data 'domain=example.com' --data 'RECORDID=1265277'\n", response: "\n"}},
-  {/v1/dns/list: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/dns/list,
-      api_key: EXAMPLE, http_method: GET, parameters: '', request: "curl -H 'API-Key:\
-        \ EXAMPLE' https://api.vultr.com/v1/dns/list\n", response: "[\n{\n\"domain\"\
-        : \"example.com\",\n\"date_created\": \"2014-12-11 16:20:59\"\n}\n]"}}, {
-    /v1/dns/records: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/dns/records,
-      api_key: EXAMPLE, http_method: GET, parameters: "domain string Domain to list\
-        \ records for\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/records?domain=example.com\n",
-      response: "[\n{\n\"type\": \"A\",\n\"name\": \"\",\n\"data\": \"127.0.0.1\"\
-        ,\n\"priority\": 0,\n\"RECORDID\": 1265276,\n\"ttl\": 300\n},\n{\n\"type\"\
-        : \"CNAME\",\n\"name\": \"*\",\n\"data\": \"example.com\",\n\"priority\":\
-        \ 0,\n\"RECORDID\": 1265277,\n\"ttl\": 300\n}\n]\n"}}, {/v1/dns/update_record: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/dns/update_record, api_key: EXAMPLE, http_method: POST, parameters: "domain\
-        \ string Domain name to delete record from\nRECORDID integer ID of record\
-        \ to delete (see /dns/records)\nname string (optional) Name (subdomain) of\
-        \ record\ndata string (optional) Data for this record\nttl integer (optional)\
-        \ TTL of this record\npriority integer (optional) (only required for MX and\
-        \ SRV) Priority of this record (omit the priority from the data)\n", request: "curl\
-        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/update_record --data\
-        \ 'domain=example.com' --data 'name=vultr' --data 'type=A' --data 'data=127.0.0.1'\n",
+      api_call: /v1/dns/delete_domain, api_key: EXAMPLE, doc_params: "domain string\
+        \ Domain name to delete\n", http_method: POST, request: "curl -H 'API-Key:\
+        \ EXAMPLE' https://api.vultr.com/v1/dns/delete_domain --data 'domain=example.com'\n",
+      response: ''}}, {/v1/dns/delete_record: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/dns/delete_record, api_key: EXAMPLE, doc_params: "domain string\
+        \ Domain name to delete record from\nRECORDID integer ID of record to delete\
+        \ (see /dns/records)\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/dns/delete_record --data 'domain=example.com' --data\
+        \ 'RECORDID=1265277'\n", response: "\n"}}, {/v1/dns/list: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/dns/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/list\n", response: "[\n\
+        {\n\"domain\": \"example.com\",\n\"date_created\": \"2014-12-11 16:20:59\"\
+        \n}\n]"}}, {/v1/dns/records: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/dns/records, api_key: EXAMPLE, doc_params: "domain string Domain\
+        \ to list records for\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/dns/records?domain=example.com\n", response: "[\n\
+        {\n\"type\": \"A\",\n\"name\": \"\",\n\"data\": \"127.0.0.1\",\n\"priority\"\
+        : 0,\n\"RECORDID\": 1265276,\n\"ttl\": 300\n},\n{\n\"type\": \"CNAME\",\n\"\
+        name\": \"*\",\n\"data\": \"example.com\",\n\"priority\": 0,\n\"RECORDID\"\
+        : 1265277,\n\"ttl\": 300\n}\n]\n"}}, {/v1/dns/update_record: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/dns/update_record, api_key: EXAMPLE, doc_params: "domain string\
+        \ Domain name to delete record from\nRECORDID integer ID of record to delete\
+        \ (see /dns/records)\nname string (optional) Name (subdomain) of record\n\
+        data string (optional) Data for this record\nttl integer (optional) TTL of\
+        \ this record\npriority integer (optional) (only required for MX and SRV)\
+        \ Priority of this record (omit the priority from the data)\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/dns/update_record\
+        \ --data 'domain=example.com' --data 'name=vultr' --data 'type=A' --data 'data=127.0.0.1'\n",
       response: ''}}, {/v1/firewall/group_create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/group_create, api_key: EXAMPLE, http_method: POST, parameters: "description\
-        \ string (optional) Description of firewall group.\n", request: "curl -H 'API-Key:\
-        \ EXAMPLE' https://api.vultr.com/v1/firewall/group_create --data 'description=group1'\n",
-      response: "{\n\"FIREWALLGROUPID\": \"1234abcd\"\n}\n"}}, {/v1/firewall/group_delete: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/group_delete, api_key: EXAMPLE, http_method: POST, parameters: "FIREWALLGROUPID\
-        \ string Firewall group to delete.\n", request: "curl -H 'API-Key: EXAMPLE'\
-        \ https://api.vultr.com/v1/firewall/group_delete --data 'FIREWALLGROUPID=1234abcd'\n",
-      response: ''}}, {/v1/firewall/group_list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/group_list, api_key: EXAMPLE, http_method: GET, parameters: "FIREWALLGROUPID\
+      api_call: /v1/firewall/group_create, api_key: EXAMPLE, doc_params: "description\
+        \ string (optional) Description of firewall group.\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/group_create\
+        \ --data 'description=group1'\n", response: "{\n\"FIREWALLGROUPID\": \"1234abcd\"\
+        \n}\n"}}, {/v1/firewall/group_delete: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/firewall/group_delete, api_key: EXAMPLE, doc_params: "FIREWALLGROUPID\
+        \ string Firewall group to delete.\n", http_method: POST, request: "curl -H\
+        \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/group_delete --data\
+        \ 'FIREWALLGROUPID=1234abcd'\n", response: ''}}, {/v1/firewall/group_list: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/firewall/group_list, api_key: EXAMPLE, doc_params: "FIREWALLGROUPID\
         \ string (optional) Filter result set to only contain this firewall group.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/group_list\n",
+      http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/group_list\n",
       response: "{\n\"1234abcd\": {\n\"FIREWALLGROUPID\": \"1234abcd\",\n\"description\"\
         : \"my http firewall\",\n\"date_created\": \"2017-02-14 17:48:40\",\n\"date_modified\"\
         : \"2017-02-14 17:48:40\",\n\"instance_count\": 2,\n\"rule_count\": 2,\n\"\
         max_rule_count\": 50\n}\n}\n"}}, {/v1/firewall/group_set_description: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/group_set_description, api_key: EXAMPLE, http_method: POST,
-      parameters: "FIREWALLGROUPID string Firewall group to update.\ndescription string\
-        \ Description of firewall group.\n", request: "curl -H 'API-Key: EXAMPLE'\
-        \ https://api.vultr.com/v1/firewall/group_set_description --data 'FIREWALLGROUPID=1234abcd'\
-        \ --data 'description=group2'\n", response: ''}}, {/v1/firewall/rule_create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/rule_create, api_key: EXAMPLE, http_method: POST, parameters: "FIREWALLGROUPID\
-        \ string Target firewall group. See /v1/firewall/group_list.\ndirection string\
-        \ Direction of rule. Possible values: \"in\".\nip_type string IP address type.\
-        \ Possible values: \"v4\", \"v6\".\nprotocol string Protocol type. Possible\
-        \ values: \"icmp\", \"tcp\", \"udp\", \"gre\".\nsubnet string IP address representing\
-        \ a subnet. The IP address format must match with the \"ip_type\" parameter\
-        \ value.\nsubnet_size integer IP prefix size in bits.\nport string (optional)\
-        \ TCP/UDP only. This field can be an integer value specifying a port or a\
-        \ colon separated port range.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/rule_create\
+      api_call: /v1/firewall/group_set_description, api_key: EXAMPLE, doc_params: "FIREWALLGROUPID\
+        \ string Firewall group to update.\ndescription string Description of firewall\
+        \ group.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/group_set_description\
+        \ --data 'FIREWALLGROUPID=1234abcd' --data 'description=group2'\n", response: ''}},
+  {/v1/firewall/rule_create: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/firewall/rule_create,
+      api_key: EXAMPLE, doc_params: "FIREWALLGROUPID string Target firewall group.\
+        \ See /v1/firewall/group_list.\ndirection string Direction of rule. Possible\
+        \ values: \"in\".\nip_type string IP address type. Possible values: \"v4\"\
+        , \"v6\".\nprotocol string Protocol type. Possible values: \"icmp\", \"tcp\"\
+        , \"udp\", \"gre\".\nsubnet string IP address representing a subnet. The IP\
+        \ address format must match with the \"ip_type\" parameter value.\nsubnet_size\
+        \ integer IP prefix size in bits.\nport string (optional) TCP/UDP only. This\
+        \ field can be an integer value specifying a port or a colon separated port\
+        \ range.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/rule_create\
         \ --data 'FIREWALLGROUPID=1234abcd' --data 'direction=in' --data 'ip_type=v4'\
         \ --data 'protocol=tcp' --data 'subnet=10.234.22.0' --data 'subnet_size=24'\
         \ --data 'port=80'\n", response: "{\n\"rulenumber\": 2\n}\n"}}, {/v1/firewall/rule_delete: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/rule_delete, api_key: EXAMPLE, http_method: POST, parameters: "FIREWALLGROUPID\
+      api_call: /v1/firewall/rule_delete, api_key: EXAMPLE, doc_params: "FIREWALLGROUPID\
         \ string Target firewall group. See /v1/firewall/group_list.\nrulenumber integer\
-        \ Rule number to delete. See /v1/firewall/rule_list.\n", request: "curl -H\
-        \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/rule_delete --data\
-        \ 'FIREWALLGROUPID=1234abcd' --data 'rulenumber=2'\n", response: ''}}, {/v1/firewall/rule_list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/firewall/rule_list, api_key: EXAMPLE, http_method: GET, parameters: "FIREWALLGROUPID\
-        \ string Target firewall group. See /v1/firewall/group_list.\ndirection string\
-        \ Direction of firewall rules. Possible values: \"in\".\nip_type string IP\
-        \ address type. Possible values: \"v4\", \"v6\".\n", request: "curl -H 'API-Key:\
-        \ EXAMPLE' 'https://api.vultr.com/v1/firewall/rule_list?FIREWALLGROUPID=1234abcd&direction=in&ip_type=v4'\n",
+        \ Rule number to delete. See /v1/firewall/rule_list.\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/firewall/rule_delete\
+        \ --data 'FIREWALLGROUPID=1234abcd' --data 'rulenumber=2'\n", response: ''}},
+  {/v1/firewall/rule_list: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/firewall/rule_list,
+      api_key: EXAMPLE, doc_params: "FIREWALLGROUPID string Target firewall group.\
+        \ See /v1/firewall/group_list.\ndirection string Direction of firewall rules.\
+        \ Possible values: \"in\".\nip_type string IP address type. Possible values:\
+        \ \"v4\", \"v6\".\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE'\
+        \ 'https://api.vultr.com/v1/firewall/rule_list?FIREWALLGROUPID=1234abcd&direction=in&ip_type=v4'\n",
       response: "{\n\"1\": {\n\"rulenumber\": 1,\n\"action\": \"accept\",\n\"protocol\"\
         : \"icmp\",\n\"port\": \"\",\n\"subnet\": \"\",\n\"subnet_size\": 0\n},\n\"\
         2\": {\n\"rulenumber\": 2,\n\"action\": \"accept\",\n\"protocol\": \"tcp\"\
         ,\n\"port\": \"80\",\n\"subnet\": \"10.234.22.0\",\n\"subnet_size\": 24\n\
         }\n}\n"}}, {/v1/iso/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/iso/list, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/iso/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/iso/list\n", response: "{\n\
         \"24\": {\n\"ISOID\": 24,\n\"date_created\": \"2014-04-01 14:10:09\",\n\"\
         filename\": \"CentOS-6.5-x86_64-minimal.iso\",\n\"size\": 9342976,\n\"md5sum\"\
         : \"ec0669895a250f803e1709d0402fc411\"\n}\n}"}}, {/v1/os/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/os/list, api_key: '', http_method: GET, parameters: '', request: "curl\
+      api_call: /v1/os/list, api_key: '', doc_params: '', http_method: GET, request: "curl\
         \ https://api.vultr.com/v1/os/list\n", response: "{\n\"127\": {\n\"OSID\"\
         : \"127\",\n\"name\": \"CentOS 6 x64\",\n\"arch\": \"x64\",\n\"family\": \"\
         centos\",\n\"windows\": false\n},\n\"148\": {\n\"OSID\": \"148\",\n\"name\"\
         : \"Ubuntu 12.04 i386\",\n\"arch\": \"i386\",\n\"family\": \"ubuntu\",\n\"\
         windows\": false\n}\n}"}}, {/v1/plans/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/plans/list, api_key: '', http_method: GET, parameters: "type string\
-        \ (optional) The type of plans to return. Possible values: \"all\", \"vc2\"\
-        , \"ssd\", \"vdc2\", \"dedicated\".\n", request: "curl https://api.vultr.com/v1/plans/list?type=vc2\n",
+      api_call: /v1/plans/list, api_key: '', doc_params: "type string (optional) The\
+        \ type of plans to return. Possible values: \"all\", \"vc2\", \"ssd\", \"\
+        vdc2\", \"dedicated\".\n", http_method: GET, request: "curl https://api.vultr.com/v1/plans/list?type=vc2\n",
       response: "{\n\"1\": {\n\"VPSPLANID\": \"1\",\n\"name\": \"Starter\",\n\"vcpu_count\"\
         : \"1\",\n\"ram\": \"512\",\n\"disk\": \"20\",\n\"bandwidth\": \"1\",\n\"\
         price_per_month\": \"5.00\",\n\"windows\": false,\n\"plan_type\": \"SSD\"\
@@ -172,21 +175,21 @@
         ,\n\"disk\": \"30\",\n\"bandwidth\": \"2\",\n\"price_per_month\": \"8.00\"\
         ,\n\"windows\": false,\n\"plan_type\": \"SATA\",\n\"available_locations\"\
         : [ ],\n\"deprecated\": true\n}\n}\n"}}, {/v1/plans/list_vc2: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/plans/list_vc2, api_key: '', http_method: GET, parameters: '',
+      api_call: /v1/plans/list_vc2, api_key: '', doc_params: '', http_method: GET,
       request: "curl https://api.vultr.com/v1/plans/list_vc2\n", response: "{\n\"\
         1\": {\n\"VPSPLANID\": \"1\",\n\"name\": \"Starter\",\n\"vcpu_count\": \"\
         1\",\n\"ram\": \"512\",\n\"disk\": \"20\",\n\"bandwidth\": \"1\",\n\"price_per_month\"\
         : \"5.00\",\n\"plan_type\": \"SSD\"\n}\n}"}}, {/v1/plans/list_vdc2: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/plans/list_vdc2, api_key: '', http_method: GET, parameters: '',
+      api_call: /v1/plans/list_vdc2, api_key: '', doc_params: '', http_method: GET,
       request: "curl https://api.vultr.com/v1/plans/list_vdc2\n", response: "{\n\"\
         115\": {\n\"VPSPLANID\": \"115\",\n\"name\": \"8192 MB RAM,110 GB SSD,10.00\
         \ TB BW\",\n\"vcpu_count\": \"2\",\n\"ram\": \"8192\",\n\"disk\": \"110\"\
         ,\n\"bandwidth\": \"10.00\",\n\"price_per_month\": \"60.00\",\n\"plan_type\"\
         : \"DEDICATED\"\n}\n}"}}, {/v1/regions/availability: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/regions/availability, api_key: '', http_method: GET, parameters: "DCID\
-        \ integer Location to check availability of\n", request: "curl https://api.vultr.com/v1/regions/availability?DCID=1\n",
+      api_call: /v1/regions/availability, api_key: '', doc_params: "DCID integer Location\
+        \ to check availability of\n", http_method: GET, request: "curl https://api.vultr.com/v1/regions/availability?DCID=1\n",
       response: "[40,11,45,29,41,61]\n"}}, {/v1/regions/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/regions/list, api_key: '', http_method: GET, parameters: '', request: "curl\
+      api_call: /v1/regions/list, api_key: '', doc_params: '', http_method: GET, request: "curl\
         \ https://api.vultr.com/v1/regions/list\n", response: "{\n\"1\": {\n\"DCID\"\
         : \"1\",\n\"name\": \"New Jersey\",\n\"country\": \"US\",\n\"continent\":\
         \ \"North America\",\n\"state\": \"NJ\",\n\"ddos_protection\": true,\n\"block_storage\"\
@@ -194,36 +197,36 @@
         : \"Chicago\",\n\"country\": \"US\",\n\"continent\": \"North America\",\n\"\
         state\": \"IL\",\n\"ddos_protection\": false,\n\"block_storage\": false,\n\
         \"regioncode\": \"ORD\"\n}\n}"}}, {/v1/reservedip/attach: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/reservedip/attach, api_key: EXAMPLE, http_method: POST, parameters: "ip_address\
-        \ string Reserved IP to attach to your account (use the full subnet here)\n\
-        attach_SUBID integer Unique indentifier of the server to attach the reserved\
-        \ IP to\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/attach\
+      api_call: /v1/reservedip/attach, api_key: EXAMPLE, doc_params: "ip_address string\
+        \ Reserved IP to attach to your account (use the full subnet here)\nattach_SUBID\
+        \ integer Unique indentifier of the server to attach the reserved IP to\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/attach\
         \ --data 'ip_address=2001:db8:8000::/64' --data 'attach_SUBID=5342543'\n",
       response: ''}}, {/v1/reservedip/convert: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/reservedip/convert, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer SUBID of the server that currently has the IP address you want to\
-        \ convert\nip_address string IP address you want to convert (v4 must be a\
-        \ /32, v6 must be a /64)\nlabel string (optional) Label for this reserved\
-        \ IP\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/convert\
+      api_call: /v1/reservedip/convert, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ SUBID of the server that currently has the IP address you want to convert\n\
+        ip_address string IP address you want to convert (v4 must be a /32, v6 must\
+        \ be a /64)\nlabel string (optional) Label for this reserved IP\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/convert\
         \ --data 'SUBID=5342543' --data 'ip_address=2001:db8:8000:/64'\n", response: "{\n\
         \"SUBID\": 365352\n}\n"}}, {/v1/reservedip/create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/reservedip/create, api_key: EXAMPLE, http_method: POST, parameters: "DCID\
-        \ integer Location to create this reserved IP in.  See v1/regions/list\nip_type\
-        \ string 'v4' or 'v6' Type of reserved IP to create\nlabel string (optional)\
-        \ Label for this reserved IP\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/create\
-        \ --data 'DCID=1' --data 'ip_type=v4'\n", response: "{\n\"SUBID\": 1312965\n\
-        }\n"}}, {/v1/reservedip/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/reservedip/destroy, api_key: EXAMPLE, http_method: POST, parameters: "ip_address\
-        \ string Reserved IP to remove from your account.\n", request: "curl -H 'API-Key:\
-        \ EXAMPLE' https://api.vultr.com/v1/reservedip/destroy --data 'SUBID=12345'\n",
-      response: ''}}, {/v1/reservedip/detach: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/reservedip/detach, api_key: EXAMPLE, http_method: POST, parameters: "ip_address\
-        \ string Reserved IP to attach to your account (use the full subnet here)\n\
-        detach_SUBID integer Unique identifier of the server to detach the reserved\
-        \ IP from\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/detach\
+      api_call: /v1/reservedip/create, api_key: EXAMPLE, doc_params: "DCID integer\
+        \ Location to create this reserved IP in.  See v1/regions/list\nip_type string\
+        \ 'v4' or 'v6' Type of reserved IP to create\nlabel string (optional) Label\
+        \ for this reserved IP\n", http_method: POST, request: "curl -H 'API-Key:\
+        \ EXAMPLE' https://api.vultr.com/v1/reservedip/create --data 'DCID=1' --data\
+        \ 'ip_type=v4'\n", response: "{\n\"SUBID\": 1312965\n}\n"}}, {/v1/reservedip/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/reservedip/destroy, api_key: EXAMPLE, doc_params: "ip_address\
+        \ string Reserved IP to remove from your account.\n", http_method: POST, request: "curl\
+        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/destroy --data\
+        \ 'ip_address=2001:db8:8000::/64'\n", response: ''}}, {/v1/reservedip/detach: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/reservedip/detach, api_key: EXAMPLE, doc_params: "ip_address string\
+        \ Reserved IP to attach to your account (use the full subnet here)\ndetach_SUBID\
+        \ integer Unique identifier of the server to detach the reserved IP from\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/detach\
         \ --data 'ip_address=2001:db8:8000::/64' --data 'detach_SUBID=5342543'\n",
       response: ''}}, {/v1/reservedip/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/reservedip/list, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/reservedip/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/reservedip/list\n",
       response: "{\n\"1313044\": {\n\"SUBID\": 1313044,\n\"DCID\": 1,\n\"ip_type\"\
         : \"v4\",\n\"subnet\": \"10.234.22.53\",\n\"subnet_size\": 32,\n\"label\"\
@@ -231,56 +234,56 @@
         \ {\n\"SUBID\": 1313045,\n\"DCID\": 1,\n\"ip_type\": \"v6\",\n\"subnet\":\
         \ \"2001:db8:9999::\",\n\"subnet_size\": 64,\n\"label\": \"\",\n\"attached_SUBID\"\
         : false\n}\n}"}}, {/v1/server/app_change: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/app_change, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nAPPID integer Application to use. See /v1/server/app_change_list.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/app_change\
+      api_call: /v1/server/app_change, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nAPPID integer Application to use. See /v1/server/app_change_list.\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/app_change\
         \ --data 'SUBID=596965' --data 'APPID=2'\n", response: ''}}, {/v1/server/app_change_list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/app_change_list, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/app_change_list?SUBID=576965\n",
+      api_call: /v1/server/app_change_list, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/app_change_list?SUBID=576965\n",
       response: "{\n\"1\": {\n\"APPID\": \"1\",\n\"name\": \"LEMP\",\n\"short_name\"\
         : \"lemp\",\n\"deploy_name\": \"LEMP on CentOS 6 x64\",\n\"surcharge\": 0.00\n\
         },\n\"2\": {\n\"APPID\": \"2\",\n\"name\": \"WordPress\",\n\"short_name\"\
         : \"wordpress\",\n\"deploy_name\": \"WordPress on CentOS 6 x64\",\n\"surcharge\"\
         : 0.00\n}\n}\n"}}, {/v1/server/backup_disable: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/backup_disable, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_disable\
+      api_call: /v1/server/backup_disable, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_disable\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/backup_enable: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/backup_enable, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_enable\
+      api_call: /v1/server/backup_enable, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_enable\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/backup_get_schedule: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/backup_get_schedule, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\n", request: "curl -H 'API-Key:\
+      api_call: /v1/server/backup_get_schedule, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\n", http_method: POST, request: "curl -H 'API-Key:\
         \ EXAMPLE' https://api.vultr.com/v1/server/backup_get_schedule --data 'SUBID=576965'\n",
       response: "{\n\"enabled\": true,\n\"cron_type\": \"weekly\",\n\"next_scheduled_time_utc\"\
         : \"2016-05-07 08:00:00\",\n\"hour\": 8,\n\"dow\": 6,\n\"dom\": 0\n}\n"}},
   {/v1/server/backup_set_schedule: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/backup_set_schedule, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\ncron_type string Backup cron type.\
-        \ Can be one of 'daily', 'weekly', or 'monthly'.\nhour integer (optional)\
-        \ Hour value (0-23). Applicable to crons: 'daily', 'weekly', 'monthly'.\n\
-        dow integer (optional) Day-of-week value (0-6). Applicable to crons: 'weekly'.\n\
-        dom integer (optional) Day-of-month value (1-28). Applicable to crons: 'monthly'.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_set_schedule\
+      api_call: /v1/server/backup_set_schedule, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\ncron_type string Backup cron type. Can be one\
+        \ of 'daily', 'weekly', or 'monthly'.\nhour integer (optional) Hour value\
+        \ (0-23). Applicable to crons: 'daily', 'weekly', 'monthly'.\ndow integer\
+        \ (optional) Day-of-week value (0-6). Applicable to crons: 'weekly'.\ndom\
+        \ integer (optional) Day-of-month value (1-28). Applicable to crons: 'monthly'.\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/backup_set_schedule\
         \ --data 'SUBID=576965' --data 'cron_type=weekly' --data 'hour=8' --data 'dow=6'\n",
       response: ''}}, {/v1/server/bandwidth: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/bandwidth, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer Unique identifier for this subscription.  These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/bandwidth?SUBID=576965\n",
+      api_call: /v1/server/bandwidth, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription.  These can be found using the v1/server/list\
+        \ call.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/bandwidth?SUBID=576965\n",
       response: "{\n\"incoming_bytes\": [\n[ \"2014-06-10\", \"81072581\" ],\n[ \"\
         2014-06-11\", \"222387466\" ],\n[ \"2014-06-12\", \"216885232\" ],\n[ \"2014-06-13\"\
         , \"117262318\" ]\n],\n\"outgoing_bytes\": [\n[ \"2014-06-10\", \"4059610\"\
         \ ],\n[ \"2014-06-11\", \"13432380\" ],\n[ \"2014-06-12\", \"2455005\" ],\n\
         [ \"2014-06-13\", \"1106963\" ]\n]\n}\n"}}, {/v1/server/create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/create, api_key: EXAMPLE, http_method: POST, parameters: "DCID\
-        \ integer Location to create this virtual machine in.  See v1/regions/list\n\
-        VPSPLANID integer Plan to use when creating this virtual machine.  See v1/plans/list\n\
-        OSID integer Operating system to use.  See v1/os/list\nipxe_chain_url string\
+      api_call: /v1/server/create, api_key: EXAMPLE, doc_params: "DCID integer Location\
+        \ to create this virtual machine in.  See v1/regions/list\nVPSPLANID integer\
+        \ Plan to use when creating this virtual machine.  See v1/plans/list\nOSID\
+        \ integer Operating system to use.  See v1/os/list\nipxe_chain_url string\
         \ (optional) If you've selected the 'custom' operating system, this can be\
         \ set to chainload the specified URL on bootup, via iPXE\nISOID string (optional)\
         \  If you've selected the 'custom' operating system, this is the ID of a specific\
@@ -308,72 +311,72 @@
         \ this server\nhostname string (optional) The hostname to assign to this server.\n\
         tag string (optional) The tag to assign to this server.\nFIREWALLGROUPID string\
         \ (optional) The firewall group to assign to this server. See /v1/firewall/group_list.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/create\
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/create\
         \ --data 'DCID=1' --data 'VPSPLANID=1' --data 'OSID=127'\n", response: "{\n\
         \"SUBID\": \"1312965\"\n}\n"}}, {/v1/server/create_ipv4: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/create_ipv4, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nreboot string (optional, default 'yes') 'yes'\
-        \ or 'no'. If yes, the server is rebooted immediately.\n", request: "curl\
-        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/create_ipv4 --data\
-        \ 'SUBID=576965'\n", response: ''}}, {/v1/server/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/destroy, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription.  These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/destroy\
+      api_call: /v1/server/create_ipv4, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nreboot string (optional, default 'yes') 'yes' or 'no'. If yes, the\
+        \ server is rebooted immediately.\n", http_method: POST, request: "curl -H\
+        \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/create_ipv4 --data 'SUBID=576965'\n",
+      response: ''}}, {/v1/server/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/server/destroy, api_key: EXAMPLE, doc_params: "SUBID integer Unique\
+        \ identifier for this subscription.  These can be found using the v1/server/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/destroy\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/destroy_ipv4: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/destroy_ipv4, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nip string IPv4 address to remove.\n", request: "curl\
+      api_call: /v1/server/destroy_ipv4, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nip string IPv4 address to remove.\n", http_method: POST, request: "curl\
         \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/destroy_ipv4 --data\
         \ 'SUBID=576965' --data 'ip=192.0.2.1'\n", response: ''}}, {/v1/server/firewall_group_set: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/firewall_group_set, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. See v1/server/list.\n\
-        FIREWALLGROUPID string The firewall group to apply to this server. A value\
-        \ of \"0\" means \"no firewall group\". See /v1/firewall/group_list.\n", request: "curl\
-        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/firewall_group_set\
+      api_call: /v1/server/firewall_group_set, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. See v1/server/list.\nFIREWALLGROUPID\
+        \ string The firewall group to apply to this server. A value of \"0\" means\
+        \ \"no firewall group\". See /v1/firewall/group_list.\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/firewall_group_set\
         \ --data 'SUBID=576965' --data 'FIREWALLGROUPID=1234abcd'\n", response: ''}},
   {/v1/server/get_app_info: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/server/get_app_info,
-      api_key: EXAMPLE, http_method: GET, parameters: "SUBID integer Unique identifier\
-        \ for this subscription. These can be found using the v1/server/list call.\n",
+      api_key: EXAMPLE, doc_params: "SUBID integer Unique identifier for this subscription.\
+        \ These can be found using the v1/server/list call.\n", http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/get_app_info?SUBID=12345\n",
       response: "{\n\"app_info\": \"\"\n}\n"}}, {/v1/server/get_user_data: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/get_user_data, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/get_user_data?SUBID=12345\n",
+      api_call: /v1/server/get_user_data, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/get_user_data?SUBID=12345\n",
       response: "{\n\"userdata\": \"ZWNobyBIZWxsbyBXb3JsZA==\"\n}\n"}}, {/v1/server/halt: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/halt, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription.  These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/halt\
+      api_call: /v1/server/halt, api_key: EXAMPLE, doc_params: "SUBID integer Unique\
+        \ identifier for this subscription.  These can be found using the v1/server/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/halt\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/iso_attach: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/iso_attach, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the /v1/server/list call.\nISOID integer The ISO that will be mounted. See\
-        \ the /v1/iso/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_attach\
+      api_call: /v1/server/iso_attach, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the /v1/server/list\
+        \ call.\nISOID integer The ISO that will be mounted. See the /v1/iso/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_attach\
         \ --data 'SUBID=576965' --data 'ISOID=24'\n", response: ''}}, {/v1/server/iso_detach: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/iso_detach, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the /v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_detach\
+      api_call: /v1/server/iso_detach, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the /v1/server/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_detach\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/iso_status: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/iso_status, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the /v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_status\
+      api_call: /v1/server/iso_status, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the /v1/server/list\
+        \ call.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/iso_status\
         \ --data 'SUBID=576965'\n", response: "{\n\"state\": \"ready\",\n\"ISOID\"\
         : \"0\"\n}\n"}}, {/v1/server/label_set: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/label_set, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nlabel string This is a text label that will be\
-        \ shown in the control panel.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/label_set\
+      api_call: /v1/server/label_set, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nlabel string This is a text label that will be shown in the control\
+        \ panel.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/label_set\
         \ --data 'SUBID=576965' --data 'label=example'\n", response: ''}}, {/v1/server/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/list, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer (optional) Unique identifier of a subscription. Only the subscription\
-        \ object will be returned.\ntag string (optional) A tag string. Only subscription\
-        \ objects with this tag will be returned.\nlabel string (optional) A text\
-        \ label string. Only subscription objects with this text label will be returned.\n\
-        main_ip string (optional) An IPv4 address. Only the subscription matching\
-        \ this IPv4 address will be returned.\n", request: "curl -H 'API-Key: EXAMPLE'\
-        \ https://api.vultr.com/v1/server/list\n", response: "{\n\"576965\": {\n\"\
-        SUBID\": \"576965\",\n\"os\": \"CentOS 6 x64\",\n\"ram\": \"4096 MB\",\n\"\
-        disk\": \"Virtual 60 GB\",\n\"main_ip\": \"123.123.123.123\",\n\"vcpu_count\"\
+      api_call: /v1/server/list, api_key: EXAMPLE, doc_params: "SUBID integer (optional)\
+        \ Unique identifier of a subscription. Only the subscription object will be\
+        \ returned.\ntag string (optional) A tag string. Only subscription objects\
+        \ with this tag will be returned.\nlabel string (optional) A text label string.\
+        \ Only subscription objects with this text label will be returned.\nmain_ip\
+        \ string (optional) An IPv4 address. Only the subscription matching this IPv4\
+        \ address will be returned.\n", http_method: GET, request: "curl -H 'API-Key:\
+        \ EXAMPLE' https://api.vultr.com/v1/server/list\n", response: "{\n\"576965\"\
+        : {\n\"SUBID\": \"576965\",\n\"os\": \"CentOS 6 x64\",\n\"ram\": \"4096 MB\"\
+        ,\n\"disk\": \"Virtual 60 GB\",\n\"main_ip\": \"123.123.123.123\",\n\"vcpu_count\"\
         : \"2\",\n\"location\": \"New Jersey\",\n\"DCID\": \"1\",\n\"default_password\"\
         : \"nreqnusibni\",\n\"date_created\": \"2013-12-19 14:45:41\",\n\"pending_charges\"\
         : \"46.67\",\n\"status\": \"active\",\n\"cost_per_month\": \"10.05\",\n\"\
@@ -387,7 +390,7 @@
         : \"https:\\/\\/my.vultr.com\\/subs\\/novnc\\/api.php?data=eawxFVZw2mXnhGUV\"\
         ,\n\"auto_backups\": \"yes\",\n\"tag\": \"mytag\",\n\"OSID\": \"127\",\n\"\
         APPID\": \"0\",\n\"FIREWALLGROUPID\": \"0\"\n}\n}\n"}}, {/v1/server/list_ipv4: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/list_ipv4, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/server/list_ipv4, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/list_ipv4?SUBID=576965\n",
       response: "{\n\"576965\": [\n{\n\"ip\": \"123.123.123.123\",\n\"netmask\": \"\
         255.255.255.248\",\n\"gateway\": \"123.123.123.1\",\n\"type\": \"main_ip\"\
@@ -396,115 +399,115 @@
         type\": \"secondary_ip\",\n\"reverse\": \"host2.example.com\"\n},\n{\n\"ip\"\
         : \"10.99.0.10\",\n\"netmask\": \"255.255.0.0\",\n\"gateway\": \"\",\n\"type\"\
         : \"private\",\n\"reverse\": \"\"\n}\n]\n}"}}, {/v1/server/list_ipv6: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/list_ipv6, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/server/list_ipv6, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/list_ipv6?SUBID=576965\n",
       response: "{\n\"576965\": [\n{\n\"ip\": \"2001:DB8:1000::100\",\n\"network\"\
         : \"2001:DB8:1000::\",\n\"network_size\": \"64\",\n\"type\": \"main_ip\"\n\
         }\n]\n}"}}, {/v1/server/neighbors: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/neighbors, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/neighbors?SUBID=12345\n",
+      api_call: /v1/server/neighbors, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/neighbors?SUBID=12345\n",
       response: "[\n23456\n]\n"}}, {/v1/server/os_change: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/os_change, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nOSID integer Operating system to use. See /v1/server/os_change_list.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/os_change\
+      api_call: /v1/server/os_change, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nOSID integer Operating system to use. See /v1/server/os_change_list.\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/os_change\
         \ --data 'SUBID=576965' --data 'OSID=127'\n", response: ''}}, {/v1/server/os_change_list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/os_change_list, api_key: EXAMPLE, http_method: GET, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/os_change_list?SUBID=576965\n",
+      api_call: /v1/server/os_change_list, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\n", http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/os_change_list?SUBID=576965\n",
       response: "{\n\"127\": {\n\"OSID\": \"127\",\n\"name\": \"CentOS 6 x64\",\n\"\
         arch\": \"x64\",\n\"family\": \"centos\",\n\"windows\": false,\n\"surcharge\"\
         : \"0.00\"\n},\n\"148\": {\n\"OSID\": \"148\",\n\"name\": \"Ubuntu 12.04 i386\"\
         ,\n\"arch\": \"i386\",\n\"family\": \"ubuntu\",\n\"windows\": false,\n\"surcharge\"\
         : \"0.00\"\n}\n}\n"}}, {/v1/server/reboot: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reboot, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription.  These can be found using\
-        \ the v1/server/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reboot\
+      api_call: /v1/server/reboot, api_key: EXAMPLE, doc_params: "SUBID integer Unique\
+        \ identifier for this subscription.  These can be found using the v1/server/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reboot\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/reinstall: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reinstall, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription.  These can be found using\
-        \ the v1/server/list call.\nhostname string (optional) The hostname to assign\
-        \ to this server.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reinstall\
+      api_call: /v1/server/reinstall, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription.  These can be found using the v1/server/list\
+        \ call.\nhostname string (optional) The hostname to assign to this server.\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reinstall\
         \ --data 'SUBID=576965'\n", response: ''}}, {/v1/server/restore_backup: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/restore_backup, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription.  These can be found using\
-        \ the v1/server/list call.\nBACKUPID string BACKUPID (see v1/backup/list)\
-        \ to restore to this instance\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/restore_backup\
+      api_call: /v1/server/restore_backup, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription.  These can be found using the v1/server/list\
+        \ call.\nBACKUPID string BACKUPID (see v1/backup/list) to restore to this\
+        \ instance\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/restore_backup\
         \ --data 'SUBID=576965' --data 'BACKUPID=543d34149403a'\n", response: ''}},
   {/v1/server/restore_snapshot: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/restore_snapshot, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription.  These can\
-        \ be found using the v1/server/list call.\nSNAPSHOTID string SNAPSHOTID (see\
-        \ v1/snapshot/list) to restore to this instance\n", request: "curl -H 'API-Key:\
+      api_call: /v1/server/restore_snapshot, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription.  These can be found using\
+        \ the v1/server/list call.\nSNAPSHOTID string SNAPSHOTID (see v1/snapshot/list)\
+        \ to restore to this instance\n", http_method: POST, request: "curl -H 'API-Key:\
         \ EXAMPLE' https://api.vultr.com/v1/server/restore_snapshot --data 'SUBID=576965'\
         \ --data 'SNAPSHOTID=5359435d28b9a'\n", response: ''}}, {/v1/server/reverse_default_ipv4: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reverse_default_ipv4, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\nip string IPv4 address used in\
-        \ the reverse DNS update. These can be found with the v1/server/list_ipv4\
-        \ call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_default_ipv4\
+      api_call: /v1/server/reverse_default_ipv4, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\nip string IPv4 address used in the reverse DNS\
+        \ update. These can be found with the v1/server/list_ipv4 call.\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_default_ipv4\
         \ --data 'SUBID=576965' --data 'ip=192.0.2.1'\n", response: ''}}, {/v1/server/reverse_delete_ipv6: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reverse_delete_ipv6, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\nip string IPv6 address used in\
-        \ the reverse DNS update. These can be found with the v1/server/reverse_list_ipv6\
-        \ call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_delete_ipv6\
+      api_call: /v1/server/reverse_delete_ipv6, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\nip string IPv6 address used in the reverse DNS\
+        \ update. These can be found with the v1/server/reverse_list_ipv6 call.\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_delete_ipv6\
         \ --data 'SUBID=576965' --data 'ip=2001:db8:1234::'\n", response: ''}}, {
     /v1/server/reverse_list_ipv6: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reverse_list_ipv6, api_key: EXAMPLE, http_method: GET,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\n", request: "curl -H 'API-Key:\
+      api_call: /v1/server/reverse_list_ipv6, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\n", http_method: GET, request: "curl -H 'API-Key:\
         \ EXAMPLE' https://api.vultr.com/v1/server/reverse_list_ipv6?SUBID=576965\n",
       response: "{\n\"576965\": [\n{\n\"ip\": \"2001:DB8:1000::101\",\n\"reverse\"\
         : \"host1.example.com\"\n},\n{\n\"ip\": \"2001:DB8:1000::102\",\n\"reverse\"\
         : \"host2.example.com\"\n}\n]\n}\n"}}, {/v1/server/reverse_set_ipv4: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reverse_set_ipv4, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\nip string IPv4 address used in\
-        \ the reverse DNS update. These can be found with the v1/server/list_ipv4\
-        \ call.\nentry string reverse DNS entry.\n", request: "curl -H 'API-Key: EXAMPLE'\
+      api_call: /v1/server/reverse_set_ipv4, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\nip string IPv4 address used in the reverse DNS\
+        \ update. These can be found with the v1/server/list_ipv4 call.\nentry string\
+        \ reverse DNS entry.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
         \ https://api.vultr.com/v1/server/reverse_set_ipv4 --data 'SUBID=576965' --data\
         \ 'ip=192.0.2.1' --data 'entry=example.vultr.com'\n", response: ''}}, {/v1/server/reverse_set_ipv6: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/reverse_set_ipv6, api_key: EXAMPLE, http_method: POST,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\nip string IPv6 address used in\
-        \ the reverse DNS update. These can be found with the v1/server/list_ipv6\
-        \ or v1/server/reverse_list_ipv6 calls.\nentry string reverse DNS entry.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_set_ipv6\
-        \ --data 'SUBID=576965' --data 'ip=2001:db8:1234::' --data 'entry=example.vultr.com'\n",
-      response: ''}}, {/v1/server/set_user_data: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/set_user_data, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
+      api_call: /v1/server/reverse_set_ipv6, api_key: EXAMPLE, doc_params: "SUBID\
         \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nuserdata string Base64 encoded cloud-init user-data\n",
+        \ the v1/server/list call.\nip string IPv6 address used in the reverse DNS\
+        \ update. These can be found with the v1/server/list_ipv6 or v1/server/reverse_list_ipv6\
+        \ calls.\nentry string reverse DNS entry.\n", http_method: POST, request: "curl\
+        \ -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reverse_set_ipv6 --data\
+        \ 'SUBID=576965' --data 'ip=2001:db8:1234::' --data 'entry=example.vultr.com'\n",
+      response: ''}}, {/v1/server/set_user_data: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/server/set_user_data, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nuserdata string Base64 encoded cloud-init user-data\n", http_method: POST,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/set_user_data\
         \ --data 'SUBID=12345' --data 'userdata=ZWNobyBIZWxsbyBXb3JsZA==''\n", response: ''}},
   {/v1/server/start: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/server/start,
-      api_key: EXAMPLE, http_method: POST, parameters: "SUBID integer Unique identifier\
-        \ for this subscription.  These can be found using the v1/server/list call.\n",
+      api_key: EXAMPLE, doc_params: "SUBID integer Unique identifier for this subscription.\
+        \  These can be found using the v1/server/list call.\n", http_method: POST,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/start --data\
         \ 'SUBID=576965'\n", response: ''}}, {/v1/server/upgrade_plan: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/upgrade_plan, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Unique identifier for this subscription. These can be found using\
-        \ the v1/server/list call.\nVPSPLANID integer The new plan. See /v1/server/upgrade_plan_list.\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/upgrade_plan\
+      api_call: /v1/server/upgrade_plan, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Unique identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\nVPSPLANID integer The new plan. See /v1/server/upgrade_plan_list.\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/upgrade_plan\
         \ --data 'SUBID=576965' --data 'VPSPLANID=29'\n", response: ''}}, {/v1/server/upgrade_plan_list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/server/upgrade_plan_list, api_key: EXAMPLE, http_method: GET,
-      parameters: "SUBID integer Unique identifier for this subscription. These can\
-        \ be found using the v1/server/list call.\n", request: "curl -H 'API-Key:\
+      api_call: /v1/server/upgrade_plan_list, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\n", http_method: GET, request: "curl -H 'API-Key:\
         \ EXAMPLE' https://api.vultr.com/v1/server/upgrade_plan_list?SUBID=576965\n",
       response: "[29,41,61]\n"}}, {/v1/snapshot/create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/snapshot/create, api_key: EXAMPLE, http_method: POST, parameters: "SUBID\
-        \ integer Identifier of the virtual machine to create a snapshot from.  See\
-        \ v1/server/list\ndescription string (optional) Description of snapshot contents\n",
+      api_call: /v1/snapshot/create, api_key: EXAMPLE, doc_params: "SUBID integer\
+        \ Identifier of the virtual machine to create a snapshot from.  See v1/server/list\n\
+        description string (optional) Description of snapshot contents\n", http_method: POST,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/create\
         \ --data 'SUBID=1312965'\n", response: "{ \"SNAPSHOTID\": \"544e52f31c706\"\
         \ }\n"}}, {/v1/snapshot/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/snapshot/destroy, api_key: EXAMPLE, http_method: POST, parameters: "SNAPSHOTID\
-        \ string Unique identifier for this snapshot.  These can be found using the\
-        \ v1/snapshot/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/destroy\
+      api_call: /v1/snapshot/destroy, api_key: EXAMPLE, doc_params: "SNAPSHOTID string\
+        \ Unique identifier for this snapshot.  These can be found using the v1/snapshot/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/destroy\
         \ --data 'SNAPSHOTID=5359435d28b9a'\n", response: ''}}, {/v1/snapshot/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/snapshot/list, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/snapshot/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/list\n",
       response: "{\n\"5359435d28b9a\": {\n\"SNAPSHOTID\": \"5359435d28b9a\",\n\"date_created\"\
         : \"2014-04-18 12:40:40\",\n\"description\": \"Test snapshot\",\n\"size\"\
@@ -512,78 +515,81 @@
         SNAPSHOTID\": \"5359435dc1df3\",\n\"date_created\": \"2014-04-22 16:11:46\"\
         ,\n\"description\": \"\",\n\"size\": \"10000000\",\n\"status\": \"complete\"\
         \n}\n}"}}, {/v1/sshkey/create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/sshkey/create, api_key: EXAMPLE, http_method: POST, parameters: "name\
-        \ string Name of the SSH key\nssh_key string SSH public key (in authorized_keys\
-        \ format)\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/create\
+      api_call: /v1/sshkey/create, api_key: EXAMPLE, doc_params: "name string Name\
+        \ of the SSH key\nssh_key string SSH public key (in authorized_keys format)\n",
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/create\
         \ --data 'name=test SSH KEY' --data 'ssh_key=ssh-rsa AA... test@example.com'\n",
       response: "{ \"SSHKEYID\": \"541b4960f23bd\" }\n"}}, {/v1/sshkey/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/sshkey/destroy, api_key: EXAMPLE, http_method: POST, parameters: "SSHKEYID\
-        \ string Unique identifier for this SSH key.  These can be found using the\
-        \ v1/sshkey/list call.\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/destroy\
+      api_call: /v1/sshkey/destroy, api_key: EXAMPLE, doc_params: "SSHKEYID string\
+        \ Unique identifier for this SSH key.  These can be found using the v1/sshkey/list\
+        \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/destroy\
         \ --data 'SSHKEYID=541b4960f23bd'\n", response: ''}}, {/v1/sshkey/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/sshkey/list, api_key: EXAMPLE, http_method: GET, parameters: '',
+      api_call: /v1/sshkey/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/list\n",
       response: "{\n\"541b4960f23bd\": {\n\"SSHKEYID\": \"541b4960f23bd\",\n\"date_created\"\
         : null,\n\"name\": \"test\",\n\"ssh_key\": \"ssh-rsa AA... test@example.com\"\
         \n}\n}"}}, {/v1/sshkey/update: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/sshkey/update, api_key: EXAMPLE, http_method: POST, parameters: "SSHKEYID\
-        \ string SSHKEYID of key to update (see /v1/sshkey/list)\nname string (optional)\
+      api_call: /v1/sshkey/update, api_key: EXAMPLE, doc_params: "SSHKEYID string\
+        \ SSHKEYID of key to update (see /v1/sshkey/list)\nname string (optional)\
         \ New name for the SSH key\nssh_key string (optional) New SSH key contents\n",
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/update\
+      http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/update\
         \ --data 'SSHKEYID=541b4960f23bd' --data 'name=new key name' --data 'ssh_key=ssh-rsa\
         \ AA... someother@example.com'\n\n", response: ''}}, {/v1/startupscript/create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/startupscript/create, api_key: EXAMPLE, http_method: POST, parameters: "name\
-        \ string Name of the newly created startup script\nscript string Startup script\
-        \ contents\ntype string boot|pxe Type of startup script.  Default is 'boot'\n",
+      api_call: /v1/startupscript/create, api_key: EXAMPLE, doc_params: "name string\
+        \ Name of the newly created startup script\nscript string Startup script contents\n\
+        type string boot|pxe Type of startup script.  Default is 'boot'\n", http_method: POST,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/create\
         \ --data 'name=my first script' --data $'script=#!/bin/bash\\necho hello world\
         \ > /root/hello'\n", response: "{ \"SCRIPTID\": 5 }\n"}}, {/v1/startupscript/destroy: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/startupscript/destroy, api_key: EXAMPLE, http_method: POST, parameters: "SCRIPTID\
+      api_call: /v1/startupscript/destroy, api_key: EXAMPLE, doc_params: "SCRIPTID\
         \ string Unique identifier for this startup script.  These can be found using\
-        \ the v1/startupscript/list call.\n", request: "curl -H 'API-Key: EXAMPLE'\
-        \ https://api.vultr.com/v1/startupscript/destroy --data 'SCRIPTID=5'\n", response: ''}},
-  {/v1/startupscript/list: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/startupscript/list,
-      api_key: EXAMPLE, http_method: GET, parameters: '', request: "curl -H 'API-Key:\
-        \ EXAMPLE' https://api.vultr.com/v1/startupscript/list\n", response: "{\n\"\
-        3\": {\n\"SCRIPTID\": \"3\",\n\"date_created\": \"2014-05-21 15:27:18\",\n\
-        \"date_modified\": \"2014-05-21 15:27:18\",\n\"name\": \"test \",\n\"type\"\
-        : \"boot\",\n\"script\": \"#!/bin/bash echo Hello World > /root/hello\"\n\
-        },\n\"5\": {\n\"SCRIPTID\": \"5\",\n\"date_created\": \"2014-08-22 15:27:18\"\
+        \ the v1/startupscript/list call.\n", http_method: POST, request: "curl -H\
+        \ 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/destroy --data\
+        \ 'SCRIPTID=5'\n", response: ''}}, {/v1/startupscript/list: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/startupscript/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/list\n",
+      response: "{\n\"3\": {\n\"SCRIPTID\": \"3\",\n\"date_created\": \"2014-05-21\
+        \ 15:27:18\",\n\"date_modified\": \"2014-05-21 15:27:18\",\n\"name\": \"test\
+        \ \",\n\"type\": \"boot\",\n\"script\": \"#!/bin/bash echo Hello World > /root/hello\"\
+        \n},\n\"5\": {\n\"SCRIPTID\": \"5\",\n\"date_created\": \"2014-08-22 15:27:18\"\
         ,\n\"date_modified\": \"2014-09-22 15:27:18\",\n\"name\": \"test \",\n\"type\"\
         : \"pxe\",\n\"script\": \"#!ipxe\\necho Hello World\\nshell\"\n}\n}"}}, {
     /v1/startupscript/update: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/startupscript/update, api_key: EXAMPLE, http_method: POST, parameters: "SCRIPTID\
+      api_call: /v1/startupscript/update, api_key: EXAMPLE, doc_params: "SCRIPTID\
         \ integer SCRIPTID of script to update (see /v1/startupscript/list)\nname\
         \ string (optional) New name for the startup script\nscript string (optional)\
-        \ New startup script contents\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/startupscript/update\
-        \ --data 'SCRIPTID=5' --data 'name=my first script' --data 'script=#!/bin/bash\\\
-        necho hello world > /root/hello'\n", response: ''}}, {/v1/user/create: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/user/create, api_key: EXAMPLE, http_method: POST, parameters: "email\
-        \ string Email address for this user\nname string Name for this user\npassword\
-        \ Password for this user\napi_enabled string (optional) 'yes' or 'no'. If\
-        \ yes, this user's API key will work on api.vultr.com.  Default is yes\nacls\
-        \ array List of ACLs that this user should have.  See /v1/user/list for information\
-        \ on possible ACLs\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/create\
-        \ --data 'email=new@vultr.com' --data 'name=test user' --data 'password=badpassword'\
-        \ --data 'acls[]=manage_users' --data 'acls[]=subscriptions'\n", response: "{\n\
-        \"USERID\": \"564a1a88947b4\",\n\"api_key\":\"AAAAAAAA\"\n}\n"}}, {/v1/user/delete: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/user/delete, api_key: EXAMPLE, http_method: POST, parameters: "USERID\
-        \ int ID of the user to delete\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/delete\
-        \ --data 'USERID=564a1a88947b4'\n", response: ''}}, {/v1/user/list: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/user/list, api_key: EXAMPLE, http_method: GET, parameters: '',
-      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/list\n",
-      response: "[\n{\n\"USERID\": \"564a1a7794d83\",\n\"name\": \"example user 1\"\
-        ,\n\"email\": \"example@vultr.com\",\n\"api_enabled\": \"yes\",\n\"acls\"\
-        : [\n\"manage_users\",\n\"subscriptions\",\n\"billing\",\n\"provisioning\"\
-        \n]\n},\n{\n\"USERID\": \"564a1a88947b4\",\n\"name\": \"example user 2\",\n\
-        \"email\": \"example@vultr.com\",\n\"api_enabled\": \"no\",\n\"acls\": [\n\
-        \"support\",\n\"dns\"\n]\n}\n]"}}, {/v1/user/update: !!python/object:tests.vultr.api_scenario.Scenario {
-      api_call: /v1/user/update, api_key: EXAMPLE, http_method: POST, parameters: "USERID\
-        \ string ID of the user to update\nemail string (optional) New email address\
-        \ for this user\nname string (optional) New name for this user\npassword string\
-        \ (optional) New password for this user\napi_enabled string (optional) 'yes'\
-        \ or 'no'. If yes, this user's API key will work on api.vultr.com\nacls array\
-        \ (optional) List of ACLs that this user should have.  See /v1/user/list for\
-        \ information on possible ACLs\n", request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/user/update\
-        \ --data 'USERID=564a1a88947b4' --data 'email=new@vultr.com' --data 'password=badpassword'\
-        \ --data 'acls[]=manage_users' --data 'acls[]=subscriptions'\n", response: ''}}]
+        \ New startup script contents\n", http_method: POST, request: "curl -H 'API-Key:\
+        \ EXAMPLE' https://api.vultr.com/v1/startupscript/update --data 'SCRIPTID=5'\
+        \ --data 'name=my first script' --data 'script=#!/bin/bash\\necho hello world\
+        \ > /root/hello'\n", response: ''}}, {/v1/user/create: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/user/create, api_key: EXAMPLE, doc_params: "email string Email\
+        \ address for this user\nname string Name for this user\npassword Password\
+        \ for this user\napi_enabled string (optional) 'yes' or 'no'. If yes, this\
+        \ user's API key will work on api.vultr.com.  Default is yes\nacls array List\
+        \ of ACLs that this user should have.  See /v1/user/list for information on\
+        \ possible ACLs\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/user/create --data 'email=new@vultr.com' --data\
+        \ 'name=test user' --data 'password=badpassword' --data 'acls[]=manage_users'\
+        \ --data 'acls[]=subscriptions'\n", response: "{\n\"USERID\": \"564a1a88947b4\"\
+        ,\n\"api_key\":\"AAAAAAAA\"\n}\n"}}, {/v1/user/delete: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/user/delete, api_key: EXAMPLE, doc_params: "USERID int ID of the\
+        \ user to delete\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/user/delete --data 'USERID=564a1a88947b4'\n", response: ''}},
+  {/v1/user/list: !!python/object:tests.vultr.api_scenario.Scenario {api_call: /v1/user/list,
+      api_key: EXAMPLE, doc_params: '', http_method: GET, request: "curl -H 'API-Key:\
+        \ EXAMPLE' https://api.vultr.com/v1/user/list\n", response: "[\n{\n\"USERID\"\
+        : \"564a1a7794d83\",\n\"name\": \"example user 1\",\n\"email\": \"example@vultr.com\"\
+        ,\n\"api_enabled\": \"yes\",\n\"acls\": [\n\"manage_users\",\n\"subscriptions\"\
+        ,\n\"billing\",\n\"provisioning\"\n]\n},\n{\n\"USERID\": \"564a1a88947b4\"\
+        ,\n\"name\": \"example user 2\",\n\"email\": \"example@vultr.com\",\n\"api_enabled\"\
+        : \"no\",\n\"acls\": [\n\"support\",\n\"dns\"\n]\n}\n]"}}, {/v1/user/update: !!python/object:tests.vultr.api_scenario.Scenario {
+      api_call: /v1/user/update, api_key: EXAMPLE, doc_params: "USERID string ID of\
+        \ the user to update\nemail string (optional) New email address for this user\n\
+        name string (optional) New name for this user\npassword string (optional)\
+        \ New password for this user\napi_enabled string (optional) 'yes' or 'no'.\
+        \ If yes, this user's API key will work on api.vultr.com\nacls array (optional)\
+        \ List of ACLs that this user should have.  See /v1/user/list for information\
+        \ on possible ACLs\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/user/update --data 'USERID=564a1a88947b4' --data\
+        \ 'email=new@vultr.com' --data 'password=badpassword' --data 'acls[]=manage_users'\
+        \ --data 'acls[]=subscriptions'\n", response: ''}}]
