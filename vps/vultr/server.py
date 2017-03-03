@@ -34,6 +34,7 @@
 from invoke import task, Collection
 from vultr import Vultr
 from vps.console import display_yaml
+from .params import param_dict
 from .key import get_key, require_key
 from .query import query
 
@@ -60,13 +61,7 @@ def server_list(ctx, subid=None, tag='', label='', main_ip='', criteria=''):
     has completed or not. The "v6_network", "v6_main_ip", and "v6_network_size"
     fields are deprecated in favor of "v6_networks".
     """
-    params = {}
-    if tag:
-        params['tag'] = tag
-    if label:
-        params['label'] = label
-    if main_ip:
-        params['main_ip'] = main_ip
+    params = param_dict(tag=tag, label=label, main_ip=main_ip)
     return query(ctx, lambda x: Vultr(x).server.list(subid=subid, params=params), criteria)
 
 
@@ -114,50 +109,35 @@ def server_list(ctx, subid=None, tag='', label='', main_ip='', criteria=''):
           'firewallgroupid': 'The firewall group to assign to this server',
       })
 @require_key
-def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url='',
-                  isoid='', scriptid=0, snapshotid=0, enable_ipv6=False,
-                  enable_private_network=False, label='', sshkeyid=0,
-                  auto_backups=False, appid=0, userdata='',
-                  notify_activate=True, ddos_protection=False,
-                  reserved_ip_v4='', hostname='', tag='', firewallgroupid=''):
+def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url=None,
+                  isoid=None, scriptid=None, snapshotid=None, enable_ipv6=None,
+                  enable_private_network=None, label=None, sshkeyid=None,
+                  auto_backups=None, appid=None, userdata=None,
+                  notify_activate=None, ddos_protection=None,
+                  reserved_ip_v4=None, hostname=None, tag=None,
+                  firewallgroupid=None):
     """
     Create a new virtual machine
     You will start being billed for this immediately
     The response only contains the SUBID for the new machine
     """
-    params = {}
-    if ipxe_chain_url:
-        params['ipxe_chain_url'] = ipxe_chain_url
-    if scriptid:
-        params['SCRIPTID'] = scriptid
-    if snapshotid:
-        params['SNAPSHOTID'] = snapshotid
-    if enable_ipv6:
-        params['enable_ipv6'] = enable_ipv6
-    if enable_private_network:
-        params['enable_private_network'] = enable_private_network
-    if label:
-        params['label'] = label
-    if sshkeyid:
-        params['SSHKEYID'] = sshkeyid
-    if auto_backups:
-        params['auto_backups'] = auto_backups
-    if appid:
-        params['APPID'] = appid
-    if userdata:
-        params['userdata'] = userdata
-    if not notify_activate:
-        params['notify_activate'] = notify_activate
-    if ddos_protection:
-        params['ddos_protection'] = ddos_protection
-    if reserved_ip_v4:
-        params['reserved_ip_v4'] = reserved_ip_v4
-    if hostname:
-        params['hostname'] = hostname
-    if tag:
-        params['tag'] = tag
-    if firewallgroupid:
-        params['FIREWALLGROUPID'] = firewallgroupid
+    params = param_dict(ipxe_chain_url=ipxe_chain_url,
+                        scriptid=scriptid, 
+                        snapshotid=snapshotid,
+                        enable_ipv6=enable_ipv6,
+                        enable_private_network=enable_private_network,
+                        label=label,
+                        sshkeyid=sshkeyid,
+                        auto_backups=auto_backups,
+                        appid=appid,
+                        userdata=userdata,
+                        notify_activate=notify_activate,
+                        ddos_protection=ddos_protection,
+                        reserved_ip_v4=reserved_ip_v4,
+                        hostname=hostname,
+                        tag=tag,
+                        firewallgroupid=firewallgroupid,
+                        )
     vultr = Vultr(get_key())
     response = vultr.server.create(dcid, vpsplanid, osid, params or None)
     if ctx.config.run.echo:

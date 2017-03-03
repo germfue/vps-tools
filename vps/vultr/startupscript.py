@@ -35,6 +35,7 @@ from invoke import task, Collection
 import os.path
 from vultr import Vultr
 from vps.console import display_yaml
+from .params import param_dict
 from .key import get_key, require_key
 from .query import query
 
@@ -67,16 +68,14 @@ def _read_script(path):
           'type': 'boot|pxe Type of startup script',
       })
 @require_key
-def startupscript_create(ctx, name, script, _type=''):
+def startupscript_create(ctx, name, script, _type=None):
     """
     Create a startup script
     """
     vultr = Vultr(get_key())
-    params = {}
     if os.path.exists(script):
         script = _read_script(script)
-    if _type:
-        params['type'] = _type
+    params = param_dict(_type=_type)
     response = vultr.startupscript.create(name, script, params)
     if ctx.config.run.echo:
         display_yaml(response)
@@ -108,11 +107,7 @@ def startupscript_update(ctx, scriptid, name='', script=''):
     Update an existing startup script
     """
     vultr = Vultr(get_key())
-    params = {}
-    if name:
-        params['name'] = name
-    if script:
-        params['script'] = script
+    params = param_dict(name=name, script=script)
     return vultr.startupscript.update(scriptid, params)
 
 
