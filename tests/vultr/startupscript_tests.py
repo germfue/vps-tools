@@ -68,8 +68,7 @@ class TestStartupscript(unittest.TestCase):
                 self.assertEqual('/v1/startupscript/create', request.path)
                 qs = parse_qs(request.text)
                 self.assertEqual(_script_name, qs.pop('name')[0])
-                script = _startupscript.replace('\n', '\\n')
-                self.assertEqual(script, qs.pop('script')[0])
+                self.assertEqual(_startupscript, qs.pop('script')[0])
                 self.assertFalse(qs)
                 return _response
 

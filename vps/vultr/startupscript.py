@@ -57,14 +57,14 @@ def startupscript_list(ctx, criteria=''):
 
 def _read_script(path):
     with open(path, 'r') as f:
-        return '\\n'.join([x.strip() for x in f.readlines()])
+        return f.read()
 
 
 @task(name='create',
       help={
           'name': 'Name of the newly created startup script',
           'script': 'Startup script contents or path to startup script',
-          '_type': 'boot|pxe Type of startup script.',
+          'type': 'boot|pxe Type of startup script',
       })
 @require_key
 def startupscript_create(ctx, name, script, _type=''):
