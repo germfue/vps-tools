@@ -34,7 +34,53 @@
 import re
 
 
-class ScenarioRequest(object):
+class TestScenario(object):
+    """
+    Test Scenario as defined in examples from https://vultr.com/api
+    """
+
+    def __init__(self, api_call, api_key='', http_method='', request='',
+                 response='', doc_params=''):
+        self.api_call = api_call
+        self.api_key = api_key
+        self.http_method = http_method
+        self.request = request
+        self.response = response
+        self.doc_params = doc_params
+
+    def parse_request(self):
+        return TestRequest(self.request)
+
+    def _get_doc_param_type(self, line):
+        if "'yes' or 'no'" in line:
+            return 'boolean'
+        return line.split(' ', 2)[1]
+
+    def parse_doc_params(self):
+        doc_lines = self.doc_params.splitlines()
+        return {
+            line.split(' ', 1)[0]: self._get_doc_param_type(line)
+            for line in doc_lines
+        }
+
+    def invoke_subcommand(self):
+        return self.api_call.replace('/v1/', '').replace('/', '.')
+
+    def test_name(self):
+        return 'test_%s' % self.api_call.replace('/v1/', '').replace('/', '_')
+
+    def __repr__(self):
+        return '%s(%r, %r, %r, %r, %r, %r)' % (self.__class__.__name__,
+                                               self.api_call,
+                                               self.api_key,
+                                               self.http_method,
+                                               self.request,
+                                               self.response,
+                                               self.doc_params
+                                               )
+
+
+class TestRequest(object):
 
     _req_pattern = ("curl\s",
                     "(-H\s'API-Key:\s(?P<api_key>EXAMPLE)'\s+){0,1}",
@@ -63,42 +109,3 @@ class ScenarioRequest(object):
 
     def __str__(self):
         return '%s(%r)' % (self.__class__.__name__, self.url)
-
-
-class Scenario(object):
-
-    def __init__(self, api_call, api_key='', http_method='', request='',
-                 response='', doc_params=''):
-        self.api_call = api_call
-        self.api_key = api_key
-        self.http_method = http_method
-        self.request = request
-        self.response = response
-        self.doc_params = doc_params
-
-    def parse_request(self):
-        return ScenarioRequest(self.request)
-
-    def _get_doc_param_type(self, line):
-        if "'yes' or 'no'" in line:
-            return 'boolean'
-        return line.split(' ', 2)[1]
-
-    def parse_doc_params(self):
-        return {line.split(' ', 1)[0]: self._get_doc_param_type(line) for line in self.doc_params.splitlines()}
-
-    def invoke_subcommand(self):
-        return self.api_call.replace('/v1/', '').replace('/', '.')
-
-    def test_name(self):
-        return 'test_%s' % self.api_call.replace('/v1/', '').replace('/', '_')
-
-    def __repr__(self):
-        return '%s(%r, %r, %r, %r, %r, %r)' % (self.__class__.__name__,
-                                               self.api_call,
-                                               self.api_key,
-                                               self.http_method,
-                                               self.request,
-                                               self.response,
-                                               self.doc_params
-                                               )

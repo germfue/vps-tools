@@ -37,7 +37,7 @@ import ruamel.yaml
 import unittest
 from bs4 import BeautifulSoup
 from collections import OrderedDict
-from .api_scenario import Scenario
+from .test_scenario import TestScenario
 
 
 _response = requests.get('https://www.vultr.com/api/')
@@ -211,7 +211,7 @@ class TestAPI(unittest.TestCase):
     def _parse_scenarios(self):
         scenarios = OrderedDict()
         for api_call in self._find_api_calls():
-            scenario = Scenario(api_call.text)
+            scenario = TestScenario(api_call.text)
             self._parse_table(scenario, api_call.parent.table)
             code_blocks = api_call.parent.find_all('div', class_='code')
             self._parse_code_blocks(scenario, code_blocks)
@@ -222,7 +222,7 @@ class TestAPI(unittest.TestCase):
         scenarios = ruamel.yaml.dump(self._parse_scenarios())
         scenarios_in_use = self._load_scenarios()
         try:
-            error_msg = "execute 'diff cases.yaml cases_new.yaml' for details"
+            error_msg = "execute 'diff cases_new.yaml cases.yaml' for details"
             self.assertEqual(scenarios_in_use, scenarios, error_msg)
         except:
             with open('cases_new.yaml', 'w') as f:
