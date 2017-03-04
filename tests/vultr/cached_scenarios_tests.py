@@ -43,7 +43,7 @@ from vps.vultr.tasks import collection
 from .scenario_file import load_cached_scenarios
 
 
-class _Test(object):
+class _TestCachedScenarios(object):
     """
     This class can't inherit from TestCase as it gets automatically loaded
     by setup tools. It defines though all test cases for the cached scenarios
@@ -52,7 +52,32 @@ class _Test(object):
     def __init__(self, test_name, task, scenario):
         self.task = task
         self.scenario = scenario
-        super(_Test, self).__init__(test_name)
+        super(_TestCachedScenarios, self).__init__(test_name)
+
+    def runAllParamsDocumented(self):
+        self._runTest(self._test_all_documented_params)
+
+    def runTestCriteria(self):
+        self._runTest(self._test_criteria)
+
+    def runTestWithKey(self):
+        self._runTest(self._test_with_key)
+
+    def runTestWithoutMandatoryKey(self):
+        self._runTest(self._test_key_not_present)
+
+    def runTestWithoutKey(self):
+        self._runTest(self._test_without_key)
+
+    def _runTest(self, f):
+        req = self.scenario.parse_request()
+        with requests_mock.mock() as m:
+            op = getattr(m, self.scenario.http_method.lower())
+            op(req.url, text=self._callback)
+            ctx = self._task_context()
+            # python api uses lower case. Vultr API uses upper case for ids
+            python_params = {self._pythonize_id(k): v for k, v in req.params.items()}
+            f(self.task, ctx, python_params)
 
     def _check_response(self, result):
         scenario = self.scenario
@@ -92,50 +117,6 @@ class _Test(object):
                                      'value for %s mismatch' % mockedreq_param
                                      )
             self.assertFalse(scenario_params)
-
-    def _callback(self, request, context):
-        self._check_request(request, context)
-        return self.scenario.response
-
-    def _task_context(self):
-        ctx = Context()
-        ctx.config.run.echo = False
-        return ctx
-
-    def _set_key(self):
-        if self.scenario.api_key:
-            vps.vultr.key._api_key = 'EXAMPLE'
-        else:
-            vps.vultr.key._api_key = None
-
-    def runAllParamsDocumented(self):
-        self._runTest(self._test_all_documented_params)
-
-    def runTestCriteria(self):
-        self._runTest(self._test_criteria)
-
-    def runTestWithKey(self):
-        self._runTest(self._test_with_key)
-
-    def runTestWithoutMandatoryKey(self):
-        self._runTest(self._test_key_not_present)
-
-    def runTestWithoutKey(self):
-        self._runTest(self._test_without_key)
-
-    def _pythonize_id(self, _id):
-        translation = {'type': '_type'}
-        return translation.get(_id, _id.lower())
-
-    def _runTest(self, f):
-        req = self.scenario.parse_request()
-        with requests_mock.mock() as m:
-            op = getattr(m, self.scenario.http_method.lower())
-            op(req.url, text=self._callback)
-            ctx = self._task_context()
-            # python api uses lower case. Vultr API uses upper case for ids
-            python_params = {self._pythonize_id(k): v for k, v in req.params.items()}
-            f(self.task, ctx, python_params)
 
     def _test_with_key(self, task, ctx, python_params):
         vps.vultr.key._api_key = 'EXAMPLE'
@@ -192,8 +173,28 @@ class _Test(object):
                 puts(self.scenario.doc_params)
             raise err
 
+    def _callback(self, request, context):
+        self._check_request(request, context)
+        return self.scenario.response
 
-def _get_task(module, method):
+    def _task_context(self):
+        ctx = Context()
+        ctx.config.run.echo = False
+        return ctx
+
+    def _set_key(self):
+        if self.scenario.api_key:
+            vps.vultr.key._api_key = 'EXAMPLE'
+        else:
+            vps.vultr.key._api_key = None
+
+    def _pythonize_id(self, _id):
+        translation = {'type': '_type'}
+        return translation.get(_id, _id.lower())
+
+
+def _get_task(subcommand):
+    (module, method) = subcommand.split('.')
     return collection.collections[module].tasks[method]
 
 
@@ -211,52 +212,55 @@ def _load_test_case(test_name, task, scenario, f):
             d[test_name] = f
             return type.__new__(mcs, name, bases, d)
 
-    class TestFromAPICases(_Test, unittest.TestCase, metaclass=_Meta):
+    class TestCachedScenarios(_TestCachedScenarios, unittest.TestCase, metaclass=_Meta):
         def __init__(self):
-            super(TestFromAPICases, self).__init__(test_name,
-                                                   task,
-                                                   scenario
-                                                   )
-    return TestFromAPICases()
+            super(TestCachedScenarios, self).__init__(test_name,
+                                                      task,
+                                                      scenario
+                                                      )
+    return TestCachedScenarios()
 
 
 def load_tests(loader, standard_tests, pattern):
     suite = unittest.TestSuite()
     scenarios = ruamel.yaml.load(load_cached_scenarios(), Loader=ruamel.yaml.Loader)
-    for api_call in scenarios:
-        scenario = scenarios[api_call]
+    for api_call, scenario in scenarios.items():
         subcommand = scenario.invoke_subcommand()
         if subcommand in collection.task_names.keys():
-            (module, method) = subcommand.split('.')
-            task = _get_task(module, method)
+            task = _get_task(subcommand)
             base_test_name = scenario.test_name()
             test = _load_test_case('%s_all_documented_params' % base_test_name,
-                                   task, scenario,
+                                   task,
+                                   scenario,
                                    lambda x: x.runAllParamsDocumented()
                                    )
             suite.addTest(test)
             if _supports_criteria(task):
                 test = _load_test_case('%s_with_criteria' % base_test_name,
-                                       task, scenario,
+                                       task,
+                                       scenario,
                                        lambda x: x.runTestCriteria()
                                        )
                 suite.addTest(test)
             if scenario.api_key:
                 test = _load_test_case('%s_with_key' % base_test_name,
-                                       task, scenario,
+                                       task,
+                                       scenario,
                                        lambda x: x.runTestWithKey()
                                        )
                 suite.addTest(test)
 
                 test_name = '%s_without_mandatory_key' % base_test_name
                 test = _load_test_case(test_name,
-                                       task, scenario,
+                                       task,
+                                       scenario,
                                        lambda x: x.runTestWithoutMandatoryKey()
                                        )
                 suite.addTest(test)
             else:
                 test = _load_test_case('%s_without_key' % base_test_name,
-                                       task, scenario,
+                                       task,
+                                       scenario,
                                        lambda x: x.runTestWithoutKey()
                                        )
                 suite.addTest(test)

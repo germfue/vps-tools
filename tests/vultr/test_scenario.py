@@ -67,7 +67,7 @@ class TestScenario(object):
         return self.api_call.replace('/v1/', '').replace('/', '.')
 
     def test_name(self):
-        return 'test_%s' % self.api_call.replace('/v1/', '').replace('/', '_')
+        return 'test_!%s!' % self.api_call.replace('/v1/', '').replace('/', '_')
 
     def __repr__(self):
         return '%s(%r, %r, %r, %r, %r, %r)' % (self.__class__.__name__,
