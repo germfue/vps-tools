@@ -2,24 +2,24 @@
 
 # Copyright (c) 2016, Germán Fuentes Capella <development@fuentescapella.com>
 # BSD 3-Clause License
-# 
+#
 # Copyright (c) 2017, Germán Fuentes Capella
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice, this
 #   list of conditions and the following disclaimer.
-# 
+#
 # * Redistributions in binary form must reproduce the above copyright notice,
 #   this list of conditions and the following disclaimer in the documentation
 #   and/or other materials provided with the distribution.
-# 
+#
 # * Neither the name of the copyright holder nor the names of its
 #   contributors may be used to endorse or promote products derived from
 #   this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -38,37 +38,47 @@ import vps.vultr.key
 from ast import literal_eval
 from invoke import Context
 from urllib.parse import parse_qs
-from vps.vultr.startupscript import startupscript_create
+from vps.vultr.startupscript import startupscript_create, startupscript_update
 
 
 _script_name = 'test script'
 _startupscript = '''#!/bin/bash
 echo "hello world" > /root/hello'''
-_response = '{ \"SCRIPTID\": 5 }'
+_scriptid = '5'
+_response = '{ \"SCRIPTID\": %s }' % _scriptid
+
 
 class TestStartupscript(unittest.TestCase):
 
-    def test_script_path(self):
+    def test_create_script_with_file_path(self):
         with tempfile.NamedTemporaryFile(mode='w') as f:
             f.write(_startupscript)
             f.seek(0)
-            self._test_mocked_script_create(f.name)
+            self._test_mocked_script_function('create', f.name)
+
+    def test_update_script_with_file_path(self):
+        with tempfile.NamedTemporaryFile(mode='w') as f:
+            f.write(_startupscript)
+            f.seek(0)
+            self._test_mocked_script_function('update', f.name)
 
     def _task_context(self):
         ctx = Context()
         ctx.config.run.echo = False
         return ctx
 
-    def _test_mocked_script_create(self, script_path):
+    def _test_mocked_script_function(self, op, script_path):
         vps.vultr.key._api_key = 'EXAMPLE'
         ctx = self._task_context()
         with requests_mock.mock() as m:
 
             def _callback_create(request, context):
-                self.assertEqual('/v1/startupscript/create', request.path)
+                self.assertEqual('/v1/startupscript/' + op, request.path)
                 qs = parse_qs(request.text)
                 self.assertEqual(_script_name, qs.pop('name')[0])
                 self.assertEqual(_startupscript, qs.pop('script')[0])
+                if op == 'update':
+                    self.assertEqual(_scriptid, qs.pop('SCRIPTID')[0])
                 self.assertFalse(qs)
                 return _response
 
@@ -83,5 +93,16 @@ class TestStartupscript(unittest.TestCase):
             m.options(requests_mock.ANY, text=_callback_error)
             m.patch(requests_mock.ANY, text=_callback_error)
 
-            result = startupscript_create(ctx, name=_script_name, script=script_path)
+            self.assertIn(op, ['create', 'update'])
+            if op == 'create':
+                result = startupscript_create(ctx,
+                                              name=_script_name,
+                                              script=script_path
+                                              )
+            elif op == 'update':
+                result = startupscript_update(ctx,
+                                              _scriptid,
+                                              name=_script_name,
+                                              script=script_path
+                                              )
             self.assertEqual(literal_eval(_response), result)

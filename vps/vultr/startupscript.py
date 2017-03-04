@@ -107,6 +107,8 @@ def startupscript_update(ctx, scriptid, name='', script=''):
     Update an existing startup script
     """
     vultr = Vultr(get_key())
+    if os.path.exists(script):
+        script = _read_script(script)
     params = param_dict(name=name, script=script)
     return vultr.startupscript.update(scriptid, params)
 
