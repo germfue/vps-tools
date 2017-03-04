@@ -84,7 +84,7 @@ def display(dl):
         # if content is bigger than console, switch to yaml format
         output = {}
         for d in dl:
-            key = d.get('label') or d.get('SUBID')
+            key = d.get('label') or d.get('SUBID') or d.get('SCRIPTID')
             output[key] = d
         puts(ruamel.yaml.dump(output, Dumper=ruamel.yaml.RoundTripDumper))
     else:
