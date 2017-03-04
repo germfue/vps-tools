@@ -48,7 +48,7 @@ from .query import query
           'main_ip': 'An IPv4 address. Only the subscription matching this IPv4 address will be returned',
       })
 @require_key
-def server_list(ctx, subid=None, tag='', label='', main_ip='', criteria=''):
+def server_list(ctx, subid=None, tag=None, label=None, main_ip=None, criteria=''):
     """
     List all active or pending virtual machines on the current account.
     The "status" field represents the status of the subscription and will be
@@ -122,7 +122,7 @@ def server_create(ctx, dcid, vpsplanid, osid, ipxe_chain_url=None,
     The response only contains the SUBID for the new machine
     """
     params = param_dict(ipxe_chain_url=ipxe_chain_url,
-                        scriptid=scriptid, 
+                        scriptid=scriptid,
                         snapshotid=snapshotid,
                         enable_ipv6=enable_ipv6,
                         enable_private_network=enable_private_network,
