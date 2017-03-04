@@ -32,8 +32,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-test_file = 'cases.yaml'
-test_file_new = 'cases_new.yaml'
+# test scenarios are cached to avoid that changes in https://vultr.com/api
+# propagate automatically to the rest of the project.
+
+test_file = 'tests/cached_scenarios.yaml'
+test_file_new = 'tests/new_scenarios.yaml'
 
 
 error_scenario_mismatch = "execute 'diff %s %s' for details" % (test_file_new,
