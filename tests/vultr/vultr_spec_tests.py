@@ -37,107 +37,17 @@ import ruamel.yaml
 import unittest
 from bs4 import BeautifulSoup
 from collections import OrderedDict
+from .scenario_file import load_cached_scenarios, dump_retrieved_scenarios, error_scenario_mismatch
+from .supported_spec_calls import supported_calls
 from .test_scenario import TestScenario
 
 
 _response = requests.get('https://www.vultr.com/api/')
 _soup = BeautifulSoup(_response.text, 'html.parser')
 _blacklist_calls = ('cURL',)
-_api_calls = """/v1/account/info
-/v1/app/list
-/v1/auth/info
-/v1/backup/list
-/v1/block/attach
-/v1/block/create
-/v1/block/delete
-/v1/block/detach
-/v1/block/label_set
-/v1/block/list
-/v1/block/resize
-/v1/dns/create_domain
-/v1/dns/create_record
-/v1/dns/delete_domain
-/v1/dns/delete_record
-/v1/dns/list
-/v1/dns/records
-/v1/dns/update_record
-/v1/iso/list
-/v1/os/list
-/v1/plans/list
-/v1/plans/list_vc2
-/v1/plans/list_vdc2
-/v1/regions/availability
-/v1/regions/list
-/v1/reservedip/attach
-/v1/reservedip/convert
-/v1/reservedip/create
-/v1/reservedip/destroy
-/v1/reservedip/detach
-/v1/reservedip/list
-/v1/server/app_change
-/v1/server/app_change_list
-/v1/server/backup_disable
-/v1/server/backup_enable
-/v1/server/backup_get_schedule
-/v1/server/backup_set_schedule
-/v1/server/bandwidth
-/v1/server/create
-/v1/server/create_ipv4
-/v1/server/destroy
-/v1/server/destroy_ipv4
-/v1/server/get_app_info
-/v1/server/get_user_data
-/v1/server/halt
-/v1/server/iso_attach
-/v1/server/iso_detach
-/v1/server/iso_status
-/v1/server/label_set
-/v1/server/list
-/v1/server/list_ipv4
-/v1/server/list_ipv6
-/v1/server/neighbors
-/v1/server/os_change
-/v1/server/os_change_list
-/v1/server/reboot
-/v1/server/reinstall
-/v1/server/restore_backup
-/v1/server/restore_snapshot
-/v1/server/reverse_default_ipv4
-/v1/server/reverse_delete_ipv6
-/v1/server/reverse_list_ipv6
-/v1/server/reverse_set_ipv4
-/v1/server/reverse_set_ipv6
-/v1/server/set_user_data
-/v1/server/start
-/v1/server/upgrade_plan
-/v1/server/upgrade_plan_list
-/v1/snapshot/create
-/v1/snapshot/destroy
-/v1/snapshot/list
-/v1/sshkey/create
-/v1/sshkey/destroy
-/v1/sshkey/list
-/v1/sshkey/update
-/v1/startupscript/create
-/v1/startupscript/destroy
-/v1/startupscript/list
-/v1/startupscript/update
-/v1/user/create
-/v1/user/delete
-/v1/user/list
-/v1/user/update
-/v1/firewall/group_create
-/v1/firewall/group_delete
-/v1/firewall/group_list
-/v1/firewall/group_set_description
-/v1/firewall/rule_create
-/v1/firewall/rule_delete
-/v1/firewall/rule_list
-/v1/server/firewall_group_set
-""".splitlines()
 
 _re_block = re.compile('/v1/(?P<block>[^/]+)/')
-_blocks = set([_re_block.match(x).group('block') for x in _api_calls])
+_blocks = set([_re_block.match(x).group('block') for x in supported_calls])
 
 _re_row = '.*%s\s+%s\s.*'
 _txt_api_key = 'API Key Required:'
@@ -149,30 +59,38 @@ _txt_no_parameters = 'No parameters.'
 _txt_no_response = 'No response, check HTTP result code.'
 
 
-class TestAPI(unittest.TestCase):
+class TestUpdatesInVultrSpec(unittest.TestCase):
     """
-    These tests check that we are using the right version of the API, as well
-    as preparing the expected inputs and outputs for the specific operation
-    tests
+    These tests check if the api defined in https://vultr.com/api and the
+    version cached are in sync
     """
 
-    def _find_api_calls(self):
-        return [x for x in _soup.find_all('h3')
-                if x.text not in _blacklist_calls]
-
-    def test_response(self):
+    def test_spec_availability(self):
         self.assertEqual(200, _response.status_code)
 
-    def test_api_call_definition(self):
-        calls_found = [x.text for x in self._find_api_calls()]
+    def test_api_calls_defined_and_cached_in_sync(self):
+        calls_found = [x.text for x in self._find_reported_calls()]
 
         # check that all calls retrieved match existing calls
         for call in calls_found:
-            self.assertIn(call, _api_calls, 'New calls added to api')
+            self.assertIn(call, supported_calls, 'New calls added to api')
 
         # check that no API call gets dropped
-        for call in _api_calls:
+        for call in supported_calls:
             self.assertIn(call, calls_found)
+
+    def test_if_new_scenarios_are_defined(self):
+        scenarios = ruamel.yaml.dump(self._parse_scenarios())
+        cached_scenarios = load_cached_scenarios()
+        try:
+            self.assertEqual(cached_scenarios, scenarios, error_scenario_mismatch)
+        except:
+            dump_retrieved_scenarios(scenarios)
+            raise
+
+    def _find_reported_calls(self):
+        return [x for x in _soup.find_all('h3')
+                if x.text not in _blacklist_calls]
 
     def _parse_table(self, scenario, table):
         txt = table.get_text()
@@ -204,27 +122,12 @@ class TestAPI(unittest.TestCase):
             else:
                 raise ValueError('%s: item not expected' % key)
 
-    def _load_scenarios(self):
-        with open('cases.yaml', 'r') as f:
-            return f.read()
-
     def _parse_scenarios(self):
         scenarios = OrderedDict()
-        for api_call in self._find_api_calls():
+        for api_call in self._find_reported_calls():
             scenario = TestScenario(api_call.text)
             self._parse_table(scenario, api_call.parent.table)
             code_blocks = api_call.parent.find_all('div', class_='code')
             self._parse_code_blocks(scenario, code_blocks)
             scenarios[api_call.text] = scenario
         return scenarios
-
-    def test_scenarios(self):
-        scenarios = ruamel.yaml.dump(self._parse_scenarios())
-        scenarios_in_use = self._load_scenarios()
-        try:
-            error_msg = "execute 'diff cases_new.yaml cases.yaml' for details"
-            self.assertEqual(scenarios_in_use, scenarios, error_msg)
-        except:
-            with open('cases_new.yaml', 'w') as f:
-                f.write(scenarios)
-            raise

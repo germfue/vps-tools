@@ -40,12 +40,13 @@ from invoke import Context
 from urllib.parse import parse_qs
 from vps.console import puts
 from vps.vultr.tasks import collection
+from .scenario_file import load_cached_scenarios
 
 
 class _Test(object):
     """
     This class can't inherit from TestCase as it gets automatically loaded
-    by setup tools
+    by setup tools. It defines though all test cases for the cached scenarios
     """
 
     def __init__(self, test_name, task, scenario):
@@ -53,7 +54,7 @@ class _Test(object):
         self.scenario = scenario
         super(_Test, self).__init__(test_name)
 
-    def check_response(self, result):
+    def _check_response(self, result):
         scenario = self.scenario
         if not result:
             self.assertEqual(scenario.response, '')
@@ -86,7 +87,10 @@ class _Test(object):
                 self.assertIn(mockedreq_param, doc_params)
                 # check that the values stored are the same
                 if mockedreq_param in scenario_params:
-                    self.assertEqual(mockedreq_value, scenario_params.pop(mockedreq_param), 'value for %s mismatch' % mockedreq_param)
+                    self.assertEqual(mockedreq_value,
+                                     scenario_params.pop(mockedreq_param),
+                                     'value for %s mismatch' % mockedreq_param
+                                     )
             self.assertFalse(scenario_params)
 
     def _callback(self, request, context):
@@ -136,12 +140,12 @@ class _Test(object):
     def _test_with_key(self, task, ctx, python_params):
         vps.vultr.key._api_key = 'EXAMPLE'
         result = task(ctx, **python_params)
-        self.check_response(result)
+        self._check_response(result)
 
     def _test_without_key(self, task, ctx, python_params):
         vps.vultr.key._api_key = None
         result = task(ctx, **python_params)
-        self.check_response(result)
+        self._check_response(result)
 
     def _test_key_not_present(self, task, ctx, python_params):
         vps.vultr.key._api_key = None
@@ -181,8 +185,8 @@ class _Test(object):
             result = task(ctx, **python_params)
             self.assertIsNotNone(result)
         except TypeError as err:
-            # this will happen if new parameters are added to the API, but not supported
-            # in the vps interface
+            # this will happen if new parameters are added to the API, but not
+            # supported in the vps interface
             if 'unexpected keyword argument' in str(err):
                 puts('Please add missing parameters')
                 puts(self.scenario.doc_params)
@@ -191,11 +195,6 @@ class _Test(object):
 
 def _get_task(module, method):
     return collection.collections[module].tasks[method]
-
-
-def _read_cases():
-    with open('cases.yaml', 'r') as f:
-        return f.read()
 
 
 def _supports_criteria(task):
@@ -223,7 +222,7 @@ def _load_test_case(test_name, task, scenario, f):
 
 def load_tests(loader, standard_tests, pattern):
     suite = unittest.TestSuite()
-    scenarios = ruamel.yaml.load(_read_cases(), Loader=ruamel.yaml.Loader)
+    scenarios = ruamel.yaml.load(load_cached_scenarios(), Loader=ruamel.yaml.Loader)
     for api_call in scenarios:
         scenario = scenarios[api_call]
         subcommand = scenario.invoke_subcommand()
