@@ -121,4 +121,7 @@ supported_calls = """/v1/account/info
 /v1/firewall/rule_create
 /v1/firewall/rule_delete
 /v1/firewall/rule_list
-/v1/server/firewall_group_set""".splitlines()
+/v1/server/firewall_group_set
+/v1/iso/create_from_url
+/v1/server/private_network_enable
+/v1/server/tag_set""".splitlines()

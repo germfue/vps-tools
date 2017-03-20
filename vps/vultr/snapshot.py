@@ -34,20 +34,22 @@
 from invoke import task, Collection
 from vultr import Vultr
 from .key import require_key
+from .params import param_dict
 from .query import query
 
 
 @task(name='list',
       help={
-          'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'status\': \'complete\'}"'
+          'snapshotid': 'Filter result set to only contain this snapshot',
+          'criteria': 'Filter queried data. Example usage: {\'status\': \'complete\'}"'
       })
 @require_key
-def snapshot_list(ctx, criteria=''):
+def snapshot_list(ctx, snapshotid=None, criteria=''):
     """
     List all snapshots on the current account
     """
-    return query(ctx, lambda x: Vultr(x).snapshot.list(), criteria)
+    params = param_dict(snapshotid=snapshotid)
+    return query(ctx, lambda x: Vultr(x).snapshot.list(params), criteria)
 
 
 snapshot_coll = Collection()
