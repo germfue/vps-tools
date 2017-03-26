@@ -82,8 +82,7 @@ def server_list(ctx, subid=None, tag=None, label=None, main_ip=None, criteria=''
           'snapshotid': '(optional) If you have selected the \'snapshot\' ' +
           'operating system, this should be the snapshotid (see ' +
           'snapshot.list) to restore for the initial installation',
-          'enable_ipv6': '(optional) \'yes\' or \'no\'. If yes, an IPv6 ' +
-          'subnet will be assigned to the machine (where available)',
+          'enable_ipv6': '(optional) "yes" or "no". If yes, an IPv6 subnet will be assigned to the machine (where available)',
           'enable_private_network': '(optional) \'yes\' or \'no\'. If yes, ' +
           'private networking support will be added to the new server.',
           'label': '(optional) This is a text label that will be shown in ' +
@@ -91,17 +90,14 @@ def server_list(ctx, subid=None, tag=None, label=None, main_ip=None, criteria=''
           'sshkeyid': '(optional) List of SSH keys to apply to this server ' +
           'on install (only valid for Linux/FreeBSD). See sshkey.list. ' +
           'Seperate keys with commas',
-          'auto_backups': '(optional) \'yes\' or \'no\'. If yes, automatic ' +
-          'backups will be enabled for this server (these have an extra ' +
-          'charge associated with them)',
+          'auto_backups': '(optional) "yes" or "no". If yes, automatic backups will be enabled for this server',
           'appid': '(optional) If launching an application (OSID 186), this ' +
           'is the appid to launch. See app.list',
           'userdata': '(optional) Base64 encoded cloud-init user-data',
           'notify_activate': '(optional, default \'yes\') \'yes\' or \'no\'. ' +
           'If yes, an activation email will be sent when the server is ready',
-          'ddos_protection':  '(optional, default \'no\') \'yes\' or \'no\'. ' +
-          'If yes, DDOS protection will be enabled on the subscription (' +
-          'there is an additional charge for this)',
+          'ddos_protection':  '(optional, default "no") "yes" or "no". ' +
+          'If yes, DDOS protection will be enabled on the subscription',
           'reserved_ip_v4': '(optional) IP address of the floating IP to use ' +
           'as the main IP of this server',
           'hostname': '(optional) The hostname to assign to this server',

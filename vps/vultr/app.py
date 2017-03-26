@@ -38,8 +38,7 @@ from .query import query
 
 @task(name='list',
       help={
-          'criteria': 'Filter queried data. Example usage: ' +
-          '"{\'name\': \'WordPress\'}"'
+          'criteria': 'Filter queried data. Example usage: "{\'name\': \'WordPress\'}"'
       })
 def app_list(ctx, criteria=''):
     """

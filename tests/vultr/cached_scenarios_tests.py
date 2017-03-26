@@ -31,6 +31,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import inspect
 import json
 import requests_mock
 import ruamel.yaml
@@ -54,8 +55,8 @@ class _TestCachedScenarios(object):
         self.scenario = scenario
         super(_TestCachedScenarios, self).__init__(test_name)
 
-    def runAllParamsDocumented(self):
-        self._runTest(self._test_all_documented_params)
+    def runAllSpecifiedParams(self):
+        self._runTest(self._test_all_specified_params)
 
     def runTestCriteria(self):
         self._runTest(self._test_criteria)
@@ -68,6 +69,18 @@ class _TestCachedScenarios(object):
 
     def runTestWithoutKey(self):
         self._runTest(self._test_without_key)
+
+    def runTestParamsDocumentation(self):
+        # check that all parameters in the help have documentation
+        for k, v in self.task.help.items():
+            self.assertTrue(v, '%s misses documentation'%k)
+        # check that there are as many items in the help as in the function
+        # definition
+        self.assertEqual(len(self.task.help),
+                         # ctx is not included in get_arguments
+                         len(self.task.get_arguments())
+                         )
+
 
     def _runTest(self, f):
         req = self.scenario.parse_request()
@@ -151,7 +164,7 @@ class _TestCachedScenarios(object):
         filtered = task(ctx, **python_params)
         self.assertFalse(filtered)
 
-    def _test_all_documented_params(self, task, ctx, python_params):
+    def _test_all_specified_params(self, task, ctx, python_params):
         self._set_key()
         default_values = {
                 'string': 'abc',
@@ -229,10 +242,16 @@ def load_tests(loader, standard_tests, pattern):
         if subcommand in collection.task_names.keys():
             task = _get_task(subcommand)
             base_test_name = scenario.test_name()
-            test = _load_test_case('%s_all_documented_params' % base_test_name,
+            test = _load_test_case('%s_all_specified_params' % base_test_name,
                                    task,
                                    scenario,
-                                   lambda x: x.runAllParamsDocumented()
+                                   lambda x: x.runAllSpecifiedParams()
+                                   )
+            suite.addTest(test)
+            test = _load_test_case('%s_params_documentation' % base_test_name,
+                                   task,
+                                   scenario,
+                                   lambda x: x.runTestParamsDocumentation()
                                    )
             suite.addTest(test)
             if _supports_criteria(task):
