@@ -16,14 +16,15 @@
         provisioning\"\n],\n\"email\": \"example@vultr.com\",\n\"name\": \"Example\
         \ Account\"\n}"}}, {/v1/backup/list: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/backup/list, api_key: EXAMPLE, doc_params: "SUBID integer (optional)\
-        \ Unique identifier of a subscription. Only backups for this subscription\
-        \ object will be returned.\n", http_method: GET, request: "curl -H 'API-Key:\
-        \ EXAMPLE' https://api.vultr.com/v1/backup/list\n", response: "{\n\"543d34149403a\"\
-        : {\n\"BACKUPID\": \"543d34149403a\",\n\"date_created\": \"2014-10-14 12:40:40\"\
-        ,\n\"description\": \"Automatic server backup\",\n\"size\": \"42949672960\"\
-        ,\n\"status\": \"complete\"\n},\n\"543d340f6dbce\": {\n\"BACKUPID\": \"543d340f6dbce\"\
-        ,\n\"date_created\": \"2014-10-13 16:11:46\",\n\"description\": \"\",\n\"\
-        size\": \"10000000\",\n\"status\": \"complete\"\n}\n}\n"}}, {/v1/block/attach: !!python/object:tests.vultr.test_scenario.TestScenario {
+        \ Filter result set to only contain backups of this subscription object.\n\
+        BACKUPID string (optional) Filter result set to only contain this backup.\n",
+      http_method: GET, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/backup/list\n",
+      response: "{\n\"543d34149403a\": {\n\"BACKUPID\": \"543d34149403a\",\n\"date_created\"\
+        : \"2014-10-14 12:40:40\",\n\"description\": \"Automatic server backup\",\n\
+        \"size\": \"42949672960\",\n\"status\": \"complete\"\n},\n\"543d340f6dbce\"\
+        : {\n\"BACKUPID\": \"543d340f6dbce\",\n\"date_created\": \"2014-10-13 16:11:46\"\
+        ,\n\"description\": \"\",\n\"size\": \"10000000\",\n\"status\": \"complete\"\
+        \n}\n}\n"}}, {/v1/block/attach: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/block/attach, api_key: EXAMPLE, doc_params: "SUBID integer ID\
         \ of the block storage subscription to attach\nattach_to_SUBID integer ID\
         \ of the VPS subscription to mount the block storage subscription to\n", http_method: POST,
@@ -154,18 +155,23 @@
         : \"icmp\",\n\"port\": \"\",\n\"subnet\": \"\",\n\"subnet_size\": 0\n},\n\"\
         2\": {\n\"rulenumber\": 2,\n\"action\": \"accept\",\n\"protocol\": \"tcp\"\
         ,\n\"port\": \"80\",\n\"subnet\": \"10.234.22.0\",\n\"subnet_size\": 24\n\
-        }\n}\n"}}, {/v1/iso/list: !!python/object:tests.vultr.test_scenario.TestScenario {
+        }\n}\n"}}, {/v1/iso/create_from_url: !!python/object:tests.vultr.test_scenario.TestScenario {
+      api_call: /v1/iso/create_from_url, api_key: EXAMPLE, doc_params: "url string\
+        \ Remote URL from where the ISO will be downloaded.\n", http_method: POST,
+      request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/iso/create_from_url\
+        \ --data 'url=http://example.com/path/to/CentOS-6.5-x86_64-minimal.iso'\n",
+      response: "{\n\"ISOID\": 24\n}\n"}}, {/v1/iso/list: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/iso/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/iso/list\n", response: "{\n\
         \"24\": {\n\"ISOID\": 24,\n\"date_created\": \"2014-04-01 14:10:09\",\n\"\
         filename\": \"CentOS-6.5-x86_64-minimal.iso\",\n\"size\": 9342976,\n\"md5sum\"\
-        : \"ec0669895a250f803e1709d0402fc411\"\n}\n}"}}, {/v1/os/list: !!python/object:tests.vultr.test_scenario.TestScenario {
-      api_call: /v1/os/list, api_key: '', doc_params: '', http_method: GET, request: "curl\
-        \ https://api.vultr.com/v1/os/list\n", response: "{\n\"127\": {\n\"OSID\"\
-        : \"127\",\n\"name\": \"CentOS 6 x64\",\n\"arch\": \"x64\",\n\"family\": \"\
-        centos\",\n\"windows\": false\n},\n\"148\": {\n\"OSID\": \"148\",\n\"name\"\
-        : \"Ubuntu 12.04 i386\",\n\"arch\": \"i386\",\n\"family\": \"ubuntu\",\n\"\
-        windows\": false\n}\n}"}}, {/v1/plans/list: !!python/object:tests.vultr.test_scenario.TestScenario {
+        : \"ec0669895a250f803e1709d0402fc411\",\n\"status\": \"complete\"\n}\n}"}},
+  {/v1/os/list: !!python/object:tests.vultr.test_scenario.TestScenario {api_call: /v1/os/list,
+      api_key: '', doc_params: '', http_method: GET, request: "curl https://api.vultr.com/v1/os/list\n",
+      response: "{\n\"127\": {\n\"OSID\": \"127\",\n\"name\": \"CentOS 6 x64\",\n\"\
+        arch\": \"x64\",\n\"family\": \"centos\",\n\"windows\": false\n},\n\"148\"\
+        : {\n\"OSID\": \"148\",\n\"name\": \"Ubuntu 12.04 i386\",\n\"arch\": \"i386\"\
+        ,\n\"family\": \"ubuntu\",\n\"windows\": false\n}\n}"}}, {/v1/plans/list: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/plans/list, api_key: '', doc_params: "type string (optional) The\
         \ type of plans to return. Possible values: \"all\", \"vc2\", \"ssd\", \"\
         vdc2\", \"dedicated\".\n", http_method: GET, request: "curl https://api.vultr.com/v1/plans/list?type=vc2\n",
@@ -422,7 +428,12 @@
         arch\": \"x64\",\n\"family\": \"centos\",\n\"windows\": false,\n\"surcharge\"\
         : \"0.00\"\n},\n\"148\": {\n\"OSID\": \"148\",\n\"name\": \"Ubuntu 12.04 i386\"\
         ,\n\"arch\": \"i386\",\n\"family\": \"ubuntu\",\n\"windows\": false,\n\"surcharge\"\
-        : \"0.00\"\n}\n}\n"}}, {/v1/server/reboot: !!python/object:tests.vultr.test_scenario.TestScenario {
+        : \"0.00\"\n}\n}\n"}}, {/v1/server/private_network_enable: !!python/object:tests.vultr.test_scenario.TestScenario {
+      api_call: /v1/server/private_network_enable, api_key: EXAMPLE, doc_params: "SUBID\
+        \ integer Unique identifier for this subscription. These can be found using\
+        \ the v1/server/list call.\n", http_method: POST, request: "curl -H 'API-Key:\
+        \ EXAMPLE' https://api.vultr.com/v1/server/private_network_enable --data 'SUBID=576965'\n",
+      response: ''}}, {/v1/server/reboot: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/server/reboot, api_key: EXAMPLE, doc_params: "SUBID integer Unique\
         \ identifier for this subscription.  These can be found using the v1/server/list\
         \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/reboot\
@@ -488,7 +499,13 @@
       api_key: EXAMPLE, doc_params: "SUBID integer Unique identifier for this subscription.\
         \  These can be found using the v1/server/list call.\n", http_method: POST,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/server/start --data\
-        \ 'SUBID=576965'\n", response: ''}}, {/v1/server/upgrade_plan: !!python/object:tests.vultr.test_scenario.TestScenario {
+        \ 'SUBID=576965'\n", response: ''}}, {/v1/server/tag_set: !!python/object:tests.vultr.test_scenario.TestScenario {
+      api_call: /v1/server/tag_set, api_key: EXAMPLE, doc_params: "SUBID integer Unique\
+        \ identifier for this subscription. These can be found using the v1/server/list\
+        \ call.\ntag string The tag to assign to this server. This tag is shown in\
+        \ the control panel.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE'\
+        \ https://api.vultr.com/v1/server/tag_set --data 'SUBID=576965' --data 'tag=Mail'\n",
+      response: ''}}, {/v1/server/upgrade_plan: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/server/upgrade_plan, api_key: EXAMPLE, doc_params: "SUBID integer\
         \ Unique identifier for this subscription. These can be found using the v1/server/list\
         \ call.\nVPSPLANID integer The new plan. See /v1/server/upgrade_plan_list.\n",
@@ -509,14 +526,15 @@
         \ Unique identifier for this snapshot.  These can be found using the v1/snapshot/list\
         \ call.\n", http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/destroy\
         \ --data 'SNAPSHOTID=5359435d28b9a'\n", response: ''}}, {/v1/snapshot/list: !!python/object:tests.vultr.test_scenario.TestScenario {
-      api_call: /v1/snapshot/list, api_key: EXAMPLE, doc_params: '', http_method: GET,
+      api_call: /v1/snapshot/list, api_key: EXAMPLE, doc_params: "SNAPSHOTID string\
+        \ (optional) Filter result set to only contain this snapshot.\n", http_method: GET,
       request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/snapshot/list\n",
       response: "{\n\"5359435d28b9a\": {\n\"SNAPSHOTID\": \"5359435d28b9a\",\n\"date_created\"\
         : \"2014-04-18 12:40:40\",\n\"description\": \"Test snapshot\",\n\"size\"\
         : \"42949672960\",\n\"status\": \"complete\"\n},\n\"5359435dc1df3\": {\n\"\
         SNAPSHOTID\": \"5359435dc1df3\",\n\"date_created\": \"2014-04-22 16:11:46\"\
         ,\n\"description\": \"\",\n\"size\": \"10000000\",\n\"status\": \"complete\"\
-        \n}\n}"}}, {/v1/sshkey/create: !!python/object:tests.vultr.test_scenario.TestScenario {
+        \n}\n}\n"}}, {/v1/sshkey/create: !!python/object:tests.vultr.test_scenario.TestScenario {
       api_call: /v1/sshkey/create, api_key: EXAMPLE, doc_params: "name string Name\
         \ of the SSH key\nssh_key string SSH public key (in authorized_keys format)\n",
       http_method: POST, request: "curl -H 'API-Key: EXAMPLE' https://api.vultr.com/v1/sshkey/create\

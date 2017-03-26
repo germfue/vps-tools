@@ -73,7 +73,9 @@ class TestUpdatesInVultrSpec(unittest.TestCase):
 
         # check that all calls retrieved match existing calls
         for call in calls_found:
-            self.assertIn(call, supported_calls, 'New calls added to api')
+            self.assertIn(call, supported_calls,
+                          'New calls added to api. Remember to add them to supported_spec_calls.py'
+                          )
 
         # check that no API call gets dropped
         for call in supported_calls:
