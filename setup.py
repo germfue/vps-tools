@@ -64,6 +64,7 @@ setup(
         'beautifulsoup4',
         'requests',
         'requests-mock',
+        'codecov',
     ],
     packages=pckgs,
     test_suite='tests',

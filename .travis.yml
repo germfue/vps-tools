@@ -3,6 +3,9 @@ python:
   - "3.5"
   - "3.6"
 # command to install dependencies
-install: "python setup.py build install"
+install: "python setup.py build install develop"
 # command to run tests
-script: "python setup.py test"
+script: "coverage run setup.py test"
+# upload report to codecov.io
+after_success:
+  - codecov
