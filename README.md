@@ -1,2 +1,1 @@
-# Virtual Private Server - Tools
-![Logo](/images/logo.png)
+# ![Logo](/images/logo.png) Virtual Private Server - Tools
