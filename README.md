@@ -1,2 +1,2 @@
-# vultr-cli
-Vultr-cli allows you to create and configure your vultr instances
+# Virtual Private Server - Tools
+![Logo](/images/logo.svg)
